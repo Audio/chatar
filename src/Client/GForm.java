@@ -23,7 +23,7 @@ public class GForm extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
-        setIconImage( new ImageIcon("icon.png").getImage() );
+        setIconImage( new ImageIcon("img/app-icon.png").getImage() );
 
     }
 
