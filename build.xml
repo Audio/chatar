@@ -25,13 +25,13 @@
         <mkdir dir="${jar.dir}" />
         <jar destfile="${jar.dir}/chatar.jar" basedir="${classes.dir}">
             <manifest>
-                <attribute name="Main-Class" value="Client.Main" />
+                <attribute name="Main-Class" value="Client.Client" />
             </manifest>
         </jar>
     </target>
 
     <target name="run" depends="jar">
-        <java fork="true" classname="Client.Main">
+        <java fork="true" classname="Client.Client">
             <classpath>
                 <path refid="classpath"/>
                 <path location="${jar.dir}/chatar.jar"/>
