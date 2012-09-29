@@ -1,20 +1,10 @@
 package Client;
 
 import Config.CommandHistory;
-import Connection.Connection;
-import Connection.Input;
-import Connection.Output;
+import Connection.*;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import java.awt.event.*;
+import javax.swing.*;
 
 /**
  * Základní panel, viditelný neustále. Načítá textový vstup od uživatele.

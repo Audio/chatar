@@ -1,13 +1,8 @@
 package Client;
 
 import Connection.Input;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.SpringLayout;
-import javax.swing.UIManager;
+import java.awt.*;
+import javax.swing.*;
 import javax.swing.text.html.HTMLDocument;
 
 /**

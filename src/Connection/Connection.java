@@ -1,15 +1,8 @@
 package Connection;
 
-import Client.ClientLogger;
-import Client.GTabServer;
+import Client.*;
 import Config.Config;
-import Client.GTabWindow;
-import Client.GUI;
-import Client.GWindow;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.Socket;
 
 /**

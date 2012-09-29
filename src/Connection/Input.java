@@ -1,14 +1,6 @@
 package Connection;
 
-import Client.Client;
-import Client.ClientException;
-import Client.GTab;
-import Client.GTabChannel;
-import Client.GTabPrivateChat;
-import Client.GTabServer;
-import Client.GTabWindow;
-import Client.GUI;
-import Client.GWindow;
+import Client.*;
 import java.util.Iterator;
 
 /**

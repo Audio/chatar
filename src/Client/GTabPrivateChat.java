@@ -1,19 +1,11 @@
 package Client;
 
-import Connection.CommandQuery;
-import Connection.Connection;
-import Connection.Input;
+import Connection.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.Reader;
 import java.io.StringReader;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SpringLayout;
+import javax.swing.*;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 

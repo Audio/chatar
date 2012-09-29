@@ -1,24 +1,13 @@
 package Client;
 
-import Connection.CommandQuery;
-import Connection.Connection;
-import Connection.Input;
-import Connection.Output;
+import Connection.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Iterator;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JEditorPane;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SpringLayout;
+import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
