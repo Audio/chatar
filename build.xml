@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="IRC_klient" default="compile">
+
+  <property name="report.dir" value="${basedir}/reports" />
+
+  <!-- soubory s nastrojem EMMA -->
+  <taskdef resource="emma_ant.properties">
+    <classpath>
+      <pathelement location="lib/emma.jar" />
+      <pathelement location="lib/emma_ant.jar" />
+    </classpath>
+  </taskdef>
+
+  <target name="compile">
+    <mkdir dir="build "/>
+    <mkdir dir="build/classes "/>
+    <mkdir dir="build/test "/>
+    <javac destdir="build/classes" srcdir="src" debug="true" encoding="UTF-8" />
+    <javac destdir="build/test" srcdir="test" debug="true" encoding="UTF-8">
+      <classpath>
+        <pathelement location="build/classes" />
+        <pathelement location="lib/junit-4.5.jar" />
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="build" depends="compile">
+    <jar destfile="ircklient.jar" basedir="build/classes" />
+  </target>
+
+  <target name="run" depends="compile">
+    <java classname="Client.Main" classpath="build/classes" fork="true" />
+  </target>
+
+  <!--  code coverage -->
+  <target name="instrument" depends="compile">
+    <mkdir dir="build/instrumented" />
+    <emma>
+      <instr instrpath="build/classes" destdir="build/instrumented" metadatafile="${report.dir}/metadata.emma" merge="true" />
+    </emma>
+  </target>
+
+  <target name="test" depends="instrument">
+    <mkdir dir="${basedir}/reports" />
+    <mkdir dir="${basedir}/reports/junit" />
+
+    <junit printsummary="yes" haltonfailure="no" fork="true">
+      <classpath>
+        <pathelement location="build/instrumented" />
+        <pathelement location="build/test" />
+        <pathelement location="lib/emma.jar" />
+        <pathelement location="lib/emma_ant.jar" />
+      </classpath>
+
+      <formatter type="plain" />
+
+      <batchtest fork="yes" todir="${report.dir}/junit">
+        <fileset dir="test">
+          <include name="**/*.java"/>
+        </fileset>
+      </batchtest>
+      <jvmarg value="-Demma.coverage.out.file=${report.dir}/coverage.emma" />
+      <jvmarg value="-Demma.coverage.out.merge=true" />
+    </junit>
+
+    <emma enabled="true">
+      <report sourcepath="src">
+        <fileset dir="${report.dir}">
+          <include name="*.emma" />
+        </fileset>
+        <html outfile="${report.dir}/coverage.html" />
+      </report>
+    </emma>
+  </target>
+
+  <target name="clean">
+    <delete dir="build" />
+    <delete dir="reports" />
+    <delete file="ircklient.jar" />
+  </target>
+
+</project>
