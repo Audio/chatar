@@ -12,7 +12,7 @@ import javax.swing.text.html.HTMLDocument;
 public class GUI {
 
     private static GTab tab;
-    private static GForm form;
+    private static MainWindow form;
     private static GInput input;
     private static GMenuBar menuBar;
     private static GServers servers;
@@ -23,7 +23,7 @@ public class GUI {
      */
     public static void prepareForm () {
 
-        form = new GForm();
+        form = new MainWindow();
         prepareMenu();
         prepareContent();
         input.getTextField().requestFocusInWindow();
@@ -155,7 +155,6 @@ public class GUI {
 
     }
 
-
     /**
      * Vytvori dialogove okno pro nastaveni osobnich udaju (pokud jiz neni vytvorene).
      *
@@ -178,7 +177,7 @@ public class GUI {
      */
     public static void showSetAwayDialog () {
 
-        GWindow question = new GWindow(GWindow.GROUP_INPUT, GWindow.TYPE_QUESTION, "Nastavení vlastní zprávy", "Nastavte důvod své nepřítomnosti, nebo nechte pole prázdné.");
+        MessageDialog question = new MessageDialog(MessageDialog.GROUP_INPUT, MessageDialog.TYPE_QUESTION, "Nastavení vlastní zprávy", "Nastavte důvod své nepřítomnosti, nebo nechte pole prázdné.");
         String ans = question.strConfirm;
 
         if (ans == null) // cancel
@@ -197,7 +196,7 @@ public class GUI {
      */
     public static void showSetNicknameDialog () {
 
-        GWindow question = new GWindow(GWindow.GROUP_INPUT, GWindow.TYPE_QUESTION, "Nastavení přezdívky", "Zvolte novou přezdívku");
+        MessageDialog question = new MessageDialog(MessageDialog.GROUP_INPUT, MessageDialog.TYPE_QUESTION, "Nastavení přezdívky", "Zvolte novou přezdívku");
         String ans = question.strConfirm;
 
         if (ans == null) // cancel
@@ -224,7 +223,7 @@ public class GUI {
      *
      * @return
      */
-    public static GForm getForm() {
+    public static MainWindow getForm() {
         return form;
     }
 

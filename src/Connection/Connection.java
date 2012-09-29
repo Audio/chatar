@@ -71,7 +71,7 @@ public class Connection extends Thread {
                 try {
                     loadReply();
                 } catch (Exception e) {
-                    new GWindow(GWindow.GROUP_MESSAGE, GWindow.TYPE_ERROR, "Chyba připojení", "K vybranému serveru se nelze připojit.");
+                    new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba připojení", "K vybranému serveru se nelze připojit.");
                     tab.die("Spojení nelze uskutečnit.");
                 }
 

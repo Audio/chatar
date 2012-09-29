@@ -1,7 +1,7 @@
 package Config;
 
 import Client.ClientLogger;
-import Client.GWindow;
+import Client.MessageDialog;
 import java.io.*;
 import java.util.Properties;
 
@@ -51,7 +51,7 @@ public class Servers {
         }
         catch (IOException e) {
             ClientLogger.log(e.getMessage(), ClientLogger.ERROR);
-            new GWindow(GWindow.GROUP_MESSAGE, GWindow.TYPE_ERROR,
+            new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR,
                     "Chyba aplikace", "Konfigurační soubor není možné načíst.");
         }
 
@@ -72,7 +72,7 @@ public class Servers {
         }
         catch (IOException e) {
             ClientLogger.log(e.getMessage(), ClientLogger.ERROR);
-            new GWindow(GWindow.GROUP_MESSAGE, GWindow.TYPE_ERROR,
+            new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR,
                     "Chyba aplikace", "Konfigurační soubor není možné uložit.");
         }
 

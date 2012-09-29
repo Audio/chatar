@@ -65,7 +65,7 @@ public class Input {
      * Oznameni uzivateli, ze neni pripojen k zadnemu serveru.
      */
     public static void connectionError () {
-        new GWindow(GWindow.GROUP_MESSAGE, GWindow.TYPE_ERROR, "Připojení nedostupné",
+        new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Připojení nedostupné",
                 "Nejste připojen/a k žádnému serveru.");
     }
 
@@ -73,7 +73,7 @@ public class Input {
      * Oznameni uzivateli, ze nema prepnuto na panel nejakeho kanalu.
      */
     public static void activeChannelError () {
-        new GWindow(GWindow.GROUP_MESSAGE, GWindow.TYPE_WARN, "Přepni si na kanál",
+        new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_WARN, "Přepni si na kanál",
                 "Aktivním oknem není kanál (channel).");
     }
 
@@ -336,7 +336,7 @@ public class Input {
             clearText();
         }
         catch (Exception e) {
-            new GWindow(GWindow.GROUP_MESSAGE, GWindow.TYPE_ERROR, "Chyba aplikace", "Připojení nelze uskutečnit.");
+            new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba aplikace", "Připojení nelze uskutečnit.");
         }
     }
 
@@ -494,7 +494,7 @@ public class Input {
     public static void showError (String invalidCommand) {
 
         if (Input.currentTab == null) {
-            new GWindow(GWindow.GROUP_MESSAGE, GWindow.TYPE_ERROR, "Neznámý příkaz",
+            new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Neznámý příkaz",
                     "Neznámý příkaz " + invalidCommand.toUpperCase() + ".");
         }
         else {

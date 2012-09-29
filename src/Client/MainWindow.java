@@ -3,18 +3,10 @@ package Client;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
-/**
- * Hlavní okno aplikace.
- *
- * @author Martin Fouček
- */
-public class GForm extends JFrame {
 
-    /**
-     * Vytvoří základní formulář celé aplikace.
-     * Nastaví mu velikost a pozici (centrování na střed obrazovky).
-     */
-    public GForm () {
+public class MainWindow extends JFrame {
+
+    public MainWindow() {
 
         setTitle("Chatař - IRC klient");
         setSize(700, 500);

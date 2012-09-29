@@ -149,7 +149,7 @@ public class GServers extends JFrame implements WindowListener {
             close();
         }
         catch (Exception e) {
-            new GWindow(GWindow.GROUP_MESSAGE, GWindow.TYPE_ERROR, "Chyba aplikace", "Připojení nelze uskutečnit.");
+            new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba aplikace", "Připojení nelze uskutečnit.");
         }
 
     }
@@ -205,7 +205,7 @@ public class GServers extends JFrame implements WindowListener {
                    + "\n\nUpozornění: výchozí port je 6667.\nPro určení jiného portu zadejte adresu ve tvaru 'irc.adresa.cz:port'."
                    + "\n\nNapř.: irc.mmoirc.com nebo irc.mmoirc.com:6667"
                    + "\n\n";
-        GWindow win = new GWindow(GWindow.GROUP_INPUT, GWindow.TYPE_QUESTION, "Přidání adresy serveru", msg);
+        MessageDialog win = new MessageDialog(MessageDialog.GROUP_INPUT, MessageDialog.TYPE_QUESTION, "Přidání adresy serveru", msg);
 
         if (win.strConfirm != null && win.strConfirm.length() > 0) {
             model.add(pos, win.strConfirm);

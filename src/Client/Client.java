@@ -47,7 +47,7 @@ public class Client {
             System.exit(returnCode);
         }
         else {
-            GWindow window = new GWindow(GWindow.GROUP_CONFIRM, GWindow.TYPE_QUESTION,
+            MessageDialog window = new MessageDialog(MessageDialog.GROUP_CONFIRM, MessageDialog.TYPE_QUESTION,
                     "Ukončit aplikaci", "Opravdu chcete ukončit aplikaci?");
             if (window.confirm == 0) {
                 ClientLogger.quit();
