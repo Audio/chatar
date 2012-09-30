@@ -91,7 +91,7 @@ public class Connection extends Thread {
     public void connect() throws Exception {
 
         if (server == null)
-            throw new ConnectionException("Adresa serveru není vyplněna.");
+            throw new Exception("Adresa serveru není vyplněna.");
 
         try {
             socket = new Socket(server, port);
@@ -164,7 +164,7 @@ public class Connection extends Thread {
     public void send(String str) throws Exception {
 
         if ( !isConnected() )
-            throw new ConnectionException("Klient není připojen k serveru.");
+            throw new Exception("Klient není připojen k serveru.");
 
         query.setBusy();
 
@@ -190,7 +190,7 @@ public class Connection extends Thread {
     public void loadReply() throws Exception {
 
         if ( !isConnected() )
-            throw new ConnectionException("Klient není připojen k serveru.");
+            throw new Exception("Klient není připojen k serveru.");
 
         if ( query.isBusy() )
             return;
