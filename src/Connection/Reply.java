@@ -14,7 +14,7 @@ import java.util.Iterator;
 public class Reply {
 
     private String message;
-    private Connection connection;
+    private DeprecatedConnection connection;
     private boolean numeric;
 
     // casti zpravy
@@ -62,7 +62,7 @@ public class Reply {
      * @param str
      * @param connection
      */
-    private Reply(String str, Connection connection) {
+    private Reply(String str, DeprecatedConnection connection) {
 
         this.message = str;
         this.connection = connection;
@@ -88,7 +88,7 @@ public class Reply {
      * @param str
      * @param connection
      */
-    public static void create (String str, Connection connection) {
+    public static void create (String str, DeprecatedConnection connection) {
         new Reply(str, connection);
     }
 

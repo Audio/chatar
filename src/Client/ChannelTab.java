@@ -310,7 +310,7 @@ public class ChannelTab extends AbstractTab {
      * @return
      */
     @Override
-    public Connection getConnection () {
+    public DeprecatedConnection getConnection () {
         return server.getConnection();
     }
 

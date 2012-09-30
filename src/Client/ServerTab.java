@@ -24,7 +24,7 @@ public class ServerTab extends AbstractTab {
     private JLabel label_channels;
     private JEditorPane text;
     private String tabName;
-    private SuperConnection connection;
+    private Connection connection;
     /**
      * Přehled všech místností, ve kterých se uživatel nachází.
      */
@@ -114,7 +114,7 @@ public class ServerTab extends AbstractTab {
 
         // Pripojeni na server
         tabName = server;
-        connection = new SuperConnection(server, port);
+        connection = new Connection(server, port);
         connection.setTab(this);
 
         channels = new HashSet<ChannelTab>();
@@ -129,7 +129,7 @@ public class ServerTab extends AbstractTab {
      * @return pridruzene spojeni
      */
     @Override
-    public Connection getConnection () {
+    public DeprecatedConnection getConnection () {
         return null;
     }
 

@@ -1,13 +1,13 @@
 package Client;
 
 import Connection.CommandQuery;
-import Connection.Connection;
+import Connection.DeprecatedConnection;
 import javax.swing.JPanel;
 
 
 public abstract class AbstractTab extends JPanel {
 
-    public Connection getConnection() {
+    public DeprecatedConnection getConnection() {
         return null;
     }
 

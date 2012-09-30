@@ -14,11 +14,11 @@ import java.util.Stack;
 public class CommandQuery {
 
     private Stack<String> commands;
-    private Connection connection;
+    private DeprecatedConnection connection;
     private boolean busy;
     private final char SOH = ''; // znak Start of Heading
 
-    public CommandQuery(Connection connection) {
+    public CommandQuery(DeprecatedConnection connection) {
 
         this.connection = connection;
         this.setBusy(false);

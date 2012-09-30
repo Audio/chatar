@@ -260,7 +260,7 @@ public class GInput extends JPanel {
 
         String msg = textField.getText();
         String room = Input.currentTab.getTabName();
-        Connection con = Input.currentTab.getConnection();
+        DeprecatedConnection con = Input.currentTab.getConnection();
 
         Input.handlePrivMessage(room + " " + msg);
         con.output(con.config.nickname + ": " + msg);

@@ -13,6 +13,7 @@ public class GUI {
     private static GConfig options;
 
     public static void prepareForm() {
+        // TODO inicializovat na lepsim miste
         window = new MainWindow();
     }
 
