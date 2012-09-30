@@ -12,35 +12,21 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 
-/**
- * Panel s výpisem informací o/ze serveru.
- * Základní grafická komponenta při připojování na server.
- *
- * @author Martin Fouček
- */
-public class ServerTab extends AbstractTab {
 
-    private JLabel label_address;
-    private JLabel label_channels;
+public class ServerTab extends AbstractTab implements ServerEventsListener {
+
+    private JLabel addressLabel;
+    private JLabel channelsLabel;
     private JEditorPane text;
     private String tabName;
     private Connection connection;
-    /**
-     * Přehled všech místností, ve kterých se uživatel nachází.
-     */
-    public  HashSet channels;
-    /**
-     * Přehled všech soukromých chatů, které má uživatel otevřené.
-     */
-    public  HashSet privateChats;
+    public HashSet channels;
+    public HashSet privateChats;
 
-    /**
-     * Konstruktor. Vytváří GUI panelu serveru.
-     *
-     * @param address
-     */
+
     public ServerTab(String address) {
 
+        // TODO sem musi rovnout prijit adresa a port
         // Pripojeni na server - analyza
         int upto;
         String server = address;
@@ -59,30 +45,27 @@ public class ServerTab extends AbstractTab {
         top.setBorder( BorderFactory.createEtchedBorder(EtchedBorder.RAISED) );
         GUI.setPreferredSize(top, 700, 50);
 
-        // Nazev serveru a jeho adresa
         JLabel text_address = new JLabel("Server:");
-        label_address = new JLabel("irc://" + server + "/");
+        addressLabel = new JLabel("irc://" + server + "/");
 
         Box r1 = Box.createHorizontalBox();
         r1.setBorder( BorderFactory.createEmptyBorder(10, 0, 0, 0) );
         r1.add(text_address);
         r1.add( Box.createRigidArea( new Dimension(10, 0)) );
-        r1.add(label_address);
+        r1.add(addressLabel);
 
-        // Pocet vytvorenych mistnosti (kanalu) - modifikováno v průběhu připojování
         JLabel text_channels = new JLabel("Počet místností:");
-        label_channels = new JLabel("-");
+        channelsLabel = new JLabel("-");
 
         Box r2 = Box.createHorizontalBox();
         r2.setBorder( BorderFactory.createEmptyBorder() );
         r2.add(text_channels);
         r2.add( Box.createRigidArea( new Dimension(10, 0)) );
-        r2.add(label_channels);
+        r2.add(channelsLabel);
 
         top.add(r1);
         top.add(r2);
 
-        // Panel s textareou
         JPanel textpanel = new JPanel();
         textpanel.setLayout( new BoxLayout(textpanel, BoxLayout.LINE_AXIS) );
         GUI.setPreferredSize(textpanel, 650, 320);
@@ -101,7 +84,6 @@ public class ServerTab extends AbstractTab {
         scrollpanel.setViewportView(text);
         textpanel.add(scrollpanel);
 
-        // Celkove usporadani
         add(top);
         add(textpanel);
 
@@ -115,10 +97,11 @@ public class ServerTab extends AbstractTab {
         // Pripojeni na server
         tabName = server;
         connection = new Connection(server, port);
+        connection.addServerEventListener(this);
         connection.setTab(this);
 
-        channels = new HashSet<ChannelTab>();
-        privateChats = new HashSet<PrivateChatTab>();
+        channels = new HashSet<>();
+        privateChats = new HashSet<>();
 
     }
 
@@ -257,33 +240,27 @@ public class ServerTab extends AbstractTab {
      * Pouzito mj. pri zpracovani vstupu od uzivatele.
      */
     @Override
-    public void setFocus () {
-
+    public void setFocus() {
         Input.currentTab = this;
         connection.setTab(this);
         changeNickname();
         GUI.getTabContainer().setSelectedComponent(this);
         GUI.getMenuBar().toggleDisconectFromServer(true);
         GUI.focusInput();
-
     }
 
-    /**
-     * Zobrazuje počet místností (kanálů) na serveru.
-     *
-     * @param num
-     */
-    public void setChannelsCount (String num) {
-        label_channels.setText(num);
+    public void setChannelsCount(String num) {
+        channelsLabel.setText(num);
     }
 
-    /**
-     * Vymaže obsah chatu.
-     */
     @Override
     public void clearContent() {
         text.setText(null);
     }
 
+    @Override
+    public void messageReceived(String message) {
+        addText(message);
+    }
 
 }

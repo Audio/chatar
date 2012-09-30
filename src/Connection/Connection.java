@@ -18,8 +18,9 @@ public class Connection extends PircBot {
     private AbstractTab tab;
     private boolean authenticated;
 
-    private ArrayList<MyNickChangeListener> myNickChangeListeners;
+    private ArrayList<ServerEventsListener> serverEventsListeners;
     private ArrayList<ChannelEventsListener> channelEventsListeners;
+    private ArrayList<MyNickChangeListener> myNickChangeListeners;
 
 
     public Connection() {
@@ -31,8 +32,9 @@ public class Connection extends PircBot {
         this.port = port;
         this.config = new Config();
         this.authenticated = false;
-        this.myNickChangeListeners = new ArrayList<>();
+        this.serverEventsListeners = new ArrayList<>();
         this.channelEventsListeners = new ArrayList<>();
+        this.myNickChangeListeners = new ArrayList<>();
 
         setName("pokusnyHovado");
         setAutoNickChange(true);
@@ -42,10 +44,6 @@ public class Connection extends PircBot {
             System.out.println( e.getMessage() );
             e.printStackTrace();
         }
-    }
-
-    @Override    protected void onServerResponse(int code, String response) {
-        System.out.println(response);
     }
 
     // TODO pri erroru
@@ -116,18 +114,28 @@ public class Connection extends PircBot {
         getTab().addText(str);
     }
 
-    public void addMyNickChangeListener(MyNickChangeListener listener) {
-        myNickChangeListeners.add(listener);
+    /*         SERVER EVENTS           */
+
+    @Override
+    protected void onServerResponse(int code, String response) {
+        notifyAboutMessageReceived(response);
     }
 
-    public void removeMyNickChangeListener(MyNickChangeListener listener) {
-        myNickChangeListeners.remove(listener);
+    public void addServerEventListener(ServerEventsListener listener) {
+        serverEventsListeners.add(listener);
     }
 
-    public void notifyAboutMyNickChange(String newNickname) {
-        for (MyNickChangeListener listener : myNickChangeListeners)
-            listener.myNickHasChanged(newNickname);
+    public void removeServerEventListener(ServerEventsListener listener) {
+        serverEventsListeners.remove(listener);
     }
+
+    public void notifyAboutMessageReceived(String message) {
+        for (ServerEventsListener listener : serverEventsListeners)
+            listener.messageReceived(message);
+    }
+
+
+    /*        CHANNEL EVENTS           */
 
     public void addChannelEventListener(ChannelEventsListener listener) {
         channelEventsListeners.add(listener);
@@ -195,6 +203,21 @@ public class Connection extends PircBot {
     public void notifyAboutTopicChanged(String initiator, String topic) {
         for (ChannelEventsListener listener : channelEventsListeners)
             listener.topicChanged(initiator, topic);
+    }
+
+    /*        NICKNAME EVENTS          */
+
+    public void addMyNickChangeListener(MyNickChangeListener listener) {
+        myNickChangeListeners.add(listener);
+    }
+
+    public void removeMyNickChangeListener(MyNickChangeListener listener) {
+        myNickChangeListeners.remove(listener);
+    }
+
+    public void notifyAboutMyNickChange(String newNickname) {
+        for (MyNickChangeListener listener : myNickChangeListeners)
+            listener.myNickHasChanged(newNickname);
     }
 
 }
