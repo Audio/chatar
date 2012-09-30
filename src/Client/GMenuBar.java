@@ -5,188 +5,156 @@ import java.awt.Component;
 import java.awt.event.*;
 import javax.swing.*;
 
-/**
- * Horní nabídka - menu aplikace. Sdružuje skupiny tlačítek.
- * Modifikace je prováděna dynamicky - na základě stavu spojení s IRC servery.
- * Dynamicky skrývaná/zobrazovaná tlačítka jsou uvedena jako atributy.
- *
- * @author Martin Fouček
- */
+
 public class GMenuBar extends JMenuBar {
 
-    // jednotliva menu
-    private JMenu menuFile;
-    private JMenu menuServer;
-    private JMenu menuUser;
+    private JMenu userMenu;
 
-    // dynamicky modifovatelna tlacitka
     private JMenuItem disconnectFromAll;
     private JMenuItem disconnectFromServer;
     private JMenuItem closePanel;
 
-    /**
-     * Vytvori menu zakladniho formulare aplikace.
-     */
-    public GMenuBar () {
 
-        // menu 1
-        menuFile = new JMenu("Chatař");
+    public GMenuBar() {
+        createFileMenu();
+        createServerMenu();
+        createUserMenu();
+    }
 
-        // Otevre dialog pro nastaveni.
+    private void createFileMenu() {
+        JMenu menu = new JMenu("Chatař");
+
         JMenuItem settings = new JMenuItem("Nastavení");
         settings.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK) );
         settings.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 GUI.showOptionsDialog(true);
             }
         });
 
-        // Zavření aktuálně otevřeného panelu
         closePanel = new JMenuItem("Zavřít panel");
         closePanel.setVisible(false);
         closePanel.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK) );
         closePanel.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 actionClosePanel();
             }
         });
 
-        // Ukonceni behu aplikace.
         JMenuItem close = new JMenuItem("Ukončit program");
         close.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK) );
         close.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 Client.terminate(0);
             }
         });
 
-        menuFile.add(settings);
-        menuFile.add(closePanel);
-        menuFile.add(close);
+        menu.add(settings);
+        menu.add(closePanel);
+        menu.add(close);
 
-        // menu 2
-        menuServer = new JMenu("Server");
+        add(menu);
+    }
 
-        // Dialog pro nastaveni oblibenych serveru.
+    private void createServerMenu() {
+        JMenu menu = new JMenu("Server");
+
         JMenuItem connect = new JMenuItem("Připojit...");
         connect.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK) );
         connect.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 GUI.showServersDialog(true);
             }
         });
 
-        // Odpojeni od vsech serveru.
         disconnectFromAll = new JMenuItem("Odpojit od všech serverů");
         disconnectFromAll.setVisible(false);
         disconnectFromAll.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK) );
         disconnectFromAll.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 actionDisconnectFromAll();
             }
         });
 
-        // Odpojeni od aktualne vybraneho serveru.
         disconnectFromServer = new JMenuItem("Odpojit od ???");
         disconnectFromServer.setVisible(false);
         disconnectFromServer.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 Input.handleQuit(null);
             }
         });
 
-        menuServer.add(connect);
-        menuServer.add(disconnectFromServer);
-        menuServer.add(disconnectFromAll);
+        menu.add(connect);
+        menu.add(disconnectFromServer);
+        menu.add(disconnectFromAll);
 
-        // menu 3
-        menuUser = new JMenu("Uživatel");
-        menuUser.setVisible(false);
+        add(menu);
+    }
 
-        // Dialog pro zmenu prezdivky
-        JMenuItem change_nickname = new JMenuItem("Změnit přezdívku");
-        change_nickname.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK) );
-        change_nickname.addActionListener( new ActionListener() {
+    private void createUserMenu() {
+        userMenu = new JMenu("Uživatel");
+        userMenu.setVisible(false);
+
+        JMenuItem changeNickname = new JMenuItem("Změnit přezdívku");
+        changeNickname.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK) );
+        changeNickname.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 GUI.showSetNicknameDialog();
             }
         });
 
-        // Dialog pro nastaveni stavu AFK (away from keyboard)
         JMenuItem afk = new JMenuItem("Nastavit nepřítomnost (AFK)");
         afk.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 GUI.showSetAwayDialog();
             }
         });
 
-        // Dialog pro nastaveni stavu Back (rusi AFK)
-        JMenuItem back = new JMenuItem("Zrušit nepřítomnost");
-        back.addActionListener( new ActionListener() {
+        JMenuItem notAfk = new JMenuItem("Zrušit nepřítomnost");
+        notAfk.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 GUI.setBack();
             }
         });
 
-        menuUser.add(change_nickname);
-        menuUser.add(afk);
-        menuUser.add(back);
+        userMenu.add(changeNickname);
+        userMenu.add(afk);
+        userMenu.add(notAfk);
 
-        // naplni menubar
-        add(menuFile);
-        add(menuServer);
-        add(menuUser);
-
+        add(userMenu);
     }
 
-    /**
-     * Zobrazuje / skrývá tlačítko pro odpojení od všech serverů.
-     * 
-     * @param setVisible
-     */
-    public void toggleDisconectFromAll (boolean setVisible) {
+    public void toggleDisconectFromAll(boolean setVisible) {
         disconnectFromAll.setVisible(setVisible);
     }
 
-    /**
-     * Zobrazuje / skrývá tlačítko pro odpojení od konkrétního serveru.
-     *
-     * @param setVisible
-     */
-    public void toggleDisconectFromServer (boolean setVisible) {
-
+    public void toggleDisconectFromServer(boolean setVisible) {
         if (setVisible) {
             String name = Input.currentTab.getServerTab().getTabName();
             disconnectFromServer.setText("Odpojit od " + name);
         }
 
         disconnectFromServer.setVisible(setVisible);
-
     }
 
-    /**
-     * Zobrazuje / skrývá uživatelskou nabídku (změna nicku, nastavení AFK).
-     *
-     * @param setVisible
-     */
-    public void toggleUserMenuBar (boolean setVisible) {
-        menuUser.setVisible(setVisible);
+    public void toggleUserMenuBar(boolean setVisible) {
+        userMenu.setVisible(setVisible);
     }
 
-    /**
-     * Zobrazuje / skrývá tlačítko na zavření panelu.
-     *
-     * @param setVisible
-     */
-    public void toggleClosePanel (boolean setVisible) {
+    public void toggleClosePanel(boolean setVisible) {
         closePanel.setVisible(setVisible);
     }
 
-    /**
-     * Odpojeni od vsech serveru.
-     */
-    private void actionDisconnectFromAll () {
-        
+    private void actionDisconnectFromAll() {
         Component[] array = GUI.getTabContainer().getComponents();
         for (int i = 0; i < array.length; i++) {
             Component component = array[i];
@@ -195,33 +163,26 @@ public class GMenuBar extends JMenuBar {
                 Input.handleQuit(c, null);
             }
         }
-
     }
 
-    /**
-     * Zavření aktuálně otevřeného panelu.
-     */
-    private void actionClosePanel () {
-
+    private void actionClosePanel() {
         AbstractTab tab = Input.currentTab;
 
         if (tab == null)
             return;
 
+        // TODO instanceof ?
         String type = tab.getClass().getSimpleName();
 
+        // TODO switch
         if ( type.equals("GTabChannel") ) {
             Input.handlePart(null);
-        }
-        else if ( type.equals("GTabPrivateChat") ) {
+        } else if ( type.equals("GTabPrivateChat") ) {
             tab.die();
             tab.killMyself();
-        }
-        else {
+        } else {
             Input.handleQuit(null);
         }
-
-
     }
 
 }
