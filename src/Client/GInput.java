@@ -46,7 +46,7 @@ public class GInput extends JPanel {
      */
     public GInput (int width, int height) {
 
-        GUI.setMySize(this, width, height);
+        GUI.setPreferredSize(this, width, height);
         setLayout( new BoxLayout(this, BoxLayout.PAGE_AXIS) );
 
         JPanel inner_panel = new JPanel();
@@ -252,7 +252,7 @@ public class GInput extends JPanel {
         }
 
 
-        if ( Input.currentTab.getClass().getName().equals("Client.GTabServer") ) {
+        if ( Input.currentTab.getClass().getName().equals("Client.ServerTab") ) {
             String err = Output.HTML.mType("error");
             Input.currentTab.addText(err+ "Nelze odeslat zprávu. Toto není chatovací místnost!");
             return;

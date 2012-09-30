@@ -11,20 +11,11 @@ import javax.swing.event.ChangeListener;
  *
  * @author Martin Fouček
  */
-public class GTab extends JTabbedPane {
+public class TabContainer extends JTabbedPane {
 
-    // typy vlozitelnych panelu
-    /**
-     * Typ vložitelného panelu - SERVER.
-     */
+    final public static int PANEL_SUPER_SERVER = 53;
     final public static int PANEL_SERVER  = 50;
-    /**
-     * Typ vložitelného panelu - KANÁL.
-     */
     final public static int PANEL_CHANNEL = 51;
-    /**
-     * Typ vložitelného panelu - SOUKROMÝ CHAT.
-     */
     final public static int PANEL_PRIVATE = 52;
 
     /**
@@ -34,14 +25,14 @@ public class GTab extends JTabbedPane {
      * @param width
      * @param height
      */
-    public GTab (int width, int height) {
+    public TabContainer (int width, int height) {
 
-        GUI.setMySize(this, width, height);
+        GUI.setPreferredSize(this, width, height);
         setTabPlacement(JTabbedPane.BOTTOM);
 
         addChangeListener( new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                GTabWindow ref = (GTabWindow) GUI.getTab().getSelectedComponent();
+                GTabWindow ref = (GTabWindow) GUI.getTabContainer().getSelectedComponent();
                 if (ref == null)
                     return;
                 ref.setFocus();
@@ -62,9 +53,10 @@ public class GTab extends JTabbedPane {
         GTabWindow new_tab = null;
 
         switch (type) {
-            case PANEL_SERVER:  { new_tab = new GTabServer(address); break; }
-            case PANEL_CHANNEL: { new_tab = new GTabChannel(address); break; }
-            case PANEL_PRIVATE: { new_tab = new GTabPrivateChat(address); break; }
+            case PANEL_SUPER_SERVER:  { new_tab = new ServerTab(address); break; }
+            case PANEL_SERVER:  { new_tab = new ServerTab(address); break; }
+            case PANEL_CHANNEL: { new_tab = new ChannelTab(address); break; }
+            case PANEL_PRIVATE: { new_tab = new PrivateChatTab(address); break; }
             default: { throw new ClientException("Snaha o přidání neexistujícího typu panelu."); }
         }
 
@@ -103,7 +95,7 @@ public class GTab extends JTabbedPane {
             tip = "Server " + title;
         }
         else {
-            GTabServer s = new_tab.getServer();
+            ServerTab s = new_tab.getServer();
             index = indexOfComponent(s) + 1;
             tip = "Server " + s.getTabName() + ", ";
             tip += (type == PANEL_CHANNEL) ? "kanál" : "uživatel";

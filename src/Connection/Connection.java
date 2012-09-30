@@ -4,6 +4,7 @@ import Client.*;
 import Config.Config;
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * Objekt třídy Connection komunikuje přes socketové spojení s IRC serverem.
@@ -33,37 +34,27 @@ public class Connection extends Thread {
     private boolean authenticated;
     private boolean closedByServer;
 
+    private ArrayList<MyNickChangeListener> myNickChangeListeners;
+    private ArrayList<ChannelEventsListener> channelEventsListeners;
 
-    /**
-     * Konstruktor, bez pocatecniho nastaveni parametru.
-     */
-    public Connection () {
+
+    public Connection() {
         this (null, 0);
     }
 
-
-    /**
-     * Konstruktor, s nastavenim parametru pro pripojeni.
-     *
-     * @param server
-     * @param port
-     */
-    public Connection (String server, int port) {
-
+    public Connection(String server, int port) {
         this.server = server;
         this.port = port;
         this.query = new CommandQuery(this);
         this.config = new Config();
         this.authenticated = false;
         this.closedByServer = false;
-
+        this.myNickChangeListeners = new ArrayList<>();
+        this.channelEventsListeners = new ArrayList<>();
     }
 
-    /**
-     * Spusti vlakno.
-     */
     @Override
-    public void run( ) {
+    public void run() {
 
         try {
             for (;;) {
@@ -86,8 +77,6 @@ public class Connection extends Thread {
     /**
      * Vraci referenci na objekt CommandQuery,
      * pres ktery komunikuje.
-     *
-     * @return
      */
     public CommandQuery getQuery() {
         return query;
@@ -99,7 +88,7 @@ public class Connection extends Thread {
      *
      * @throws java.lang.Exception
      */
-    public void connect () throws Exception {
+    public void connect() throws Exception {
 
         if (server == null)
             throw new ConnectionException("Adresa serveru není vyplněna.");
@@ -129,7 +118,7 @@ public class Connection extends Thread {
      *
      * @throws java.lang.Exception
      */
-    public void close () throws Exception {
+    public void close() throws Exception {
 
         out.close();
         in.close();
@@ -139,30 +128,23 @@ public class Connection extends Thread {
 
     /**
      * Informace, zda je otevřeno spojení;
-     *
-     * @return
      */
-    public boolean isConnected () {
+    public boolean isConnected() {
         return (socket != null && socket.isConnected() && !closedByServer);
     }
 
     /**
      * Vraci informaci, zda je prezdivka predana parametrem
      * shoda s uzivatelovou aktualne pouzitou prezdivkou.
-     *
-     * @param nickname
-     * @return
      */
-    public boolean isMe (String nickname) {
+    public boolean isMe(String nickname) {
         return nickname.equals(config.nickname);
     }
 
     /**
      * Vraci informaci, zda je uzivatel uspesne prihlaseny k serveru.
-     *
-     * @return
      */
-    public boolean isAuthenticated () {
+    public boolean isAuthenticated() {
         return authenticated;
     }
 
@@ -170,17 +152,16 @@ public class Connection extends Thread {
      * Nastavuje priznak uspesneho prihlaseni k serveru.
      * Dalsi info: Reply/handleCode451()
      */
-    public void authenticate () {
+    public void authenticate() {
         authenticated = true;
     }
 
     /**
      * Odesila serveru zpravy (prikazy).
      *
-     * @param str
      * @throws java.lang.Exception
      */
-    public void send (String str) throws Exception {
+    public void send(String str) throws Exception {
 
         if ( !isConnected() )
             throw new ConnectionException("Klient není připojen k serveru.");
@@ -206,7 +187,7 @@ public class Connection extends Thread {
      *
      * @throws java.lang.Exception
      */
-    public void loadReply () throws Exception {
+    public void loadReply() throws Exception {
 
         if ( !isConnected() )
             throw new ConnectionException("Klient není připojen k serveru.");
@@ -239,10 +220,8 @@ public class Connection extends Thread {
     /**
      * Socketové spojení se ukončuje až po odeslání příkazu QUIT.
      * Je důležité, aby se příkaz QUIT stihl odeslat.
-     *
-     * @param command
      */
-    private void maybeQuit (String command) {
+    private void maybeQuit(String command) {
 
         if ( !command.startsWith("QUIT") )
             return;
@@ -255,28 +234,22 @@ public class Connection extends Thread {
 
     /**
      * Nastavuje port pro navazani spojeni.
-     *
-     * @param port
      */
-    public void setPort (int port) {
+    public void setPort(int port) {
         this.port = port;
     }
 
     /**
      * Nastavuje adresu pro navazani spojeni.
-     *
-     * @param server
      */
-    public void setServer (String server) {
+    public void setServer(String server) {
         this.server = server;
     }
 
     /**
      * Smerovani vystupu CommandQuery do prislusneho panelu.
-     *
-     * @param tab
      */
-    public void setTab (GTabWindow tab) {
+    public void setTab(GTabWindow tab) {
         this.tab = tab;
     }
 
@@ -284,36 +257,111 @@ public class Connection extends Thread {
      * Server v průběhu komunikace může uzavřít spojení a oznámit
      * to pouze chybovou hláškou.
      */
-    public void setClosedByServer () {
+    public void setClosedByServer() {
         closedByServer = true;
     }
 
     /**
      * Vraci referenci na panel, do ktereho momentalne smeruje vystup.
-     *
-     * @return
      */
-    public GTabWindow getTab () {
+    public GTabWindow getTab() {
         return tab;
     }
 
     /**
      * Vraci referenci na panel (SERVER), do ktereho momentalne smeruje vystup,
      * anebo smeruje vystup do nektereho z jeho kanalu.
-     *
-     * @return
      */
-    public GTabServer getServerTab () {
+    public ServerTab getServerTab() {
         return tab.getServer();
     }
 
     /**
      * Tunel pro vypis vystupniho textu do prislusneho panelu.
-     *
-     * @param str
      */
-    public void output (String str) {
+    public void output(String str) {
         getTab().addText(str);
+    }
+
+    public void addMyNickChangeListener(MyNickChangeListener listener) {
+        myNickChangeListeners.add(listener);
+    }
+
+    public void removeMyNickChangeListener(MyNickChangeListener listener) {
+        myNickChangeListeners.remove(listener);
+    }
+
+    public void notifyAboutMyNickChange(String newNickname) {
+        for (MyNickChangeListener listener : myNickChangeListeners)
+            listener.myNickHasChanged(newNickname);
+    }
+
+    public void addChannelEventListener(ChannelEventsListener listener) {
+        channelEventsListeners.add(listener);
+    }
+
+    public void removeChannelEventListener(ChannelEventsListener listener) {
+        channelEventsListeners.remove(listener);
+    }
+
+    public void notifyAboutUserGetsOp(String initiator, String recipient) {
+        for (ChannelEventsListener listener : channelEventsListeners)
+            listener.userGetsOp(initiator, recipient);
+    }
+
+    public void notifyAboutUserLoseOp(String initiator, String recipient) {
+        for (ChannelEventsListener listener : channelEventsListeners)
+            listener.userLoseOp(initiator, recipient);
+    }
+
+    public void notifyAboutUserGetsVoice(String initiator, String recipient) {
+        for (ChannelEventsListener listener : channelEventsListeners)
+            listener.userGetsVoice(initiator, recipient);
+    }
+
+    public void notifyAboutUserLoseVoice(String initiator, String recipient) {
+        for (ChannelEventsListener listener : channelEventsListeners)
+            listener.userLoseVoice(initiator, recipient);
+    }
+
+    public void notifyAboutUserChangesNick(String oldNick, String newNick) {
+        for (ChannelEventsListener listener : channelEventsListeners)
+            listener.userChangesNick(oldNick, newNick);
+    }
+
+    public void notifyAboutUserJoined(String nickname) {
+        for (ChannelEventsListener listener : channelEventsListeners)
+            listener.userJoined(nickname);
+    }
+
+    public void notifyAboutUserLeft(String nickname) {
+        for (ChannelEventsListener listener : channelEventsListeners)
+            listener.userLeft(nickname);
+    }
+
+    public void notifyAboutUserQuit(String nickname, String reason) {
+        for (ChannelEventsListener listener : channelEventsListeners)
+            listener.userQuit(nickname, reason);
+    }
+
+    public void notifyAboutUserKicked(String initiator, String recipient) {
+        for (ChannelEventsListener listener : channelEventsListeners)
+            listener.userKicked(initiator, recipient);
+    }
+
+    public void notifyAboutUserBanned(String initiator, String recipient) {
+        for (ChannelEventsListener listener : channelEventsListeners)
+            listener.userBanned(initiator, recipient);
+    }
+
+    public void notifyAboutUserUnbanned(String initiator, String recipient) {
+        for (ChannelEventsListener listener : channelEventsListeners)
+            listener.userUnbanned(initiator, recipient);
+    }
+
+    public void notifyAboutTopicChanged(String initiator, String topic) {
+        for (ChannelEventsListener listener : channelEventsListeners)
+            listener.topicChanged(initiator, topic);
     }
 
 }

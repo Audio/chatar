@@ -199,7 +199,7 @@ public class Reply {
      * @param name
      * @return
      */
-    private GTabChannel getChannel (String name) {
+    private ChannelTab getChannel (String name) {
         return connection.getServerTab().getChannelByName(name);
     }
 
@@ -210,7 +210,7 @@ public class Reply {
      * @param name
      * @return
      */
-    private GTabPrivateChat getPrivateChat (String name) {
+    private PrivateChatTab getPrivateChat (String name) {
         return connection.getServerTab().getPrivateChatByName(name);
     }
 
@@ -304,18 +304,18 @@ public class Reply {
 
         if ( params.startsWith("Closing Link:") ) {
             // uzavře vsechny místnosti a soukromé chaty
-            GTabServer s = connection.getServerTab();
+            ServerTab s = connection.getServerTab();
 
             Iterator it = s.channels.iterator();
             while ( it.hasNext() ) {
-                GTabChannel ch = (GTabChannel) it.next();
+                ChannelTab ch = (ChannelTab) it.next();
                 ch.die();
                 ch.killMyself();
             }
 
             it = s.privateChats.iterator();
             while ( it.hasNext() ) {
-                GTabPrivateChat ch = (GTabPrivateChat) it.next();
+                PrivateChatTab ch = (PrivateChatTab) it.next();
                 ch.die();
                 ch.killMyself();
             }
@@ -374,7 +374,7 @@ public class Reply {
                 out = modifyAction();
 
             // výstup
-            GTabChannel channel = getChannel(target);
+            ChannelTab channel = getChannel(target);
             if (channel == null)
                 output(out);
             else
@@ -391,11 +391,11 @@ public class Reply {
             }
 
             // otevre okno pro soukromy chat (pokud neni otevreno)
-            GTabPrivateChat chat = getPrivateChat(prefix.nick);
+            PrivateChatTab chat = getPrivateChat(prefix.nick);
             if (chat == null) {
                 try {
                     Input.currentTab = connection.getServerTab();
-                    GUI.addTab(GTab.PANEL_PRIVATE, prefix.nick);
+                    GUI.addTab(TabContainer.PANEL_PRIVATE, prefix.nick);
                     chat = getPrivateChat(prefix.nick);
                     chat.setFocus();
                 } catch (ClientException e) { return; }
@@ -413,7 +413,7 @@ public class Reply {
     private void handleJoin () {
 
         String channel = smileAtMe(params);
-        GTabChannel ch = getChannel(channel);
+        ChannelTab ch = getChannel(channel);
         if (ch == null)
             return;
 
@@ -433,7 +433,7 @@ public class Reply {
             return;
 
         String channel = smileAtMe(params);
-        GTabChannel ch = getChannel(channel);
+        ChannelTab ch = getChannel(channel);
         if (ch == null)
             return;
 
@@ -459,7 +459,7 @@ public class Reply {
         String person = target;
         String reason = smileAtMe(params);
 
-        GTabChannel channel_tab = getChannel(channel);
+        ChannelTab channel_tab = getChannel(channel);
         if (channel_tab == null)
             return;
 
@@ -486,7 +486,7 @@ public class Reply {
         vyparseTarget();
         String topic = smileAtMe(params);
 
-        GTabChannel channel = connection.getServerTab().getChannelByName(target);
+        ChannelTab channel = connection.getServerTab().getChannelByName(target);
         channel.setTopic(topic);
 
         topic = Output.HTML.bold(topic);
@@ -523,7 +523,7 @@ public class Reply {
          */
         Iterator it = connection.getServerTab().channels.iterator();
         while ( it.hasNext() ) {
-            GTabChannel ch = (GTabChannel) it.next();
+            ChannelTab ch = (ChannelTab) it.next();
             if (isMe || ch.hasNick(prefix.nick) ) {
                 output(temp, ch);
                 ch.changeUsersNickname(prefix.nick, new_nickname);
@@ -535,9 +535,9 @@ public class Reply {
          * zmenil prezdivku, prejmenuje se.
          */
         it = connection.getServerTab().privateChats.iterator();
-        GTabPrivateChat pr = null;
+        PrivateChatTab pr = null;
         while ( it.hasNext() ) {
-            pr = (GTabPrivateChat) it.next();
+            pr = (PrivateChatTab) it.next();
             if (isMe) {
                 // oznameni o zmene meho nicku do soukromych mistnosti
                 output(temp, pr);
@@ -546,7 +546,7 @@ public class Reply {
                 // uzivatel, se kterym si pisi soukromne, zmenil prezdivku
                 output(temp, pr);
                 pr.setTabName(new_nickname);
-                GUI.getTab().setTitleAt( GUI.getTab().indexOfTab(prefix.nick) , new_nickname);
+                GUI.getTabContainer().setTitleAt( GUI.getTabContainer().indexOfTab(prefix.nick) , new_nickname);
             }
         }
 
@@ -560,7 +560,7 @@ public class Reply {
         vyparseTarget();
 
         String channel = target;
-        GTabChannel ch = getChannel(channel);
+        ChannelTab ch = getChannel(channel);
         if (ch == null)
             return;
 
@@ -595,7 +595,7 @@ public class Reply {
 
         Iterator it = connection.getServerTab().channels.iterator();
         while ( it.hasNext() ) {
-            GTabChannel ch = (GTabChannel) it.next();
+            ChannelTab ch = (ChannelTab) it.next();
             if ( ch.hasNick(user) ) {
                 ch.removeUser(user);
                 output(temp, ch);
@@ -692,9 +692,9 @@ public class Reply {
 
         output(foo, true);
         Iterator it = connection.getServerTab().channels.iterator();
-        GTabChannel ch = null;
+        ChannelTab ch = null;
         while ( it.hasNext() ) {
-            ch = (GTabChannel) it.next();
+            ch = (ChannelTab) it.next();
             output(foo, ch);
         }
 
@@ -713,9 +713,9 @@ public class Reply {
 
         output(foo, true);
         Iterator it = connection.getServerTab().channels.iterator();
-        GTabChannel ch = null;
+        ChannelTab ch = null;
         while ( it.hasNext() ) {
-            ch = (GTabChannel) it.next();
+            ch = (ChannelTab) it.next();
             output(foo, ch);
         }
 
@@ -800,7 +800,7 @@ public class Reply {
         String channel = target;
         String topic = Output.HTML.bold( smileAtMe(params) );
 
-        GTabChannel ch = getChannel(channel);
+        ChannelTab ch = getChannel(channel);
         output( mType("info") + "Aktuální téma je " + topic, ch);
         ch.setTopic(topic);
 
@@ -821,7 +821,7 @@ public class Reply {
         String channel = params.substring(0, upto);
         params = params.substring(upto + 2);
 
-        GTabChannel ch = getChannel(channel);
+        ChannelTab ch = getChannel(channel);
         if (ch == null)
             return;
 
@@ -845,7 +845,7 @@ public class Reply {
 
         vyparseTarget();
         String channel = target;
-        GTabChannel ch = getChannel(channel);
+        ChannelTab ch = getChannel(channel);
         if (ch == null)
             return;
 
@@ -902,7 +902,7 @@ public class Reply {
         String channel = target;
         String foo     = mType("error") + "Pro tento úkon potřebujete práva operátora.";
 
-        GTabChannel ch = getChannel(channel);
+        ChannelTab ch = getChannel(channel);
 
         if (ch == null)
             return;
@@ -953,7 +953,7 @@ public class Reply {
         // Provedeme update informací?
         // (END of WHOIS se neoznamuje - kod 319)
         // (kod 311 - zacatek WHOIS - maze stavajici info)
-        GTabPrivateChat pc = getPrivateChat(target);
+        PrivateChatTab pc = getPrivateChat(target);
         if (pc == null || type.equals("CODE_318") )
             return;
 

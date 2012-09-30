@@ -210,7 +210,7 @@ public class GConfig extends JFrame implements WindowListener {
         c.password   = password.getPassword().toString();
         c.saveToFile();
 
-        if ( GUI.getTab().getTabCount() == 0) {
+        if ( GUI.getTabContainer().getTabCount() == 0) {
             GUI.getInput().setNickname(c.nickname);
         }
 

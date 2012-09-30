@@ -10,7 +10,7 @@ public class MainWindow extends JFrame {
 
         setTitle("Chatař - IRC klient");
         setSize(700, 500);
-        GUI.setMySize(this, 700, 500);
+        GUI.setPreferredSize(this, 700, 500);
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

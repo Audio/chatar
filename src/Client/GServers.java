@@ -99,7 +99,7 @@ public class GServers extends JFrame implements WindowListener {
         main_panel.add(box);
         getContentPane().add(main_panel);
 
-        setLocationRelativeTo( GUI.getForm() );
+        setLocationRelativeTo( GUI.getWindow() );
         setVisible(true);
         changed = false;
 
@@ -145,7 +145,7 @@ public class GServers extends JFrame implements WindowListener {
 
         String server = (String) list.getSelectedValue();
         try {
-            GUI.addTab(GTab.PANEL_SERVER, server);
+            GUI.addTab(TabContainer.PANEL_SERVER, server);
             close();
         }
         catch (Exception e) {

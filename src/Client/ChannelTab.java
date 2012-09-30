@@ -12,29 +12,29 @@ import javax.swing.text.EditorKit;
 
 /**
  * Panel s výpisem informací o/ze kanálu (channel).
- * Grafická komponenta, s serverem komunikuje přes na instanci GTabServer.
+ * Grafická komponenta, s serverem komunikuje přes na instanci ServerTab.
  *
  * @author Martin Fouček
  */
-public class GTabChannel extends GTabWindow {
+public class ChannelTab extends GTabWindow {
 
     private JList users;
     private DefaultListModel usersModel;
     private JEditorPane infobox;
     private JEditorPane chat;
     private String tabName;
-    private GTabServer server;
+    private ServerTab server;
     private JPopupMenu popup;
     private MouseListener popupListener;
     private String selectedPopupUser;
     private LinkedList<String> tempUserNames;
 
     /**
-     * Konstruktor. Vytváří GUI a lepí se na objekt GTabServer.
+     * Konstruktor. Vytváří GUI a lepí se na objekt ServerTab.
      *
      * @param channel
      */
-    public GTabChannel(String channel) {
+    public ChannelTab(String channel) {
 
         // Konstrukce panelu
         SpringLayout layout = new SpringLayout();
@@ -43,7 +43,7 @@ public class GTabChannel extends GTabWindow {
         // Levy panel s vypisem pripojenych uzivatelu
         JPanel userspanel = new JPanel();
         userspanel.setLayout( new BoxLayout(userspanel, BoxLayout.LINE_AXIS) );
-        GUI.setMySize(userspanel, 200, 375);
+        GUI.setPreferredSize(userspanel, 200, 375);
         userspanel.setBorder( BorderFactory.createEmptyBorder(0, 7, 0, 0) );
         userspanel.setBackground(Color.WHITE);
 
@@ -64,7 +64,7 @@ public class GTabChannel extends GTabWindow {
         users.setCellRenderer( new ListImageRenderer() );
 
         JScrollPane panel = new JScrollPane(users);
-        GUI.setMySize(panel, 250, 355);
+        GUI.setPreferredSize(panel, 250, 355);
 
         scrollpanel.setViewportView(users);
         userspanel.add(scrollpanel);
@@ -72,7 +72,7 @@ public class GTabChannel extends GTabWindow {
         // Pravy obsahovy panel - vypis informaci o kanale; vypis chatu
         JPanel toppanel = new JPanel();
         toppanel.setLayout ( new BoxLayout(toppanel, BoxLayout.LINE_AXIS) );
-        GUI.setMySize(toppanel, 480, 80);
+        GUI.setPreferredSize(toppanel, 480, 80);
         toppanel.setMaximumSize( new Dimension(3200, 100) );
         toppanel.setBorder( BorderFactory.createEtchedBorder() );
 
@@ -91,7 +91,7 @@ public class GTabChannel extends GTabWindow {
 
         JPanel bottompanel = new JPanel();
         bottompanel.setLayout( new BoxLayout(bottompanel, BoxLayout.LINE_AXIS) );
-        GUI.setMySize(bottompanel, 480, 305);
+        GUI.setPreferredSize(bottompanel, 480, 305);
         bottompanel.setBorder( BorderFactory.createEmptyBorder() );
 
         JScrollPane chatscroll = new JScrollPane();
@@ -108,7 +108,7 @@ public class GTabChannel extends GTabWindow {
         // Slepeni horniho a spodniho praveho panelu
         Box rightbox = Box.createVerticalBox();
         rightbox.setBorder( BorderFactory.createEmptyBorder(0, 0, 0, 5) );
-        GUI.setMySize(rightbox, 485, 375);
+        GUI.setPreferredSize(rightbox, 485, 375);
         rightbox.add(toppanel);
         rightbox.add( Box.createRigidArea(new Dimension(0, 5)) );
         rightbox.add(bottompanel);
@@ -292,10 +292,10 @@ public class GTabChannel extends GTabWindow {
         if ( getConnection().isMe(nickname) )
             return;
 
-        GTabPrivateChat pc = getServer().getPrivateChatByName(nickname);
+        PrivateChatTab pc = getServer().getPrivateChatByName(nickname);
         if (pc == null) {
             try {
-                GUI.addTab(GTab.PANEL_PRIVATE, nickname);
+                GUI.addTab(TabContainer.PANEL_PRIVATE, nickname);
                 pc = getServer().getPrivateChatByName(nickname);
             } catch (ClientException e) { }
         }
@@ -315,13 +315,13 @@ public class GTabChannel extends GTabWindow {
     }
 
     /**
-     * Vraci referenci na server (GTabServer), pres ktery je kanal napojen.
+     * Vraci referenci na server (ServerTab), pres ktery je kanal napojen.
      * V pripade serverove mistnosti vraci ref. na sebe.
      *
      * @return
      */
     @Override
-    public GTabServer getServer () {
+    public ServerTab getServer () {
         return server;
     }
 
@@ -475,7 +475,7 @@ public class GTabChannel extends GTabWindow {
     }
 
     /**
-     * Kanal se prilepi na svuj server (GTabServer).
+     * Kanal se prilepi na svuj server (ServerTab).
      * Zatim umisteno v konstruktoru.
      *
      * @param channel
@@ -526,7 +526,7 @@ public class GTabChannel extends GTabWindow {
         Input.currentTab = this;
         getConnection().setTab(this);
         changeNickname();
-        GUI.getTab().setSelectedComponent(this);
+        GUI.getTabContainer().setSelectedComponent(this);
         GUI.getMenuBar().toggleDisconectFromServer(true);
         GUI.focusInput();
 

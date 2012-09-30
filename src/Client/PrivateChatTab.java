@@ -16,7 +16,7 @@ import javax.swing.text.EditorKit;
  *
  * @author Martin Fouček
  */
-public class GTabPrivateChat extends GTabWindow {
+public class PrivateChatTab extends GTabWindow {
 
     private JEditorPane infobox;
     private JEditorPane chat;
@@ -24,16 +24,16 @@ public class GTabPrivateChat extends GTabWindow {
      * Název záložky v tabbed panelu a zároveň přezdívka cílového uživatele.
      */
     public  String tabName;
-    private GTabServer server;
+    private ServerTab server;
     private Color originalColor;
     private Color unreadMessageColor;
 
     /**
-     * Konstruktor. Vytváří GUI a lepí se na objekt GTabServer.
+     * Konstruktor. Vytváří GUI a lepí se na objekt ServerTab.
      *
      * @param nickname
      */
-    public GTabPrivateChat (String nickname) {
+    public PrivateChatTab (String nickname) {
 
         // Konstrukce panelu
         SpringLayout layout = new SpringLayout();
@@ -43,7 +43,7 @@ public class GTabPrivateChat extends GTabWindow {
         // se kterym komunikujeme
         JPanel toppanel = new JPanel();
         toppanel.setLayout (new BoxLayout(toppanel, BoxLayout.LINE_AXIS) );
-        GUI.setMySize(toppanel, 695, 100);
+        GUI.setPreferredSize(toppanel, 695, 100);
         toppanel.setMaximumSize( new Dimension(3200, 120) );
         toppanel.setBorder( BorderFactory.createEtchedBorder() );
 
@@ -63,7 +63,7 @@ public class GTabPrivateChat extends GTabWindow {
         // Obsahovy panel - vypis chatu
         JPanel bottompanel = new JPanel();
         bottompanel.setLayout( new BoxLayout(bottompanel, BoxLayout.LINE_AXIS) );
-        GUI.setMySize(bottompanel, 695, 305);
+        GUI.setPreferredSize(bottompanel, 695, 305);
         bottompanel.setBorder( BorderFactory.createEmptyBorder() );
 
         JScrollPane chatscroll = new JScrollPane();
@@ -109,13 +109,13 @@ public class GTabPrivateChat extends GTabWindow {
     }
 
     /**
-     * Vraci referenci na server (GTabServer), pres ktery je kanal napojen.
+     * Vraci referenci na server (ServerTab), pres ktery je kanal napojen.
      * V pripade serverove mistnosti vraci ref. na sebe.
      *
      * @return
      */
     @Override
-    public GTabServer getServer () {
+    public ServerTab getServer () {
         return server;
     }
 
@@ -178,7 +178,7 @@ public class GTabPrivateChat extends GTabWindow {
     }
 
     /**
-     * Kanál se přilepí na svůj server (instance GTabServer).
+     * Kanál se přilepí na svůj server (instance ServerTab).
      * Také načte informace o druhém uživateli.
      * 
      * @param nickname
@@ -228,7 +228,7 @@ public class GTabPrivateChat extends GTabWindow {
         getConnection().setTab(this);
         changeNickname();
         setToRead(false);
-        GUI.getTab().setSelectedComponent(this);
+        GUI.getTabContainer().setSelectedComponent(this);
         GUI.getMenuBar().toggleDisconectFromServer(true);
         GUI.focusInput();
 
@@ -275,8 +275,8 @@ public class GTabPrivateChat extends GTabWindow {
         if (originalColor != null)
             return;
 
-        int index = GUI.getTab().indexOfComponent(this);
-        originalColor = GUI.getTab().getBackgroundAt(index);
+        int index = GUI.getTabContainer().indexOfComponent(this);
+        originalColor = GUI.getTabContainer().getBackgroundAt(index);
 
     }
 
@@ -290,12 +290,12 @@ public class GTabPrivateChat extends GTabWindow {
 
         setupOriginalColor();
 
-        int index = GUI.getTab().indexOfComponent(this);
+        int index = GUI.getTabContainer().indexOfComponent(this);
 
         if (toRead)
-            GUI.getTab().setBackgroundAt(index, unreadMessageColor);
+            GUI.getTabContainer().setBackgroundAt(index, unreadMessageColor);
         else
-            GUI.getTab().setBackgroundAt(index, originalColor);
+            GUI.getTabContainer().setBackgroundAt(index, originalColor);
 
     }
 

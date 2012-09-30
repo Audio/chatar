@@ -18,13 +18,13 @@ import javax.swing.text.EditorKit;
  *
  * @author Martin Fouček
  */
-public class GTabServer extends GTabWindow {
+public class ServerTab extends GTabWindow {
 
     private JLabel label_address;
     private JLabel label_channels;
     private JEditorPane text;
     private String tabName;
-    private Connection connection;
+    private SuperConnection connection;
     /**
      * Přehled všech místností, ve kterých se uživatel nachází.
      */
@@ -39,7 +39,7 @@ public class GTabServer extends GTabWindow {
      *
      * @param address
      */
-    public GTabServer(String address) {
+    public ServerTab(String address) {
 
         // Pripojeni na server - analyza
         int upto;
@@ -57,7 +57,7 @@ public class GTabServer extends GTabWindow {
         JPanel top = new JPanel();
         top.setLayout( new BoxLayout(top, BoxLayout.PAGE_AXIS) );
         top.setBorder( BorderFactory.createEtchedBorder(EtchedBorder.RAISED) );
-        GUI.setMySize(top, 700, 50);
+        GUI.setPreferredSize(top, 700, 50);
 
         // Nazev serveru a jeho adresa
         JLabel text_address = new JLabel("Server:");
@@ -85,7 +85,7 @@ public class GTabServer extends GTabWindow {
         // Panel s textareou
         JPanel textpanel = new JPanel();
         textpanel.setLayout( new BoxLayout(textpanel, BoxLayout.LINE_AXIS) );
-        GUI.setMySize(textpanel, 650, 320);
+        GUI.setPreferredSize(textpanel, 650, 320);
         textpanel.setBorder( BorderFactory.createEmptyBorder(10, 10, 10, 10) );
         textpanel.setBackground( new Color(255, 255, 255) );
 
@@ -114,11 +114,11 @@ public class GTabServer extends GTabWindow {
 
         // Pripojeni na server
         tabName = server;
-        connection = new Connection(server, port);
+        connection = new SuperConnection(server, port);
         connection.setTab(this);
 
-        channels = new HashSet<GTabChannel>();
-        privateChats = new HashSet<GTabPrivateChat>();
+        channels = new HashSet<ChannelTab>();
+        privateChats = new HashSet<PrivateChatTab>();
 
     }
 
@@ -130,7 +130,7 @@ public class GTabServer extends GTabWindow {
      */
     @Override
     public Connection getConnection () {
-        return connection;
+        return null;
     }
 
     /**
@@ -141,14 +141,14 @@ public class GTabServer extends GTabWindow {
      * @param name
      * @return
      */
-    public GTabChannel getChannelByName (String name) {
+    public ChannelTab getChannelByName (String name) {
 
-        GTabChannel channel = null;
+        ChannelTab channel = null;
         name = name.toLowerCase();
 
         Iterator it = channels.iterator();
         while ( it.hasNext() ) {
-            channel = (GTabChannel) it.next();
+            channel = (ChannelTab) it.next();
             if ( channel.getTabName().toLowerCase().equals(name) )
                 break;
             else
@@ -167,14 +167,14 @@ public class GTabServer extends GTabWindow {
      * @param nickname 
      * @return
      */
-    public GTabPrivateChat getPrivateChatByName (String nickname) {
+    public PrivateChatTab getPrivateChatByName (String nickname) {
 
-        GTabPrivateChat chat = null;
+        PrivateChatTab chat = null;
         nickname = nickname.toLowerCase();
 
         Iterator it = privateChats.iterator();
         while ( it.hasNext() ) {
-            chat = (GTabPrivateChat) it.next();
+            chat = (PrivateChatTab) it.next();
             if ( chat.getTabName().toLowerCase().equals(nickname) )
                 break;
             else
@@ -212,8 +212,10 @@ public class GTabServer extends GTabWindow {
     public void adapt (String foo) {
 
         try {
+            /*
             connection.connect();
             connection.start();
+            */
             GUI.getMenuBar().toggleDisconectFromAll(true);
             GUI.getMenuBar().toggleUserMenuBar(true);
         }
@@ -243,7 +245,7 @@ public class GTabServer extends GTabWindow {
         if ( connection.isConnected() )
             getQuery().disconnect();
 
-        connection.interrupt();
+        // connection.interrupt();
 
     }
 
@@ -254,7 +256,7 @@ public class GTabServer extends GTabWindow {
      */
     @Override
     public CommandQuery getQuery () {
-        return connection.getQuery();
+        return null;
     }
 
     /**
@@ -267,18 +269,6 @@ public class GTabServer extends GTabWindow {
         return tabName;
     }
 
-
-    /**
-     * Vraci referenci sama na sebe.
-     * 
-     * @return
-     */
-    @Override
-    public GTabServer getServer () {
-        return this;
-    }
-
-
     /**
      * Urci sama sebe jako aktualni panel.
      * Pouzito mj. pri zpracovani vstupu od uzivatele.
@@ -289,7 +279,7 @@ public class GTabServer extends GTabWindow {
         Input.currentTab = this;
         connection.setTab(this);
         changeNickname();
-        GUI.getTab().setSelectedComponent(this);
+        GUI.getTabContainer().setSelectedComponent(this);
         GUI.getMenuBar().toggleDisconectFromServer(true);
         GUI.focusInput();
 

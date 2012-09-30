@@ -187,11 +187,11 @@ public class GMenuBar extends JMenuBar {
      */
     private void actionDisconnectFromAll () {
         
-        Component[] array = GUI.getTab().getComponents();
+        Component[] array = GUI.getTabContainer().getComponents();
         for (int i = 0; i < array.length; i++) {
             Component component = array[i];
-            if ( component.getClass().getSimpleName().equals("GTabServer") ) {
-                GTabServer c = (GTabServer) component;
+            if ( component.getClass().getSimpleName().equals("ServerTab") ) {
+                ServerTab c = (ServerTab) component;
                 Input.handleQuit(c, null);
             }
         }

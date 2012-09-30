@@ -5,14 +5,11 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.text.html.HTMLDocument;
 
-/**
- *
- * @author Martin
- */
+
 public class GUI {
 
-    private static GTab tab;
-    private static MainWindow form;
+    private static TabContainer tabContainer;
+    private static MainWindow window;
     private static GInput input;
     private static GMenuBar menuBar;
     private static GServers servers;
@@ -21,61 +18,52 @@ public class GUI {
     /**
      * Vytvori novy formular. Umisti do nej menu a panely pro vlozeni obsahu.
      */
-    public static void prepareForm () {
-
-        form = new MainWindow();
-        prepareMenu();
+    public static void prepareForm() {
+        window = new MainWindow();
+        prepareMenuBar();
         prepareContent();
         input.getTextField().requestFocusInWindow();
-
     }
 
     /**
      * Vytvori zakladni layout formulare.
      * Umisti do nej panel pro obsah (tabbed panel)
      * a textove vstupni pole. Tyto dva panely budou zobrazeny stale.
-     *
-     * @return void
      */
-    private static void prepareContent () {
+    private static void prepareContent() {
 
         // horni a spodni panely
         final int WIDTH = 650;
 
-        tab = new GTab(WIDTH, 400);
+        tabContainer = new TabContainer(WIDTH, 400);
         input = new GInput(WIDTH, 100);
 
         // umisteni panelu ve formulari
-        JPanel content_panel = (JPanel) form.getContentPane();
+        JPanel content_panel = (JPanel) window.getContentPane();
         SpringLayout layout = new SpringLayout();
         content_panel.setLayout(layout);
-        content_panel.add(tab);
+        content_panel.add(tabContainer);
         content_panel.add(input);
 
         // Tab umisten nad Input
-        layout.putConstraint(SpringLayout.WEST, input, 0, SpringLayout.WEST, tab);
-        layout.putConstraint(SpringLayout.NORTH, input, 0, SpringLayout.SOUTH, tab);
+        layout.putConstraint(SpringLayout.WEST, input, 0, SpringLayout.WEST, tabContainer);
+        layout.putConstraint(SpringLayout.NORTH, input, 0, SpringLayout.SOUTH, tabContainer);
         // Roztahovani vertikalni - tab
-        layout.putConstraint(SpringLayout.EAST, content_panel, 0, SpringLayout.EAST, tab);
-        layout.putConstraint(SpringLayout.SOUTH, content_panel, 40, SpringLayout.SOUTH, tab);
+        layout.putConstraint(SpringLayout.EAST, content_panel, 0, SpringLayout.EAST, tabContainer);
+        layout.putConstraint(SpringLayout.SOUTH, content_panel, 40, SpringLayout.SOUTH, tabContainer);
         // Roztahovani hirizontalni - tab, input
         layout.putConstraint(SpringLayout.EAST, content_panel, 0, SpringLayout.EAST, input);
-        layout.putConstraint(SpringLayout.EAST, input, 0, SpringLayout.EAST, tab);
+        layout.putConstraint(SpringLayout.EAST, input, 0, SpringLayout.EAST, tabContainer);
 
-        tab.setVisible(true);
+        tabContainer.setVisible(true);
         input.setVisible(true);
 
     }
 
-    /**
-     * Vytvori objekt typu MenuBar a umisti ho do formulare.
-     *
-     * @return void
-     */
-    private static void prepareMenu () {
+    private static void prepareMenuBar() {
 
         menuBar = new GMenuBar();
-        form.setJMenuBar( menuBar );
+        window.setJMenuBar( menuBar );
         menuBar.setVisible(true);
 
     }
@@ -87,8 +75,8 @@ public class GUI {
      * @param address
      * @throws ClientException
      */
-    public static void addTab (int type, String address) throws ClientException {
-        tab.addTab(type, address);
+    public static void addTab(int type, String address) throws ClientException {
+        tabContainer.addTab(type, address);
     }
 
     /**
@@ -98,11 +86,11 @@ public class GUI {
      * @param c
      * @throws ClientException
      */
-    public static void removeTab (Component c) throws ClientException {
+    public static void removeTab(Component c) throws ClientException {
 
-        tab.removeTab(c);
+        tabContainer.removeTab(c);
 
-        if ( tab.getTabCount() == 0 ) {
+        if ( tabContainer.getTabCount() == 0 ) {
             GUI.getMenuBar().toggleDisconectFromAll(false);
             GUI.getMenuBar().toggleDisconectFromServer(false);
             GUI.getMenuBar().toggleUserMenuBar(false);
@@ -111,29 +99,13 @@ public class GUI {
 
     }
 
-    /**
-     * Nastavi presnou velikost komponenty.
-     *
-     * @param c
-     * @param width
-     * @param height
-     */
-    public static void setExactSize (Component c, int width, int height) {
-
+    public static void setExactSize(Component c, int width, int height) {
         c.setMinimumSize( new Dimension(width, height) );
         c.setPreferredSize( new Dimension(width, height) );
         c.setMaximumSize( new Dimension(width, height) );
-
     }
 
-    /**
-     * Nastaví žádanou velikost komponenty.
-     *
-     * @param c
-     * @param width
-     * @param height
-     */
-    public static void setMySize (Component c, int width, int height) {
+    public static void setPreferredSize(Component c, int width, int height) {
         c.setMinimumSize( new Dimension(width, height) );
         c.setPreferredSize( new Dimension(width, height) );
     }
@@ -145,12 +117,12 @@ public class GUI {
      *
      * @param show
      */
-    public static void showServersDialog (boolean show) {
+    public static void showServersDialog(boolean show) {
 
         if (servers == null)
             servers = new GServers();
 
-        servers.setLocationRelativeTo( getForm() );
+        servers.setLocationRelativeTo( getWindow() );
         servers.setVisible(show);
 
     }
@@ -162,12 +134,12 @@ public class GUI {
      *
      * @param show
      */
-    public static void showOptionsDialog (boolean show) {
+    public static void showOptionsDialog(boolean show) {
 
         if (options == null)
             options = new GConfig();
 
-        options.setLocationRelativeTo( getForm() );
+        options.setLocationRelativeTo( getWindow() );
         options.setVisible(show);
 
     }
@@ -175,7 +147,7 @@ public class GUI {
     /**
      * Okno pro nastaveni duvodu nepritomnosti.
      */
-    public static void showSetAwayDialog () {
+    public static void showSetAwayDialog() {
 
         MessageDialog question = new MessageDialog(MessageDialog.GROUP_INPUT, MessageDialog.TYPE_QUESTION, "Nastavení vlastní zprávy", "Nastavte důvod své nepřítomnosti, nebo nechte pole prázdné.");
         String ans = question.strConfirm;
@@ -194,7 +166,7 @@ public class GUI {
     /**
      * Okno pro nastaveni nové přezdívky.
      */
-    public static void showSetNicknameDialog () {
+    public static void showSetNicknameDialog() {
 
         MessageDialog question = new MessageDialog(MessageDialog.GROUP_INPUT, MessageDialog.TYPE_QUESTION, "Nastavení přezdívky", "Zvolte novou přezdívku");
         String ans = question.strConfirm;
@@ -213,45 +185,24 @@ public class GUI {
     /**
      * Zruseni nepritomnosti. Bez grafickeho vykresleni.
      */
-    public static void setBack () {
+    public static void setBack() {
         Input.getCurrentServer().getQuery().away(null);
     }
 
-
-    /**
-     * Getter pro GForm.
-     *
-     * @return
-     */
-    public static MainWindow getForm() {
-        return form;
+    public static MainWindow getWindow() {
+        return window;
     }
 
-    /**
-     * Getter pro GInput.
-     *
-     * @return
-     */
     public static GInput getInput() {
         return input;
     }
 
-    /**
-     * Getter pro GMenuBar.
-     *
-     * @return
-     */
     public static GMenuBar getMenuBar() {
         return menuBar;
     }
 
-    /**
-     * Getter pro GTab.
-     *
-     * @return
-     */
-    public static GTab getTab() {
-        return tab;
+    public static TabContainer getTabContainer() {
+        return tabContainer;
     }
 
     /**
@@ -259,7 +210,7 @@ public class GUI {
      *
      * @return
      */
-    public static JEditorPane createHTMLPane () {
+    public static JEditorPane createHTMLPane() {
 
         JEditorPane chat = new JEditorPane();
         chat.setContentType("text/html");
@@ -275,10 +226,7 @@ public class GUI {
 
     }
 
-    /**
-     * Nastaví focus na textový vstup.
-     */
-    public static void focusInput () {
+    public static void focusInput() {
         input.getTextField().requestFocus();
     }
 

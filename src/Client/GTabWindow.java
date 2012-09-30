@@ -54,7 +54,7 @@ public abstract class GTabWindow extends JPanel {
      *
      * @return
      */
-    public GTabServer getServer () {
+    public ServerTab getServer () {
         return null;
     }
 

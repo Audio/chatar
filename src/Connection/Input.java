@@ -17,11 +17,11 @@ public class Input {
     public static GTabWindow currentTab;
 
     /**
-     * Reference na použitý GTabServer.
+     * Reference na použitý ServerTab.
      *
      * @return
      */
-    public static GTabServer getCurrentServer () {
+    public static ServerTab getCurrentServer () {
         return currentTab.getServer();
     }
 
@@ -101,19 +101,19 @@ public class Input {
             return;
         }
 
-        GTabServer server = tab.getServer();
+        ServerTab server = tab.getServer();
 
         // pozavira vsechny kanaly
         Iterator it = server.channels.iterator();
         while ( it.hasNext() ) {
-            GTabChannel channel = (GTabChannel) it.next();
+            ChannelTab channel = (ChannelTab) it.next();
             channel.killMyself();
         }
 
         // pozavira soukroma okna
         it = server.privateChats.iterator();
         while ( it.hasNext() ) {
-            GTabPrivateChat chat = (GTabPrivateChat) it.next();
+            PrivateChatTab chat = (PrivateChatTab) it.next();
             chat.killMyself();
         }
 
@@ -122,7 +122,7 @@ public class Input {
         server.die(reason);
         server.killMyself();
 
-        if ( GUI.getTab().getTabCount() == 0 ) {
+        if ( GUI.getTabContainer().getTabCount() == 0 ) {
             Input.currentTab = null;
         }
 
@@ -158,7 +158,7 @@ public class Input {
         // Otevření nového okna při soukromé zprávě (tzn. uživateli)
         if ( user.startsWith("#") == false && getCurrentServer().getPrivateChatByName(user) == null) {
             try {
-                GUI.addTab(GTab.PANEL_PRIVATE, user);
+                GUI.addTab(TabContainer.PANEL_PRIVATE, user);
             } catch (ClientException e) { }
         }
 
@@ -187,15 +187,15 @@ public class Input {
         }
 
         // neotevre panel, co jiz existuje; pouze prepne
-        GTabChannel exists = getCurrentServer().getChannelByName("#" + channel);
+        ChannelTab exists = getCurrentServer().getChannelByName("#" + channel);
         if (exists != null) {
-            GUI.getTab().setSelectedComponent( exists );
+            GUI.getTabContainer().setSelectedComponent( exists );
             clearText();
             return;
         }
 
         try {
-            GUI.addTab(GTab.PANEL_CHANNEL, channel);
+            GUI.addTab(TabContainer.PANEL_CHANNEL, channel);
             currentTab.getQuery().join(channel);
             clearText();
         } catch (ClientException e) { }
@@ -204,7 +204,7 @@ public class Input {
 
     /**
      * Zavre panel se zvolenym nazvem a odejde z kanalu.
-     * Odstrani se take ze seznamu kanalu v objektu GTabServer.
+     * Odstrani se take ze seznamu kanalu v objektu ServerTab.
      *
      * @param channel
      */
@@ -225,7 +225,7 @@ public class Input {
         if ( channel.startsWith("#") )
             channel = channel.substring(1);
 
-        GTabChannel channel_tab = getCurrentServer().getChannelByName("#" + channel);
+        ChannelTab channel_tab = getCurrentServer().getChannelByName("#" + channel);
 
         // overi existenci panelu
         if (channel_tab == null) {
@@ -332,7 +332,7 @@ public class Input {
      */
     public static void handleServer (String address) {
         try {
-            GUI.addTab(GTab.PANEL_SERVER, address);
+            GUI.addTab(TabContainer.PANEL_SUPER_SERVER, address);
             clearText();
         }
         catch (Exception e) {
@@ -401,7 +401,7 @@ public class Input {
      */
     public static void handleClear () {
 
-        if ( GUI.getTab().getTabCount() > 0)
+        if ( GUI.getTabContainer().getTabCount() > 0)
             currentTab.clearContent();
 
         clearText();

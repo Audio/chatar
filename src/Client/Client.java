@@ -32,7 +32,7 @@ public class Client {
     public static void run() {
         init();
         GUI.prepareForm();
-        GUI.getForm().validate();
+        GUI.getWindow().validate();
     }
 
     public static void terminate() {
