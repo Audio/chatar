@@ -175,17 +175,17 @@ public class Input {
         if ( channel.startsWith("#") )
             channel = channel.substring(1);
 
-        ChannelTab channel_tab = getCurrentServer().getChannelTabByName("#" + channel);
+        ChannelTab channelTab = getCurrentServer().getChannelTabByName("#" + channel);
 
         // overi existenci panelu
-        if (channel_tab == null) {
+        if (channelTab == null) {
             clearText();
             return;
         }
 
         // channel_tab.getQuery().leave(channel);
-        channel_tab.die();
-        channel_tab.killMyself();
+        channelTab.die();
+        channelTab.killMyself();
         clearText();
     }
 

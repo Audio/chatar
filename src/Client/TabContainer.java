@@ -39,15 +39,7 @@ public class TabContainer extends JTabbedPane {
 
     }
 
-    /**
-     * Továrna na výrobu panelů :) (záložek - tabs).
-     *
-     * @param type
-     * @param address
-     * @throws Client.ClientException
-     */
     public void addTab(int type, String address) throws ClientException {
-
         AbstractTab tab = null;
 
         switch (type) {
@@ -60,38 +52,22 @@ public class TabContainer extends JTabbedPane {
         tab.adapt(address);
         insertNewTab(tab, type);
         tab.setFocus();
-        GUI.getMenuBar().toggleClosePanel(true);
-
+        MainWindow.getInstance().getGMenuBar().toggleClosePanel(true);
     }
 
-    /**
-     * Odstranění zvolené komponenty (panelu).
-     *
-     * @param c
-     */
-    public void removeTab(Component c) {
-        remove(c);
+    public void removeTab(AbstractTab tab) {
+        remove(tab);
     }
 
-    /**
-     * Vkládá komponenty v pořadí: server, jeho mistnosti, dalsi server..
-     * Serverový panel přidává na konec, ostatní panely přidává za serverový
-     * (za ten, přes který komunikují).
-     *
-     * @param tab
-     * @param type
-     */
     private void insertNewTab(AbstractTab tab, int type) {
-
-        int index = 0;
-        String tip = null;
+        int index;
+        String tip ;
         String title = tab.getTabName();
 
         if (type == PANEL_SERVER) {
             index = getTabCount();
             tip = "Server " + title;
-        }
-        else {
+        } else {
             ServerTab s = tab.getServerTab();
             index = indexOfComponent(s) + 1;
             tip = "Server " + s.getTabName() + ", ";
@@ -101,10 +77,8 @@ public class TabContainer extends JTabbedPane {
 
         insertTab(title, null, tab, tip, index);
 
-        // Panel serveru bude označen (pro přehlednost)
         if (type == PANEL_SERVER)
             setBackgroundAt(index, new Color(238, 232, 170) );
-
     }
 
 }

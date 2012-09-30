@@ -10,28 +10,26 @@ import javax.swing.*;
  * Základní panel, viditelný neustále. Načítá textový vstup od uživatele.
  * Vstup má podobu příkazů nebo obyčejného textu (zpráva na odeslání
  * při komunikaci s ostatními uživateli).
- *
- * @author Martin Fouček
  */
 public class GInput extends JPanel {
 
     private JButton button;
     private JTextField textField;
 
-    // vyctovy typ obsahujici povolene prikazy ke zpracovani
-    private enum Allowed {
+    private enum Commands {
 
         UNKNOWN, ACTION, AFK, AWAY, BACK, CLEAR, JOIN, KICK, LEAVE, ME, MODE,
         NAMES, NICK, OPER, PART, PRIVMSG, QUIT, SERVER, TOPIC, WHOIS
         ;
 
-        public static Allowed fromString(String Str) {
+        public static Commands fromString(String Str) {
             try {
                 return valueOf(Str);
             }
-            catch (Exception e){ return Allowed.UNKNOWN; }
+            catch (Exception e){ return Commands.UNKNOWN; }
         }
     };
+
 
     /**
      * Zkonstruuje spodni panel. Na nem se bude nachazet tlacitko
@@ -40,12 +38,8 @@ public class GInput extends JPanel {
      * od serveru atd.). Textove pole slouzi pro odesilani textovych
      * zprav do kanalu (je-li uzivatel pripojen) a odesilani prikazu
      * vybranemu serveru.
-     * 
-     * @param width
-     * @param height
      */
-    public GInput (int width, int height) {
-
+    public GInput(int width, int height) {
         GUI.setPreferredSize(this, width, height);
         setLayout( new BoxLayout(this, BoxLayout.PAGE_AXIS) );
 
@@ -56,20 +50,12 @@ public class GInput extends JPanel {
         button = new JButton("Chatař");
         button.setToolTipText("Kliknutím nastavíte přezdívku (vyžaduje aktivní připojení na server)");
         button.addActionListener( new ActionListener() {
-
-            /**
-             * Změna přezdívky při kliku na tlačítko.
-             * Použitelné jen v případě, že je uživatel připojen k serveru.
-             */
             public void actionPerformed(ActionEvent e) {
-
                 if (Input.currentTab == null)
                     return;
 
                 GUI.showSetNicknameDialog();
-
             }
-
         });
 
         textField = new JTextField(510);
@@ -78,7 +64,7 @@ public class GInput extends JPanel {
         // Zpracování události po odentrování
         textField.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                actionInput();
+                handleInputText();
             }
         });
 
@@ -97,59 +83,35 @@ public class GInput extends JPanel {
         inner_panel.add(textField);
 
         add(inner_panel);
-
     }
 
-    /**
-     * Vraci referenci na tlacitko.
-     *
-     * @return
-     */
     public JButton getButton() {
         return button;
     }
 
-    /**
-     * Vraci referenci na textove pole.
-     *
-     * @return
-     */
     public JTextField getTextField() {
         return textField;
     }
 
-    /**
-     * Na tlacitko vepise nove zvolenou prezdivku.
-     * 
-     * @param nick
-     */
-    public void setNickname (String nick) {
+    public void setNickname(String nick) {
         button.setText(nick);
     }
 
-    /**
-     * Analyzuje a zpracuje vstupni text.
-     */
-    private void actionInput () {
-
-        String input_text = textField.getText();
-        if (input_text.trim().isEmpty())
+    private void handleInputText() {
+        String inputText = textField.getText();
+        if ( inputText.trim().isEmpty() )
             return;
 
-        if ( input_text.startsWith("/") )
+        if ( inputText.startsWith("/") )
             handleCommand();
         else
             handleMessage();
-
     }
 
     /**
      * Práce s historií příkazů.
-     *
-     * @param e
      */
-    private void browseHistory (KeyEvent e) {
-
+    private void browseHistory(KeyEvent e) {
         int c = e.getKeyCode();
         String command = "";
 
@@ -167,9 +129,9 @@ public class GInput extends JPanel {
         e.consume();
 
         // Vypíše příkaz z historie.
-        GUI.getInput().getTextField().setText(command);
-        GUI.getInput().getTextField().selectAll();
-
+        JTextField field = MainWindow.getInstance().getGInput().getTextField();
+        field.setText(command);
+        field.selectAll();
     }
 
     /**
@@ -183,29 +145,25 @@ public class GInput extends JPanel {
      *
      * Feature: příkazy přidávány do historie příkazů.
      */
-    private void handleCommand () {
-
-        String input_text = textField.getText();
-        String command = null;
+    private void handleCommand() {
+        String inputText = textField.getText();
+        String command;
         String params = null;
         int upto;
 
-        if ( (upto = input_text.indexOf(" ") ) > -1 ) {
-            command = input_text.substring(1, upto);
-            params  = input_text.substring(upto + 1);
+        if ( (upto = inputText.indexOf(" ") ) > -1 ) {
+            command = inputText.substring(1, upto);
+            params  = inputText.substring(upto + 1);
         }
         else {
-            command = input_text.substring(1);
+            command = inputText.substring(1);
         }
 
         command = command.toUpperCase();
 
+        CommandHistory.add(inputText);
 
-        // historie příkazů
-        CommandHistory.add(input_text);
-
-
-        switch ( Allowed.fromString(command) ) {
+        switch ( Commands.fromString(command) ) {
             case UNKNOWN:    { Input.showError(command); break; }
             case QUIT:    { Input.handleQuit(params); break; }
             case PRIVMSG: { Input.handlePrivMessage(params); break; }
@@ -227,30 +185,16 @@ public class GInput extends JPanel {
             case ACTION:  { Input.handleMe(params); break; }
 
             case SERVER:  { Input.handleServer(params); break; }
-
-            // DEBUG - makra
-            // case A:       { Input.handleServer("irc.mmoirc.com"); break; }
-            // case B:       { Input.handleJoin("hokus"); break; }
         }
-
     }
 
-    /**
-     * Odesle zpravu do vybrane mistnosti / soukromeho okna.
-     * Pokud neni aktivni zadne z predchozich oken,
-     * oznami uzivateli, ze ma smulu; zpravu v textovem
-     * policku ponecha.
-     *
-     * Po korektnim odeslani zpravy ji zobrazi take v panelu.
-     */
     private void handleMessage () {
-
         if (Input.getCurrentServer() == null) {
             Input.showNoConnectionError();
             return;
         }
 
-
+        // TODO instanceof ?
         if ( Input.currentTab.getClass().getName().equals("Client.ServerTab") ) {
             String err = Output.HTML.mType("error");
             Input.currentTab.addText(err+ "Nelze odeslat zprávu. Toto není chatovací místnost!");
@@ -263,7 +207,6 @@ public class GInput extends JPanel {
 
         Input.handlePrivMessage(room + " " + msg);
         con.output(con.config.nickname + ": " + msg);
-
     }
 
 }

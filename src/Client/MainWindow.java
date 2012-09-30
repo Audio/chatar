@@ -70,8 +70,8 @@ public class MainWindow extends JFrame {
         tabContainer.addTab(type, address);
     }
 
-    public void removeTab(Component c) throws ClientException {
-        tabContainer.removeTab(c);
+    public void removeTab(AbstractTab tab) throws ClientException {
+        tabContainer.removeTab(tab);
 
         if ( tabContainer.getTabCount() == 0 ) {
             menuBar.toggleDisconectFromAll(false);
