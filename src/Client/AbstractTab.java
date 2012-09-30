@@ -1,12 +1,12 @@
 package Client;
 
-import Connection.CommandQuery;
 import Connection.DeprecatedConnection;
 import javax.swing.JPanel;
 
 
 public abstract class AbstractTab extends JPanel {
 
+    // TODO pryc
     public DeprecatedConnection getConnection() {
         return null;
     }
@@ -60,7 +60,7 @@ public abstract class AbstractTab extends JPanel {
     // TODO ehm, finalize?
     public void killMyself() {
         try {
-            GUI.removeTab(this);
+            MainWindow.getInstance().removeTab(this);
             finalize();
         }
         catch (Exception e) { }

@@ -396,7 +396,7 @@ public class Reply {
             if (chat == null) {
                 try {
                     Input.currentTab = connection.getServerTab();
-                    GUI.addTab(TabContainer.PANEL_PRIVATE, prefix.nick);
+                    MainWindow.getInstance().addTab(TabContainer.PANEL_PRIVATE, prefix.nick);
                     chat = getPrivateChat(prefix.nick);
                     chat.setFocus();
                 } catch (ClientException e) { return; }

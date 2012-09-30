@@ -295,7 +295,7 @@ public class ChannelTab extends AbstractTab {
         PrivateChatTab pc = getServerTab().getPrivateChatByName(nickname);
         if (pc == null) {
             try {
-                GUI.addTab(TabContainer.PANEL_PRIVATE, nickname);
+                MainWindow.getInstance().addTab(TabContainer.PANEL_PRIVATE, nickname);
                 pc = getServerTab().getPrivateChatByName(nickname);
             } catch (ClientException e) { }
         }
@@ -479,6 +479,7 @@ public class ChannelTab extends AbstractTab {
             if (channel.startsWith("#")) {
                 channel = channel.substring(1);
             }
+            // TODO prasečina
             server = Input.getCurrentServer();
             Input.getCurrentServer().channels.add(this);
             getConnection().setTab(this);

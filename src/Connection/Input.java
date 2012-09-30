@@ -158,7 +158,7 @@ public class Input {
         // Otevření nového okna při soukromé zprávě (tzn. uživateli)
         if ( user.startsWith("#") == false && getCurrentServer().getPrivateChatByName(user) == null) {
             try {
-                GUI.addTab(TabContainer.PANEL_PRIVATE, user);
+                MainWindow.getInstance().addTab(TabContainer.PANEL_PRIVATE, user);
             } catch (ClientException e) { }
         }
 
@@ -195,7 +195,7 @@ public class Input {
         }
 
         try {
-            GUI.addTab(TabContainer.PANEL_CHANNEL, channel);
+            MainWindow.getInstance().addTab(TabContainer.PANEL_CHANNEL, channel);
             // currentTab.getQuery().join(channel);
             clearText();
         } catch (ClientException e) { }
@@ -332,7 +332,7 @@ public class Input {
      */
     public static void handleServer (String address) {
         try {
-            GUI.addTab(TabContainer.PANEL_SERVER, address);
+            MainWindow.getInstance().addTab(TabContainer.PANEL_SERVER, address);
             clearText();
         }
         catch (Exception e) {

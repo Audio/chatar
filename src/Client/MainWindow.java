@@ -1,5 +1,6 @@
 package Client;
 
+import java.awt.Component;
 import javax.swing.*;
 
 
@@ -63,6 +64,21 @@ public class MainWindow extends JFrame {
         tabContainer.setVisible(true);
         input.setVisible(true);
         input.getTextField().requestFocusInWindow();
+    }
+
+    public void addTab(int type, String address) throws ClientException {
+        tabContainer.addTab(type, address);
+    }
+
+    public void removeTab(Component c) throws ClientException {
+        tabContainer.removeTab(c);
+
+        if ( tabContainer.getTabCount() == 0 ) {
+            menuBar.toggleDisconectFromAll(false);
+            menuBar.toggleDisconectFromServer(false);
+            menuBar.toggleUserMenuBar(false);
+            menuBar.toggleClosePanel(false);
+        }
     }
 
     public TabContainer getTabContainer() {

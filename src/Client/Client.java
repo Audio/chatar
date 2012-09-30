@@ -21,8 +21,7 @@ public class Client {
 
     public static void run() {
         ClientLogger.enable();
-        GUI.prepareForm();
-        GUI.getWindow().validate();
+        MainWindow.getInstance().validate();
     }
 
     public static void terminate(int returnCode) {

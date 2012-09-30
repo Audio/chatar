@@ -11,37 +11,6 @@ public class GUI {
     private static GConfig options;
 
 
-    /**
-     * Pridani obsahu. Typ obsahu je urcen tridou GTab.
-     *
-     * @param type GTab
-     * @param address
-     * @throws ClientException
-     */
-    public static void addTab(int type, String address) throws ClientException {
-        getTabContainer().addTab(type, address);
-    }
-
-    /**
-     * Odebrani zvoleneho obsahu (zalozky).
-     * Neexistuje-li dalsi zalozka, skryje tlačítka na odpojení od serverů.
-     *
-     * @param c
-     * @throws ClientException
-     */
-    public static void removeTab(Component c) throws ClientException {
-
-        getTabContainer().removeTab(c);
-
-        if ( getTabContainer().getTabCount() == 0 ) {
-            GUI.getMenuBar().toggleDisconectFromAll(false);
-            GUI.getMenuBar().toggleDisconectFromServer(false);
-            GUI.getMenuBar().toggleUserMenuBar(false);
-            GUI.getMenuBar().toggleClosePanel(false);
-        }
-
-    }
-
     public static void setExactSize(Component c, int width, int height) {
         c.setMinimumSize( new Dimension(width, height) );
         c.setPreferredSize( new Dimension(width, height) );
