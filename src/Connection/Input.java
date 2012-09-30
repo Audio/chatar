@@ -3,76 +3,43 @@ package Connection;
 import Client.*;
 import java.util.Iterator;
 
+
 /**
  * Zpracovává vstup od uživatele (pouze příkazy, které zná). Seznam známých
  * (povolených) příkazů určuje třída GInput, která příkazy načítá.
- *
- * @author Martin Fouček
  */
 public class Input {
     
-    /**
-     * Aktuálně použivaná záložka tabbed panelu.
-     */
     public static AbstractTab currentTab;
 
-    /**
-     * Reference na použitý ServerTab.
-     *
-     * @return
-     */
-    public static ServerTab getCurrentServer () {
+
+    public static ServerTab getCurrentServer() {
         return currentTab.getServerTab();
     }
 
-    /**
-     * Příznak, zda je právě používaným panelem kanál.
-     *
-     * @return
-     */
-    public static boolean isActiveChannel () {
+    public static boolean isChannelTabActive() {
+        // TODO instanceof? instanceof ChannelTab
         return currentTab.getClass().getSimpleName().equals("GTabChannel");
     }
 
-    /**
-     * Tunel pro vystup textu do aktualniho panelu.
-     *
-     * @param str
-     */
-    public static void output (String str) {
+    public static void outputToCurrentTab(String str) {
         currentTab.getConnection().getTab().addText(str);
     }
 
-    /**
-     * Odstrani text z textoveho pole (vstup uzivatele).
-     * Provadi se v pripade validni syntaxe vkladaneho prikazu.
-     */
-    public static void clearText () {
-        GUI.getInput().getTextField().setText(null);
+    public static void clearText() {
+        MainWindow.getInstance().getGInput().getTextField().setText(null);
     }
 
-    /**
-     * Overuje stav pripojeni.
-     * Vetsina prikazu vyzaduje jiz otevrene pripojeni.
-     *
-     * @return
-     */
-    public static boolean isConnected () {
-        return (currentTab != null && currentTab.getConnection().isConnected());
+    public static boolean isConnected() {
+        return (currentTab != null && currentTab.getConnection().isConnected() );
     }
 
-    /**
-     * Oznameni uzivateli, ze neni pripojen k zadnemu serveru.
-     */
-    public static void connectionError () {
+    public static void showNoConnectionError() {
         new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Připojení nedostupné",
                 "Nejste připojen/a k žádnému serveru.");
     }
 
-    /**
-     * Oznameni uzivateli, ze nema prepnuto na panel nejakeho kanalu.
-     */
-    public static void activeChannelError () {
+    public static void showNotActiveChannelError() {
         new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_WARN, "Přepni si na kanál",
                 "Aktivním oknem není kanál (channel).");
     }
@@ -81,8 +48,6 @@ public class Input {
      * Uzavre vsechny kanaly pridruzene k serveru.
      * Uzavre panel serveru a ukonci spojeni prikazem QUIT
      * a uzavrenim socketoveho spojeni.
-     *
-     * @param reason
      */
     public static void handleQuit (String reason) {
         handleQuit(Input.currentTab, reason);
@@ -90,14 +55,10 @@ public class Input {
 
     /**
      * Uzavira spojeni - nikoli aktualniho panelu, ale vybraneho.
-     *
-     * @param tab
-     * @param reason
      */
     public static void handleQuit (AbstractTab tab, String reason) {
-
         if (currentTab == null) {
-            connectionError();
+            showNoConnectionError();
             return;
         }
 
@@ -125,19 +86,16 @@ public class Input {
         if ( GUI.getTabContainer().getTabCount() == 0 ) {
             Input.currentTab = null;
         }
-
     }
 
     /**
      * Odesle soukromou zpravu vybranemu uzivateli,
      * nebo odesle zpravu do vybraneho kanalu.
-     *
-     * @param params
      */
     public static void handlePrivMessage (String params) {
-
         if (!isConnected()) {
-            connectionError(); return;
+            showNoConnectionError();
+            return;
         }
 
         String user;
@@ -145,7 +103,7 @@ public class Input {
         int upto;
 
         if ((upto = params.indexOf(" ")) == -1) {
-            output( mType("error") + "Špatná syntaxe příkazu. Použijte /privmsg prijemce zprava");
+            outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /privmsg prijemce zprava");
             return;
         }
 
@@ -161,24 +119,20 @@ public class Input {
                 MainWindow.getInstance().addTab(TabContainer.PANEL_PRIVATE, user);
             } catch (ClientException e) { }
         }
-
     }
 
     /**
      * Pripoji se na vybrany kanal.
      * Otevre novy panel pro komunikaci na zminenem kanale.
-     *
-     * @param channel
      */
-    public static void handleJoin (String channel) {
-
-        if (!isConnected()) {
-            connectionError();
+    public static void handleJoin(String channel) {
+        if ( !isConnected() ) {
+            showNoConnectionError();
             return;
         }
 
         if (channel == null || channel.trim().length() == 0) {
-            output( mType("error") + "Špatná syntaxe příkazu. Použijte /join nazev_kanalu");
+            outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /join nazev_kanalu");
             return;
         }
 
@@ -199,25 +153,21 @@ public class Input {
             // currentTab.getQuery().join(channel);
             clearText();
         } catch (ClientException e) { }
-
     }
 
     /**
      * Zavre panel se zvolenym nazvem a odejde z kanalu.
      * Odstrani se take ze seznamu kanalu v objektu ServerTab.
-     *
-     * @param channel
      */
-    public static void handlePart (String channel) {
-
+    public static void handlePart(String channel) {
         if (!isConnected()) {
-            connectionError(); return;
+            showNoConnectionError(); return;
         }
 
         if (channel == null || channel.trim().length() == 0) {
             channel = currentTab.getTabName();
-            if ( !isActiveChannel() ) {
-                activeChannelError();
+            if ( !isChannelTabActive() ) {
+                showNotActiveChannelError();
                 return;
             }
         }
@@ -237,45 +187,37 @@ public class Input {
         channel_tab.die();
         channel_tab.killMyself();
         clearText();
-
     }
 
     /**
      * Mění přezdívku uživatele.
-     *
-     * @param nick
      */
-    public static void handleNick (String nick) {
-
-        if (!isConnected()) {
-            connectionError(); return;
+    public static void handleNick(String nick) {
+        if ( !isConnected() ) {
+            showNoConnectionError(); return;
         }
         
         // kontrola syntaxe
         if (nick == null || nick.trim().length() == 0) {
-            output( mType("error") + "Nebyla zadána nová přezdívka.");
+            outputToCurrentTab( mType("error") + "Nebyla zadána nová přezdívka.");
             return;
         }
 
         // getCurrentServer().getQuery().nick(nick);
         clearText();
-
     }
 
     /**
      * Meni tema ve vybranem kanale.
-     *
-     * @param topic
      */
-    public static void handleTopic (String topic) {
-
+    public static void handleTopic(String topic) {
         if (!isConnected()) {
-            connectionError();
+            showNoConnectionError();
             return;
         }
 
         if ( !currentTab.getClass().getSimpleName().equals("GTabChannel") ) {
-            output( mType("error") + "Téma lze změnit pouze ve vybraném kanále.");
+            outputToCurrentTab( mType("error") + "Téma lze změnit pouze ve vybraném kanále.");
             return;
         }
 
@@ -285,52 +227,43 @@ public class Input {
         String channel = currentTab.getTabName().substring(1);
         // currentTab.getQuery().topic(channel, topic );
         clearText();
-
     }
     
     /**
      * Zpracovani prikazu NAMES.
-     * 
-     * @param channels
      */
-    public static void handleNames (String channels) {
+    public static void handleNames(String channels) {
         // currentTab.getQuery().names(channels);
         clearText();
     }
 
     /**
      * Zpracovani prikazu MODE.
-     *
-     * @param params
      */
-    public static void handleMode (String params) {
-
+    public static void handleMode(String params) {
         if (params != null && params.trim().length() > 0) {
             params = params.trim();
         }
         else {
-            output( mType("error") + "Příkaz MODE: nesprávná syntaxe příkazu. Použijte /mode {UZIVATEL|KANAL}");
+            outputToCurrentTab( mType("error") + "Příkaz MODE: nesprávná syntaxe příkazu. Použijte /mode {UZIVATEL|KANAL}");
             return;
         }
 
         // currentTab.getQuery().mode(params);
         clearText();
-
     }
 
     /**
      * Ukonci program.
      */
-    public static void handleShutdown () {
+    public static void handleShutdown() {
         Client.terminate(0);
     }
 
     /**
      * Pripojeni na zvoleny server.
-     *
-     * @param address
      */
-    public static void handleServer (String address) {
+    public static void handleServer(String address) {
         try {
             MainWindow.getInstance().addTab(TabContainer.PANEL_SERVER, address);
             clearText();
@@ -346,10 +279,9 @@ public class Input {
      *
      * @param params
      */
-    public static void handleKick (String params) {
-
-        if (!isConnected()) {
-            connectionError();
+    public static void handleKick(String params) {
+        if ( !isConnected() ) {
+            showNoConnectionError();
             return;
         }
 
@@ -359,24 +291,20 @@ public class Input {
         String syntax = mType("error") + "Nesprávná syntaxe příkazu: KICK #kanal uzivatel [:duvod]";
         String match = "#[a-zA-Z_0-9]+ [a-zA-Z_0-9]+( :.+)?";
         if ( !params.matches(match) ) {
-            output(syntax);
+            outputToCurrentTab(syntax);
             return;
         }
 
         // currentTab.getQuery().kick(params);
         clearText();
-
     }
 
     /**
      * Nastavení ci zrušení nepřítomnosti (AFK - away from keyboard).
-     *
-     * @param params
      */
-    public static void handleAway (String params) {
-
+    public static void handleAway(String params) {
         if (!isConnected()) {
-            connectionError();
+            showNoConnectionError();
             return;
         }
 
@@ -388,37 +316,31 @@ public class Input {
             */
 
         clearText();
-
     }
 
     /**
      * Zrušení nepřítomnosti (AFK).
      */
-    public static void handleBack () {
+    public static void handleBack() {
         handleAway(null);
     }
 
     /**
      * Vymaže obsah aktualního panelu (záložky).
      */
-    public static void handleClear () {
-
+    public static void handleClear() {
         if ( GUI.getTabContainer().getTabCount() > 0)
             currentTab.clearContent();
 
         clearText();
-
     }
 
     /**
      * Žádost uživatele o přidělení práv operátora (mode +o).
-     *
-     * @param params
      */
-    public static void handleOper (String params) {
-
-        if (!isConnected()) {
-            connectionError();
+    public static void handleOper(String params) {
+        if ( !isConnected() ) {
+            showNoConnectionError();
             return;
         }
 
@@ -426,23 +348,20 @@ public class Input {
         clearText();
 
         if (params == null || params.length() == 0 || params.indexOf(" ") == -1) {
-            output( mType("error") + "Špatná syntaxe příkazu. Použijte /oper uzivatel heslo");
+            outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /oper uzivatel heslo");
             return;
         }
 
         // getCurrentServer().getQuery().oper(params);
-
     }
 
     /**
      * Informace o uživateli.
-     *
-     * @param params
      */
-    public static void handleWhois (String params) {
+    public static void handleWhois(String params) {
         
         if (!isConnected()) {
-            connectionError();
+            showNoConnectionError();
             return;
         }
 
@@ -450,28 +369,24 @@ public class Input {
         clearText();
 
         if (params == null || params.length() == 0) {
-            output( mType("error") + "Špatná syntaxe příkazu. Použijte /whois [server ]uzivatel");
+            outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /whois [server ]uzivatel");
             return;
         }
 
         // getCurrentServer().getQuery().whois(params);
-
     }
 
     /**
      * Vypíše do kanálu, že uživatel provádí akci speficikovanou parametrem.
-     * 
-     * @param params
      */
-    public static void handleMe (String params) {
-
+    public static void handleMe(String params) {
         if (!isConnected()) {
-            connectionError();
+            showNoConnectionError();
             return;
         }
 
-        if ( !isActiveChannel() ) {
-            activeChannelError();
+        if ( !isChannelTabActive() ) {
+            showNotActiveChannelError();
             return;
         }
 
@@ -485,34 +400,26 @@ public class Input {
         }
 
         // getCurrentServer().getQuery().me(channel, params);
-
     }
 
     /**
      * Oznámení, že vložený příkaz nelze vykonat, neboť nemá obsluhu.
-     *
-     * @param invalidCommand
      */
-    public static void showError (String invalidCommand) {
-
+    public static void showError(String invalidCommand) {
         if (Input.currentTab == null) {
             new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Neznámý příkaz",
                     "Neznámý příkaz " + invalidCommand.toUpperCase() + ".");
         }
         else {
             String err = Output.HTML.color( mType("error"), Output.HTML.RED);
-            output(err + " Neznámý přijatý příkaz: " + invalidCommand);
+            outputToCurrentTab(err + " Neznámý přijatý příkaz: " + invalidCommand);
         }
-
     }
 
     /**
      * Tunýlek pro stejnojmennou metodu v Output.HTML - kvůli přehlednosti.
-     *
-     * @param str
-     * @return
      */
-    public static String mType (String str) {
+    public static String mType(String str) {
         return Output.HTML.mType(str);
     }
 

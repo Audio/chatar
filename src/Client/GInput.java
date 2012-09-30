@@ -247,7 +247,7 @@ public class GInput extends JPanel {
     private void handleMessage () {
 
         if (Input.getCurrentServer() == null) {
-            Input.connectionError();
+            Input.showNoConnectionError();
             return;
         }
 

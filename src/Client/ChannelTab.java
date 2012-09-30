@@ -473,7 +473,7 @@ public class ChannelTab extends AbstractTab {
     public void adapt (String channel) {
 
         if (Input.getCurrentServer() == null) {
-            Input.connectionError();
+            Input.showNoConnectionError();
         }
         else {
             if (channel.startsWith("#")) {

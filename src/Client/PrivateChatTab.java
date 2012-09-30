@@ -176,7 +176,7 @@ public class PrivateChatTab extends AbstractTab {
     public void adapt(String nickname) {
 
         if (Input.getCurrentServer() == null) {
-            Input.connectionError();
+            Input.showNoConnectionError();
         }
         else {
             server = Input.getCurrentServer();
