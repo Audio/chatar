@@ -2,7 +2,6 @@ package Connection;
 
 import Client.*;
 import Config.Config;
-import java.io.*;
 import java.util.ArrayList;
 import org.jibble.pircbot.*;
 
@@ -10,13 +9,10 @@ import org.jibble.pircbot.*;
 // TODO threading
 public class Connection extends PircBot {
 
-    private String server;
-    private int port;
-
-    // TODO public config jo?
+    // TODO public config jo? bere se z nej nickname asi
+    // TODO config tu nema co delat bych rek
     public Config config;
     private AbstractTab tab;
-    private boolean authenticated;
 
     private ArrayList<ServerEventsListener> serverEventsListeners;
     private ArrayList<ChannelEventsListener> channelEventsListeners;
@@ -28,10 +24,7 @@ public class Connection extends PircBot {
     }
 
     public Connection(String server, int port) {
-        this.server = server;
-        this.port = port;
         this.config = new Config();
-        this.authenticated = false;
         this.serverEventsListeners = new ArrayList<>();
         this.channelEventsListeners = new ArrayList<>();
         this.myNickChangeListeners = new ArrayList<>();
@@ -67,16 +60,6 @@ public class Connection extends PircBot {
     // TODO asi pryc
     public boolean isMe(String nickname) {
         return nickname.equals(config.nickname);
-    }
-
-    // TODO asi pryc
-    public boolean isAuthenticated() {
-        return authenticated;
-    }
-
-    // TODO asi pryc
-    public void authenticate() {
-        authenticated = true;
     }
 
     // TODO pri send:
