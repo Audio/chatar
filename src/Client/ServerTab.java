@@ -1,16 +1,12 @@
 package Client;
 
 import Connection.*;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.awt.*;
+import java.io.*;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
-import javax.swing.text.Document;
-import javax.swing.text.EditorKit;
+import javax.swing.text.*;
 
 
 public class ServerTab extends AbstractTab implements ServerEventsListener {
@@ -20,6 +16,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     private JEditorPane text;
     private String tabName;
     private Connection connection;
+    // TODO zadny public
     public HashSet channels;
     public HashSet privateChats;
 
@@ -98,7 +95,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         tabName = server;
         connection = new Connection(server, port);
         connection.addServerEventListener(this);
-        connection.setTab(this);
 
         channels = new HashSet<>();
         privateChats = new HashSet<>();
@@ -106,25 +102,11 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     }
 
     /**
-     * Vraci referenci na objekt Connection,
-     * pres ktery komunikuje.
-     *
-     * @return pridruzene spojeni
-     */
-    @Override
-    public DeprecatedConnection getConnection () {
-        return null;
-    }
-
-    /**
      * Vraci referenci na kanal, ktery ma dany nazev
      * a je pripojen pres tento server.
      * Rozlišuje velikost písmen.
-     *
-     * @param name
-     * @return
      */
-    public ChannelTab getChannelByName (String name) {
+    public ChannelTab getChannelTabByName(String name) {
 
         ChannelTab channel = null;
         name = name.toLowerCase();
@@ -146,9 +128,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
      * Vrati referenci na soukromy chat s uzivatelem, ktery ma zvolenou
      * prezdivku a je pripojen pres tento server.
      * Rozlišuje velikost písmen.
-     *
-     * @param nickname 
-     * @return
      */
     public PrivateChatTab getPrivateChatByName (String nickname) {
 
@@ -170,8 +149,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
     /**
      * Zobrazuje vystupni text - pridava jej na konec.
-     *
-     * @param str
      */
     @Override
     public void addText(String str) {

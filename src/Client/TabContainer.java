@@ -48,18 +48,18 @@ public class TabContainer extends JTabbedPane {
      */
     public void addTab(int type, String address) throws ClientException {
 
-        AbstractTab new_tab = null;
+        AbstractTab tab = null;
 
         switch (type) {
-            case PANEL_SERVER:  { new_tab = new ServerTab(address); break; }
-            case PANEL_CHANNEL: { new_tab = new ChannelTab(address); break; }
-            case PANEL_PRIVATE: { new_tab = new PrivateChatTab(address); break; }
+            case PANEL_SERVER:  { tab = new ServerTab(address); break; }
+            case PANEL_CHANNEL: { tab = new ChannelTab(address); break; }
+            case PANEL_PRIVATE: { tab = new PrivateChatTab(address); break; }
             default: { throw new ClientException("Snaha o přidání neexistujícího typu panelu."); }
         }
 
-        new_tab.adapt(address);
-        insertNewTab(new_tab, type);
-        new_tab.setFocus();
+        tab.adapt(address);
+        insertNewTab(tab, type);
+        tab.setFocus();
         GUI.getMenuBar().toggleClosePanel(true);
 
     }

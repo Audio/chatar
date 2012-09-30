@@ -1,6 +1,5 @@
 package Client;
 
-import Connection.Input;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.text.html.HTMLDocument;
@@ -8,18 +7,9 @@ import javax.swing.text.html.HTMLDocument;
 
 public class GUI {
 
-    private static MainWindow window;
     private static GServers servers;
     private static GConfig options;
 
-    public static void prepareForm() {
-        // TODO inicializovat na lepsim miste
-        window = new MainWindow();
-    }
-
-    public static TabContainer getTabContainer() {
-        return window.getTabContainer();
-    }
 
     /**
      * Pridani obsahu. Typ obsahu je urcen tridou GTab.
@@ -67,8 +57,6 @@ public class GUI {
      * Vytvori dialogove okno pro nastaveni serveru (pokud jiz neni vytvorene).
      *
      * Dale toto dialogove okno ukaze/skryje.
-     *
-     * @param show
      */
     public static void showServersDialog(boolean show) {
 
@@ -84,8 +72,6 @@ public class GUI {
      * Vytvori dialogove okno pro nastaveni osobnich udaju (pokud jiz neni vytvorene).
      *
      * Dale toto dialogove okno ukaze/skryje.
-     *
-     * @param show
      */
     public static void showOptionsDialog(boolean show) {
 
@@ -143,21 +129,23 @@ public class GUI {
     }
 
     public static MainWindow getWindow() {
-        return window;
+        return MainWindow.getInstance();
     }
 
-    public static GInput getInput() {
-        return window.getGInput();
+    public static TabContainer getTabContainer() {
+        return getWindow().getTabContainer();
     }
 
     public static GMenuBar getMenuBar() {
-        return window.getGMenuBar();
+        return getWindow().getGMenuBar();
+    }
+
+    public static GInput getInput() {
+        return getWindow().getGInput();
     }
 
     /**
      * Vytvoří JEditorPane, nastaví mu zobrazení HTML a CSS styl.
-     *
-     * @return
      */
     public static JEditorPane createHTMLPane() {
 

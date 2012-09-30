@@ -5,12 +5,21 @@ import javax.swing.*;
 
 public class MainWindow extends JFrame {
 
+    private static MainWindow instance;
+
     private TabContainer tabContainer;
     private GMenuBar menuBar;
     private GInput input;
 
 
-    public MainWindow() {
+    public static MainWindow getInstance() {
+        if (instance == null)
+            instance = new MainWindow();
+
+        return instance;
+    }
+
+    private MainWindow() {
         setTitle("Chatař - IRC klient");
         setSize(700, 500);
         GUI.setPreferredSize(this, 700, 500);

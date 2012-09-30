@@ -3,6 +3,7 @@ package Connection;
 import Client.*;
 import java.util.Iterator;
 
+
 /**
  * Zpracování odpovědí ze serveru. Server zasílá odpovědi v textové podobě.
  * Od sebe jsou odděleny znakem nového řádku. Každý řádek vyžaduje analýzu
@@ -200,7 +201,7 @@ public class Reply {
      * @return
      */
     private ChannelTab getChannel (String name) {
-        return connection.getServerTab().getChannelByName(name);
+        return connection.getServerTab().getChannelTabByName(name);
     }
 
     /**
@@ -486,7 +487,7 @@ public class Reply {
         vyparseTarget();
         String topic = smileAtMe(params);
 
-        ChannelTab channel = connection.getServerTab().getChannelByName(target);
+        ChannelTab channel = connection.getServerTab().getChannelTabByName(target);
         channel.setTopic(topic);
 
         topic = Output.HTML.bold(topic);
@@ -1067,4 +1068,3 @@ public class Reply {
     }
 
 }
-

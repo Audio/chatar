@@ -187,7 +187,7 @@ public class Input {
         }
 
         // neotevre panel, co jiz existuje; pouze prepne
-        ChannelTab exists = getCurrentServer().getChannelByName("#" + channel);
+        ChannelTab exists = getCurrentServer().getChannelTabByName("#" + channel);
         if (exists != null) {
             GUI.getTabContainer().setSelectedComponent( exists );
             clearText();
@@ -225,7 +225,7 @@ public class Input {
         if ( channel.startsWith("#") )
             channel = channel.substring(1);
 
-        ChannelTab channel_tab = getCurrentServer().getChannelByName("#" + channel);
+        ChannelTab channel_tab = getCurrentServer().getChannelTabByName("#" + channel);
 
         // overi existenci panelu
         if (channel_tab == null) {
