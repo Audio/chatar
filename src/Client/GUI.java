@@ -93,7 +93,7 @@ public class GUI {
     /**
      * Zruseni nepritomnosti. Bez grafickeho vykresleni.
      */
-    public static void setBack() {
+    public static void setNotAfk() {
         // Input.getCurrentServer().getQuery().away(null);
     }
 
@@ -113,23 +113,16 @@ public class GUI {
         return getWindow().getGInput();
     }
 
-    /**
-     * Vytvoří JEditorPane, nastaví mu zobrazení HTML a CSS styl.
-     */
     public static JEditorPane createHTMLPane() {
-
         JEditorPane chat = new JEditorPane();
         chat.setContentType("text/html");
         chat.setEditable(false);
 
-        // CSS styl: font-family a size
         Font font = UIManager.getFont("Label.font");
-        String bodyRule = "body { font-family: " + font.getFamily() + "; " +
-                "font-size: 13pt; }";
+        String bodyRule = "body { font-family: " + font.getFamily() + "; " + "font-size: 13pt; }";
         ((HTMLDocument) chat.getDocument()).getStyleSheet().addRule(bodyRule);
 
         return chat;
-
     }
 
     public static void focusInput() {

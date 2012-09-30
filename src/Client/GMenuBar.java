@@ -122,7 +122,7 @@ public class GMenuBar extends JMenuBar {
         notAfk.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GUI.setBack();
+                GUI.setNotAfk();
             }
         });
 

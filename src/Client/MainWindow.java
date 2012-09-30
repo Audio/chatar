@@ -1,7 +1,6 @@
 package Client;
 
 import Client.TabContainer.PanelTypes;
-import java.awt.Component;
 import javax.swing.*;
 
 
@@ -46,20 +45,20 @@ public class MainWindow extends JFrame {
         input = new GInput(650, 100);
 
         // umisteni panelu ve formulari
-        JPanel content_panel = (JPanel) getContentPane();
+        JPanel contentPanel = (JPanel) getContentPane();
         SpringLayout layout = new SpringLayout();
-        content_panel.setLayout(layout);
-        content_panel.add(tabContainer);
-        content_panel.add(input);
+        contentPanel.setLayout(layout);
+        contentPanel.add(tabContainer);
+        contentPanel.add(input);
 
         // Tab umisten nad Input
         layout.putConstraint(SpringLayout.WEST, input, 0, SpringLayout.WEST, tabContainer);
         layout.putConstraint(SpringLayout.NORTH, input, 0, SpringLayout.SOUTH, tabContainer);
         // Roztahovani vertikalni - tab
-        layout.putConstraint(SpringLayout.EAST, content_panel, 0, SpringLayout.EAST, tabContainer);
-        layout.putConstraint(SpringLayout.SOUTH, content_panel, 40, SpringLayout.SOUTH, tabContainer);
+        layout.putConstraint(SpringLayout.EAST, contentPanel, 0, SpringLayout.EAST, tabContainer);
+        layout.putConstraint(SpringLayout.SOUTH, contentPanel, 40, SpringLayout.SOUTH, tabContainer);
         // Roztahovani hirizontalni - tab, input
-        layout.putConstraint(SpringLayout.EAST, content_panel, 0, SpringLayout.EAST, input);
+        layout.putConstraint(SpringLayout.EAST, contentPanel, 0, SpringLayout.EAST, input);
         layout.putConstraint(SpringLayout.EAST, input, 0, SpringLayout.EAST, tabContainer);
 
         tabContainer.setVisible(true);

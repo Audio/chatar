@@ -1,34 +1,25 @@
 package Client;
 
 import java.awt.Color;
-import java.awt.Component;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 
-/**
- * Panel se záložkami tří typu (server, channel, private chat).
- */
 public class TabContainer extends JTabbedPane {
 
     public enum PanelTypes {
         PANEL_SERVER, PANEL_CHANNEL, PANEL_PRIVATE
     }
 
-    /**
-     * Konstruktor. Nastavuje velikost své komponenty.
-     * Vytváři objekt posluchače události - při prepnutí na jinou záložku.
-     *
-     * @param width
-     * @param height
-     */
+
     public TabContainer(int width, int height) {
 
         GUI.setPreferredSize(this, width, height);
         setTabPlacement(JTabbedPane.BOTTOM);
 
         addChangeListener( new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent e) {
                 AbstractTab ref = (AbstractTab) GUI.getTabContainer().getSelectedComponent();
                 if (ref == null)
