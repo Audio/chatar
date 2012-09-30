@@ -1,7 +1,7 @@
 package Connection;
 
-import Client.*;
 import Config.Config;
+import java.io.IOException;
 import java.util.ArrayList;
 import org.jibble.pircbot.*;
 
@@ -12,18 +12,13 @@ public class Connection extends PircBot {
     // TODO public config jo? bere se z nej nickname asi
     // TODO config tu nema co delat bych rek
     public Config config;
-    private AbstractTab tab;
 
     private ArrayList<ServerEventsListener> serverEventsListeners;
     private ArrayList<ChannelEventsListener> channelEventsListeners;
     private ArrayList<MyNickChangeListener> myNickChangeListeners;
 
 
-    public Connection() {
-        this (null, 0);
-    }
-
-    public Connection(String server, int port) {
+    public Connection(String server, int port) throws IOException, IrcException {
         this.config = new Config();
         this.serverEventsListeners = new ArrayList<>();
         this.channelEventsListeners = new ArrayList<>();
@@ -31,19 +26,8 @@ public class Connection extends PircBot {
 
         setName("pokusnyHovado");
         setAutoNickChange(true);
-        try {
-            connect(server, port);
-        } catch (Exception e) {
-            System.out.println( e.getMessage() );
-            e.printStackTrace();
-        }
+        connect(server, port);
     }
-
-    // TODO pri erroru
-    /*
-    new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba připojení", "K vybranému serveru se nelze připojit.");
-    tab.die("Spojení nelze uskutečnit.");
-    */
 
     // TODO odezva
     /*
@@ -53,49 +37,12 @@ public class Connection extends PircBot {
     ClientLogger.log("Nelze se připojit: " + e.getMessage(), ClientLogger.ERROR);
     */
 
-    /**
-     * Vraci informaci, zda je prezdivka predana parametrem
-     * shoda s uzivatelovou aktualne pouzitou prezdivkou.
-     */
-    // TODO asi pryc
-    public boolean isMe(String nickname) {
-        return nickname.equals(config.nickname);
-    }
-
     // TODO pri send:
     /*
     if ( !isConnected() )
         throw new ConnectionException("Klient není připojen k serveru.");
     */
 
-    /**
-     * Smerovani vystupu CommandQuery do prislusneho panelu.
-     */
-    public void setTab(AbstractTab tab) {
-        this.tab = tab;
-    }
-
-    /**
-     * Vraci referenci na panel, do ktereho momentalne smeruje vystup.
-     */
-    public AbstractTab getTab() {
-        return tab;
-    }
-
-    /**
-     * Vraci referenci na panel (SERVER), do ktereho momentalne smeruje vystup,
-     * anebo smeruje vystup do nektereho z jeho kanalu.
-     */
-    public ServerTab getServerTab() {
-        return tab.getServerTab();
-    }
-
-    /**
-     * Tunel pro vypis vystupniho textu do prislusneho panelu.
-     */
-    public void output(String str) {
-        getTab().addText(str);
-    }
 
     /*         SERVER EVENTS           */
 

@@ -7,6 +7,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.text.*;
+import org.jibble.pircbot.IrcException;
 
 
 public class ServerTab extends AbstractTab implements ServerEventsListener {
@@ -22,7 +23,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
 
     public ServerTab(String address) {
-
         // TODO sem musi rovnout prijit adresa a port
         // Pripojeni na server - analyza
         int upto;
@@ -93,12 +93,16 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
         // Pripojeni na server
         tabName = server;
-        connection = new Connection(server, port);
-        connection.addServerEventListener(this);
-
         channels = new HashSet<>();
         privateChats = new HashSet<>();
 
+        try {
+            connection = new Connection(server, port);
+            connection.addServerEventListener(this);
+        } catch (IOException | IrcException e) {
+            new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba připojení", "K vybranému serveru se nelze připojit.");
+            // die("Spojení nelze uskutečnit."); // TODO volani z konstruktoru :-/
+        }
     }
 
     /**
@@ -219,7 +223,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     @Override
     public void setFocus() {
         Input.currentTab = this;
-        connection.setTab(this);
         changeNickname();
         GUI.getTabContainer().setSelectedComponent(this);
         GUI.getMenuBar().toggleDisconectFromServer(true);
