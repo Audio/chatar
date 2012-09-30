@@ -16,7 +16,7 @@ import javax.swing.text.EditorKit;
  *
  * @author Martin Fouček
  */
-public class ChannelTab extends GTabWindow {
+public class ChannelTab extends AbstractTab {
 
     private JList users;
     private DefaultListModel usersModel;
@@ -126,7 +126,7 @@ public class ChannelTab extends GTabWindow {
         JMenuItem tl2 = new JMenuItem("Získat informace");
         tl2.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                getQuery().whois(selectedPopupUser);
+                // getQuery().whois(selectedPopupUser);
             }
         } );
 
@@ -134,7 +134,7 @@ public class ChannelTab extends GTabWindow {
         tl3.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String params = getTabName() + " " + selectedPopupUser;
-                getQuery().kick(params);
+                // getQuery().kick(params);
             }
         } );
 
@@ -292,11 +292,11 @@ public class ChannelTab extends GTabWindow {
         if ( getConnection().isMe(nickname) )
             return;
 
-        PrivateChatTab pc = getServer().getPrivateChatByName(nickname);
+        PrivateChatTab pc = getServerTab().getPrivateChatByName(nickname);
         if (pc == null) {
             try {
                 GUI.addTab(TabContainer.PANEL_PRIVATE, nickname);
-                pc = getServer().getPrivateChatByName(nickname);
+                pc = getServerTab().getPrivateChatByName(nickname);
             } catch (ClientException e) { }
         }
         pc.setFocus();
@@ -321,7 +321,7 @@ public class ChannelTab extends GTabWindow {
      * @return
      */
     @Override
-    public ServerTab getServer () {
+    public ServerTab getServerTab () {
         return server;
     }
 
@@ -461,17 +461,6 @@ public class ChannelTab extends GTabWindow {
     @Override
     public String getTabName() {
         return "#" + tabName;
-    }
-
-    /**
-     * Vraci referenci na objekt CommandQuery,
-     * pres ktery komunikuje.
-     *
-     * @return
-     */
-    @Override
-    public CommandQuery getQuery() {
-        return getConnection().getQuery();
     }
 
     /**

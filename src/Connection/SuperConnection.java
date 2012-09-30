@@ -15,7 +15,7 @@ public class SuperConnection extends PircBot {
 
     // TODO public config jo?
     public Config config;
-    private GTabWindow tab;
+    private AbstractTab tab;
     private boolean authenticated;
 
     private ArrayList<MyNickChangeListener> myNickChangeListeners;
@@ -90,14 +90,14 @@ public class SuperConnection extends PircBot {
     /**
      * Smerovani vystupu CommandQuery do prislusneho panelu.
      */
-    public void setTab(GTabWindow tab) {
+    public void setTab(AbstractTab tab) {
         this.tab = tab;
     }
 
     /**
      * Vraci referenci na panel, do ktereho momentalne smeruje vystup.
      */
-    public GTabWindow getTab() {
+    public AbstractTab getTab() {
         return tab;
     }
 
@@ -106,7 +106,7 @@ public class SuperConnection extends PircBot {
      * anebo smeruje vystup do nektereho z jeho kanalu.
      */
     public ServerTab getServerTab() {
-        return tab.getServer();
+        return tab.getServerTab();
     }
 
     /**

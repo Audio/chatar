@@ -12,31 +12,17 @@ package Client;
 public class Client {
 
     public static void main(String[] args) {
-
         try {
             Client.run();
         } catch (Exception e) {
             ClientLogger.log("Chyba při běhu programu: " + e.getMessage(), ClientLogger.ERROR);
         }
-
     }
 
-    public static void init() {
-        ClientLogger.enable();
-    }
-
-    /**
-     * Vytvoří grafické rozhraní. Spustí aplikaci.
-     * Překreslí formulář kvůli správnému zobrazení.
-     */
     public static void run() {
-        init();
+        ClientLogger.enable();
         GUI.prepareForm();
         GUI.getWindow().validate();
-    }
-
-    public static void terminate() {
-        Client.terminate(1);
     }
 
     public static void terminate(int returnCode) {

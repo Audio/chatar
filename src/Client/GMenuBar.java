@@ -156,7 +156,7 @@ public class GMenuBar extends JMenuBar {
     public void toggleDisconectFromServer (boolean setVisible) {
 
         if (setVisible) {
-            String name = Input.currentTab.getServer().getTabName();
+            String name = Input.currentTab.getServerTab().getTabName();
             disconnectFromServer.setText("Odpojit od " + name);
         }
 
@@ -203,7 +203,7 @@ public class GMenuBar extends JMenuBar {
      */
     private void actionClosePanel () {
 
-        GTabWindow tab = Input.currentTab;
+        AbstractTab tab = Input.currentTab;
 
         if (tab == null)
             return;

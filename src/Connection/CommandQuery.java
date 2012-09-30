@@ -18,11 +18,6 @@ public class CommandQuery {
     private boolean busy;
     private final char SOH = ''; // znak Start of Heading
 
-    /**
-     * Konstruktor. Počáteční nastavení.
-     *
-     * @param connection
-     */
     public CommandQuery(Connection connection) {
 
         this.connection = connection;

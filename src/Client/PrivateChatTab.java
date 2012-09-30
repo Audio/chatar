@@ -16,7 +16,7 @@ import javax.swing.text.EditorKit;
  *
  * @author Martin Fouček
  */
-public class PrivateChatTab extends GTabWindow {
+public class PrivateChatTab extends AbstractTab {
 
     private JEditorPane infobox;
     private JEditorPane chat;
@@ -115,7 +115,7 @@ public class PrivateChatTab extends GTabWindow {
      * @return
      */
     @Override
-    public ServerTab getServer () {
+    public ServerTab getServerTab () {
         return server;
     }
 
@@ -167,17 +167,6 @@ public class PrivateChatTab extends GTabWindow {
     }
 
     /**
-     * Vraci referenci na objekt CommandQuery,
-     * pres ktery komunikuje.
-     *
-     * @return
-     */
-    @Override
-    public CommandQuery getQuery() {
-        return getConnection().getQuery();
-    }
-
-    /**
      * Kanál se přilepí na svůj server (instance ServerTab).
      * Také načte informace o druhém uživateli.
      * 
@@ -193,7 +182,7 @@ public class PrivateChatTab extends GTabWindow {
             server = Input.getCurrentServer();
             Input.getCurrentServer().privateChats.add(this);
             getConnection().setTab(this);
-            getQuery().whois(tabName);
+            // getQuery().whois(tabName);
         }
 
     }

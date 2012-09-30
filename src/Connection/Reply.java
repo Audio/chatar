@@ -465,7 +465,7 @@ public class Reply {
 
         if ( connection.isMe(person) ) {
             String msg = mType("info") + "Byl/a jste vyhozen/a z kanálu " + channel + ". Důvod: " + reason;
-            output(msg, channel_tab.getServer() );
+            output(msg, channel_tab.getServerTab() );
             channel_tab.die();
             channel_tab.killMyself();
         }
@@ -1052,7 +1052,7 @@ public class Reply {
      * @param str
      * @param tab
      */
-    public void output (String str, GTabWindow tab) {
+    public void output (String str, AbstractTab tab) {
         tab.addText(str);
     }
 

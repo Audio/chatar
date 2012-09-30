@@ -30,7 +30,7 @@ public class Connection extends Thread {
      * Přidružený konfigurační objekt.
      */
     public  Config config;
-    private GTabWindow tab;
+    private AbstractTab tab;
     private boolean authenticated;
     private boolean closedByServer;
 
@@ -249,7 +249,7 @@ public class Connection extends Thread {
     /**
      * Smerovani vystupu CommandQuery do prislusneho panelu.
      */
-    public void setTab(GTabWindow tab) {
+    public void setTab(AbstractTab tab) {
         this.tab = tab;
     }
 
@@ -264,7 +264,7 @@ public class Connection extends Thread {
     /**
      * Vraci referenci na panel, do ktereho momentalne smeruje vystup.
      */
-    public GTabWindow getTab() {
+    public AbstractTab getTab() {
         return tab;
     }
 
@@ -273,7 +273,7 @@ public class Connection extends Thread {
      * anebo smeruje vystup do nektereho z jeho kanalu.
      */
     public ServerTab getServerTab() {
-        return tab.getServer();
+        return tab.getServerTab();
     }
 
     /**

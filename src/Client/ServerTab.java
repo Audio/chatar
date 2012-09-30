@@ -18,7 +18,7 @@ import javax.swing.text.EditorKit;
  *
  * @author Martin Fouček
  */
-public class ServerTab extends GTabWindow {
+public class ServerTab extends AbstractTab {
 
     private JLabel label_address;
     private JLabel label_channels;
@@ -225,38 +225,21 @@ public class ServerTab extends GTabWindow {
 
     /**
      * Ukonci cinnost panelu, ale nezavre ho.
-     */
-    @Override
-    public void die () {
-        die(null);
-    }
-
-    /**
-     * Ukonci cinnost panelu, ale nezavre ho.
      *
      * @param reason
      */
     @Override
-    public void die (String reason) {
+    public void die(String reason) {
 
         if (reason != null)
             addText( Output.HTML.mType("error") + reason);
 
-        if ( connection.isConnected() )
-            getQuery().disconnect();
+        // TODO disconnect asi
+        // if ( connection.isConnected() )
+            // getQuery().disconnect();
 
-        // connection.interrupt();
+        // connection.interrupt(); // TODO Thread asi
 
-    }
-
-    /**
-     * Tunel pro ziskani mechaniky odesilani zprav.
-     *
-     * @return
-     */
-    @Override
-    public CommandQuery getQuery () {
-        return null;
     }
 
     /**

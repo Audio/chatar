@@ -14,7 +14,7 @@ public class Input {
     /**
      * Aktuálně použivaná záložka tabbed panelu.
      */
-    public static GTabWindow currentTab;
+    public static AbstractTab currentTab;
 
     /**
      * Reference na použitý ServerTab.
@@ -22,7 +22,7 @@ public class Input {
      * @return
      */
     public static ServerTab getCurrentServer () {
-        return currentTab.getServer();
+        return currentTab.getServerTab();
     }
 
     /**
@@ -94,14 +94,14 @@ public class Input {
      * @param tab
      * @param reason
      */
-    public static void handleQuit (GTabWindow tab, String reason) {
+    public static void handleQuit (AbstractTab tab, String reason) {
 
         if (currentTab == null) {
             connectionError();
             return;
         }
 
-        ServerTab server = tab.getServer();
+        ServerTab server = tab.getServerTab();
 
         // pozavira vsechny kanaly
         Iterator it = server.channels.iterator();
@@ -152,7 +152,7 @@ public class Input {
         user = params.substring(0, upto);
         msg  = ":" + params.substring(upto + 1);
 
-        currentTab.getQuery().privMsg(user, msg);
+        // currentTab.getQuery().privMsg(user, msg);
         clearText();
 
         // Otevření nového okna při soukromé zprávě (tzn. uživateli)
@@ -196,7 +196,7 @@ public class Input {
 
         try {
             GUI.addTab(TabContainer.PANEL_CHANNEL, channel);
-            currentTab.getQuery().join(channel);
+            // currentTab.getQuery().join(channel);
             clearText();
         } catch (ClientException e) { }
 
@@ -233,7 +233,7 @@ public class Input {
             return;
         }
 
-        channel_tab.getQuery().leave(channel);
+        // channel_tab.getQuery().leave(channel);
         channel_tab.die();
         channel_tab.killMyself();
         clearText();
@@ -257,7 +257,7 @@ public class Input {
             return;
         }
 
-        getCurrentServer().getQuery().nick(nick);
+        // getCurrentServer().getQuery().nick(nick);
         clearText();
 
     }
@@ -283,7 +283,7 @@ public class Input {
             topic = topic.trim();
 
         String channel = currentTab.getTabName().substring(1);
-        currentTab.getQuery().topic(channel, topic );
+        // currentTab.getQuery().topic(channel, topic );
         clearText();
 
     }
@@ -294,7 +294,7 @@ public class Input {
      * @param channels
      */
     public static void handleNames (String channels) {
-        currentTab.getQuery().names(channels);
+        // currentTab.getQuery().names(channels);
         clearText();
     }
 
@@ -313,7 +313,7 @@ public class Input {
             return;
         }
 
-        currentTab.getQuery().mode(params);
+        // currentTab.getQuery().mode(params);
         clearText();
 
     }
@@ -332,7 +332,7 @@ public class Input {
      */
     public static void handleServer (String address) {
         try {
-            GUI.addTab(TabContainer.PANEL_SUPER_SERVER, address);
+            GUI.addTab(TabContainer.PANEL_SERVER, address);
             clearText();
         }
         catch (Exception e) {
@@ -363,7 +363,7 @@ public class Input {
             return;
         }
 
-        currentTab.getQuery().kick(params);
+        // currentTab.getQuery().kick(params);
         clearText();
 
     }
@@ -380,10 +380,12 @@ public class Input {
             return;
         }
 
+        /*
         if (params == null || params.trim().length() == 0)
             currentTab.getQuery().away(null);
         else
             currentTab.getQuery().away( params.trim() );
+            */
 
         clearText();
 
@@ -428,7 +430,7 @@ public class Input {
             return;
         }
 
-        getCurrentServer().getQuery().oper(params);
+        // getCurrentServer().getQuery().oper(params);
 
     }
 
@@ -452,7 +454,7 @@ public class Input {
             return;
         }
 
-        getCurrentServer().getQuery().whois(params);
+        // getCurrentServer().getQuery().whois(params);
 
     }
 
@@ -482,7 +484,7 @@ public class Input {
             params = "neumi pouzivat IRC klienta."; // :)
         }
 
-        getCurrentServer().getQuery().me(channel, params);
+        // getCurrentServer().getQuery().me(channel, params);
 
     }
 
