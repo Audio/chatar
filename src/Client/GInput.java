@@ -21,15 +21,15 @@ public class GInput extends JPanel {
     // vyctovy typ obsahujici povolene prikazy ke zpracovani
     private enum Allowed {
 
-        fake, ACTION, AFK, AWAY, BACK, CLEAR, JOIN, KICK, LEAVE, ME, MODE,
-        NAMES, NICK, OPER, PART, PRIVMSG, QUIT, SERVER, SHUTDOWN, TOPIC, WHOIS
+        UNKNOWN, ACTION, AFK, AWAY, BACK, CLEAR, JOIN, KICK, LEAVE, ME, MODE,
+        NAMES, NICK, OPER, PART, PRIVMSG, QUIT, SERVER, TOPIC, WHOIS
         ;
 
         public static Allowed fromString(String Str) {
             try {
                 return valueOf(Str);
             }
-            catch (Exception e){ return Allowed.fake; }
+            catch (Exception e){ return Allowed.UNKNOWN; }
         }
     };
 
@@ -206,7 +206,7 @@ public class GInput extends JPanel {
 
 
         switch ( Allowed.fromString(command) ) {
-            case fake:    { Input.showError(command); break; }
+            case UNKNOWN:    { Input.showError(command); break; }
             case QUIT:    { Input.handleQuit(params); break; }
             case PRIVMSG: { Input.handlePrivMessage(params); break; }
             case JOIN:    { Input.handleJoin(params); break; }
@@ -226,7 +226,6 @@ public class GInput extends JPanel {
             case ME:      { Input.handleMe(params); break; }
             case ACTION:  { Input.handleMe(params); break; }
 
-            case SHUTDOWN:{ Input.handleShutdown(); break; }
             case SERVER:  { Input.handleServer(params); break; }
 
             // DEBUG - makra

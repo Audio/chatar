@@ -254,13 +254,6 @@ public class Input {
     }
 
     /**
-     * Ukonci program.
-     */
-    public static void handleShutdown() {
-        Client.terminate(0);
-    }
-
-    /**
      * Pripojeni na zvoleny server.
      */
     public static void handleServer(String address) {
