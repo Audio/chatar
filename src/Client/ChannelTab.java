@@ -1,5 +1,6 @@
 package Client;
 
+import Client.TabContainer.PanelTypes;
 import Connection.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -295,7 +296,7 @@ public class ChannelTab extends AbstractTab {
         PrivateChatTab pc = getServerTab().getPrivateChatByName(nickname);
         if (pc == null) {
             try {
-                MainWindow.getInstance().addTab(TabContainer.PANEL_PRIVATE, nickname);
+                MainWindow.getInstance().addTab(PanelTypes.PANEL_PRIVATE, nickname);
                 pc = getServerTab().getPrivateChatByName(nickname);
             } catch (ClientException e) { }
         }

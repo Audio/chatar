@@ -1,5 +1,6 @@
 package Client;
 
+import Client.TabContainer.PanelTypes;
 import Config.Servers;
 import java.awt.*;
 import java.awt.event.*;
@@ -145,7 +146,7 @@ public class GServers extends JFrame implements WindowListener {
 
         String server = (String) list.getSelectedValue();
         try {
-            MainWindow.getInstance().addTab(TabContainer.PANEL_SERVER, server);
+            MainWindow.getInstance().addTab(PanelTypes.PANEL_SERVER, server);
             close();
         }
         catch (Exception e) {

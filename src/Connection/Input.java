@@ -1,6 +1,7 @@
 package Connection;
 
 import Client.*;
+import Client.TabContainer.PanelTypes;
 import java.util.Iterator;
 
 
@@ -116,7 +117,7 @@ public class Input {
         // Otevření nového okna při soukromé zprávě (tzn. uživateli)
         if ( user.startsWith("#") == false && getCurrentServer().getPrivateChatByName(user) == null) {
             try {
-                MainWindow.getInstance().addTab(TabContainer.PANEL_PRIVATE, user);
+                MainWindow.getInstance().addTab(PanelTypes.PANEL_PRIVATE, user);
             } catch (ClientException e) { }
         }
     }
@@ -149,7 +150,7 @@ public class Input {
         }
 
         try {
-            MainWindow.getInstance().addTab(TabContainer.PANEL_CHANNEL, channel);
+            MainWindow.getInstance().addTab(PanelTypes.PANEL_CHANNEL, channel);
             // currentTab.getQuery().join(channel);
             clearText();
         } catch (ClientException e) { }
@@ -258,7 +259,7 @@ public class Input {
      */
     public static void handleServer(String address) {
         try {
-            MainWindow.getInstance().addTab(TabContainer.PANEL_SERVER, address);
+            MainWindow.getInstance().addTab(PanelTypes.PANEL_SERVER, address);
             clearText();
         }
         catch (Exception e) {

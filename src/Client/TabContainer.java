@@ -12,9 +12,9 @@ import javax.swing.event.ChangeListener;
  */
 public class TabContainer extends JTabbedPane {
 
-    final public static int PANEL_SERVER  = 50;
-    final public static int PANEL_CHANNEL = 51;
-    final public static int PANEL_PRIVATE = 52;
+    public enum PanelTypes {
+        PANEL_SERVER, PANEL_CHANNEL, PANEL_PRIVATE
+    }
 
     /**
      * Konstruktor. Nastavuje velikost své komponenty.
@@ -39,14 +39,13 @@ public class TabContainer extends JTabbedPane {
 
     }
 
-    public void addTab(int type, String address) throws ClientException {
+    public void addTab(PanelTypes type, String address) throws ClientException {
         AbstractTab tab = null;
 
         switch (type) {
             case PANEL_SERVER:  { tab = new ServerTab(address); break; }
             case PANEL_CHANNEL: { tab = new ChannelTab(address); break; }
             case PANEL_PRIVATE: { tab = new PrivateChatTab(address); break; }
-            default: { throw new ClientException("Snaha o přidání neexistujícího typu panelu."); }
         }
 
         tab.adapt(address);
@@ -59,25 +58,25 @@ public class TabContainer extends JTabbedPane {
         remove(tab);
     }
 
-    private void insertNewTab(AbstractTab tab, int type) {
+    private void insertNewTab(AbstractTab tab, PanelTypes type) {
         int index;
         String tip ;
         String title = tab.getTabName();
 
-        if (type == PANEL_SERVER) {
+        if (type == PanelTypes.PANEL_SERVER) {
             index = getTabCount();
             tip = "Server " + title;
         } else {
             ServerTab s = tab.getServerTab();
             index = indexOfComponent(s) + 1;
             tip = "Server " + s.getTabName() + ", ";
-            tip += (type == PANEL_CHANNEL) ? "kanál" : "uživatel";
+            tip += (type == PanelTypes.PANEL_CHANNEL) ? "kanál" : "uživatel";
             tip += " " + title;
         }
 
         insertTab(title, null, tab, tip, index);
 
-        if (type == PANEL_SERVER)
+        if (type == PanelTypes.PANEL_SERVER)
             setBackgroundAt(index, new Color(238, 232, 170) );
     }
 

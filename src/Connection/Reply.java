@@ -1,6 +1,7 @@
 package Connection;
 
 import Client.*;
+import Client.TabContainer.PanelTypes;
 import java.util.Iterator;
 
 
@@ -396,7 +397,7 @@ public class Reply {
             if (chat == null) {
                 try {
                     Input.currentTab = connection.getServerTab();
-                    MainWindow.getInstance().addTab(TabContainer.PANEL_PRIVATE, prefix.nick);
+                    MainWindow.getInstance().addTab(PanelTypes.PANEL_PRIVATE, prefix.nick);
                     chat = getPrivateChat(prefix.nick);
                     chat.setFocus();
                 } catch (ClientException e) { return; }

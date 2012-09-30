@@ -1,5 +1,6 @@
 package Client;
 
+import Client.TabContainer.PanelTypes;
 import java.awt.Component;
 import javax.swing.*;
 
@@ -66,7 +67,7 @@ public class MainWindow extends JFrame {
         input.getTextField().requestFocusInWindow();
     }
 
-    public void addTab(int type, String address) throws ClientException {
+    public void addTab(PanelTypes type, String address) throws ClientException {
         tabContainer.addTab(type, address);
     }
 
