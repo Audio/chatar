@@ -28,7 +28,7 @@ public class InputHandler {
         return (getActiveTab() != null && getActiveTab().getConnection().isConnected() );
     }
 
-    public static void showNoConnectionError() {
+    public static void showNotConnectedError() {
         new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Připojení nedostupné",
                 "Nejste připojen/a k žádnému serveru.");
     }
@@ -51,11 +51,6 @@ public class InputHandler {
      * Uzavira spojeni - nikoli aktualniho panelu, ale vybraneho.
      */
     public static void handleQuit (AbstractTab tab, String reason) {
-        if (getActiveTab() == null) {
-            showNoConnectionError();
-            return;
-        }
-
         ServerTab server = tab.getServerTab();
 
         // pozavira vsechny kanaly
@@ -83,11 +78,6 @@ public class InputHandler {
      * nebo odesle zpravu do vybraneho kanalu.
      */
     public static void handlePrivMessage (String params) {
-        if (!isConnected()) {
-            showNoConnectionError();
-            return;
-        }
-
         String user;
         String msg;
         int upto;
@@ -116,11 +106,6 @@ public class InputHandler {
      * Otevre novy panel pro komunikaci na zminenem kanale.
      */
     public static void handleJoin(String channel) {
-        if ( !isConnected() ) {
-            showNoConnectionError();
-            return;
-        }
-
         if (channel == null || channel.trim().length() == 0) {
             outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /join nazev_kanalu");
             return;
@@ -150,10 +135,6 @@ public class InputHandler {
      * Odstrani se take ze seznamu kanalu v objektu ServerTab.
      */
     public static void handlePart(String channel) {
-        if (!isConnected()) {
-            showNoConnectionError(); return;
-        }
-
         if (channel == null || channel.trim().length() == 0) {
             channel = getActiveTab().getTabName();
             if ( !isChannelTabActive() ) {
@@ -183,10 +164,6 @@ public class InputHandler {
      * Mění přezdívku uživatele.
      */
     public static void handleNick(String nick) {
-        if ( !isConnected() ) {
-            showNoConnectionError(); return;
-        }
-        
         // kontrola syntaxe
         if (nick == null || nick.trim().length() == 0) {
             outputToCurrentTab( mType("error") + "Nebyla zadána nová přezdívka.");
@@ -201,11 +178,6 @@ public class InputHandler {
      * Meni tema ve vybranem kanale.
      */
     public static void handleTopic(String topic) {
-        if (!isConnected()) {
-            showNoConnectionError();
-            return;
-        }
-
         if ( !getActiveTab().getClass().getSimpleName().equals("GTabChannel") ) {
             outputToCurrentTab( mType("error") + "Téma lze změnit pouze ve vybraném kanále.");
             return;
@@ -263,11 +235,6 @@ public class InputHandler {
      * @param params
      */
     public static void handleKick(String params) {
-        if ( !isConnected() ) {
-            showNoConnectionError();
-            return;
-        }
-
         if (params == null)
             return;
 
@@ -286,11 +253,6 @@ public class InputHandler {
      * Nastavení ci zrušení nepřítomnosti (AFK - away from keyboard).
      */
     public static void handleAway(String params) {
-        if (!isConnected()) {
-            showNoConnectionError();
-            return;
-        }
-
         /*
         if (params == null || params.trim().length() == 0)
             getActiveTab().getQuery().away(null);
@@ -304,7 +266,7 @@ public class InputHandler {
     /**
      * Zrušení nepřítomnosti (AFK).
      */
-    public static void handleBack() {
+    public static void handleNotAway() {
         handleAway(null);
     }
 
@@ -322,11 +284,6 @@ public class InputHandler {
      * Žádost uživatele o přidělení práv operátora (mode +o).
      */
     public static void handleOper(String params) {
-        if ( !isConnected() ) {
-            showNoConnectionError();
-            return;
-        }
-
         params = (params == null) ? null : params.trim();
         clearText();
 
@@ -342,12 +299,6 @@ public class InputHandler {
      * Informace o uživateli.
      */
     public static void handleWhois(String params) {
-        
-        if (!isConnected()) {
-            showNoConnectionError();
-            return;
-        }
-
         params = (params == null) ? null : params.trim();
         clearText();
 
@@ -363,11 +314,6 @@ public class InputHandler {
      * Vypíše do kanálu, že uživatel provádí akci speficikovanou parametrem.
      */
     public static void handleMe(String params) {
-        if (!isConnected()) {
-            showNoConnectionError();
-            return;
-        }
-
         if ( !isChannelTabActive() ) {
             showNotActiveChannelError();
             return;

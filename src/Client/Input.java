@@ -18,7 +18,7 @@ public class Input extends JPanel {
 
     private enum Commands {
 
-        UNKNOWN, ACTION, AFK, AWAY, NOT_AFK, CLEAR, JOIN, KICK, LEAVE, ME, MODE,
+        UNKNOWN, ACTION, AFK, AWAY, BACK, CLEAR, JOIN, KICK, LEAVE, ME, MODE,
         NAMES, NICK, OPER, PART, PRIVMSG, QUIT, SERVER, TOPIC, WHOIS
         ;
 
@@ -147,50 +147,61 @@ public class Input extends JPanel {
      */
     private void handleCommand() {
         String inputText = textField.getText();
-        String command;
+        String rawCommand;
         String params = null;
         int upto;
 
         if ( (upto = inputText.indexOf(" ") ) > -1 ) {
-            command = inputText.substring(1, upto);
+            rawCommand = inputText.substring(1, upto);
             params  = inputText.substring(upto + 1);
         }
         else {
-            command = inputText.substring(1);
+            rawCommand = inputText.substring(1);
         }
 
-        command = command.toUpperCase();
+        rawCommand = rawCommand.toUpperCase();
 
         CommandHistory.add(inputText);
 
-        switch ( Commands.fromString(command) ) {
-            case UNKNOWN: { InputHandler.showError(command); break; }
-            case QUIT:    { InputHandler.handleQuit(params); break; }
-            case PRIVMSG: { InputHandler.handlePrivMessage(params); break; }
-            case JOIN:    { InputHandler.handleJoin(params); break; }
-            case LEAVE:   { InputHandler.handlePart(params); break; }
-            case PART:    { InputHandler.handlePart(params); break; }
-            case NICK:    { InputHandler.handleNick(params); break; }
-            case TOPIC:   { InputHandler.handleTopic(params); break; }
-            case NAMES:   { InputHandler.handleNames(params); break; }
-            case MODE:    { InputHandler.handleMode(params); break; }
-            case KICK:    { InputHandler.handleKick(params); break; }
-            case AWAY:    { InputHandler.handleAway(params); break; }
-            case AFK:     { InputHandler.handleAway(params); break; }
-            case NOT_AFK:    { InputHandler.handleBack(); break; }
-            case CLEAR:   { InputHandler.handleClear(); break; }
-            case OPER:    { InputHandler.handleOper(params); break; }
-            case WHOIS:   { InputHandler.handleWhois(params); break; }
-            case ME:      { InputHandler.handleMe(params); break; }
-            case ACTION:  { InputHandler.handleMe(params); break; }
+        Commands command = Commands.fromString(rawCommand);
 
-            case SERVER:  { InputHandler.handleServer(params); break; }
+        AbstractTab tab = MainWindow.getInstance().getActiveTab();
+        boolean connectionRequired = (command != Commands.CLEAR && command != Commands.SERVER);
+        boolean isConnected = (tab == null) ? false : tab.getConnection().isConnected();
+        if (connectionRequired && !isConnected) {
+            InputHandler.showNotConnectedError();
+        } else {
+
+            switch (command) {
+                case UNKNOWN: { InputHandler.showError(rawCommand); break; }
+                case QUIT:    { InputHandler.handleQuit(params); break; }
+                case PRIVMSG: { InputHandler.handlePrivMessage(params); break; }
+                case JOIN:    { InputHandler.handleJoin(params); break; }
+                case LEAVE:   { InputHandler.handlePart(params); break; }
+                case PART:    { InputHandler.handlePart(params); break; }
+                case NICK:    { InputHandler.handleNick(params); break; }
+                case TOPIC:   { InputHandler.handleTopic(params); break; }
+                case NAMES:   { InputHandler.handleNames(params); break; }
+                case MODE:    { InputHandler.handleMode(params); break; }
+                case KICK:    { InputHandler.handleKick(params); break; }
+                case AWAY:    { InputHandler.handleAway(params); break; }
+                case AFK:     { InputHandler.handleAway(params); break; }
+                case BACK:    { InputHandler.handleNotAway(); break; }
+                case CLEAR:   { InputHandler.handleClear(); break; }
+                case OPER:    { InputHandler.handleOper(params); break; }
+                case WHOIS:   { InputHandler.handleWhois(params); break; }
+                case ME:      { InputHandler.handleMe(params); break; }
+                case ACTION:  { InputHandler.handleMe(params); break; }
+
+                case SERVER:  { InputHandler.handleServer(params); break; }
+            }
+
         }
     }
 
     private void handleMessage () {
         if (InputHandler.getCurrentServer() == null) {
-            InputHandler.showNoConnectionError();
+            InputHandler.showNotConnectedError();
             return;
         }
 

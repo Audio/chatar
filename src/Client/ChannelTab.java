@@ -409,7 +409,7 @@ public class ChannelTab extends AbstractTab {
     @Override
     public void adapt(String channel) {
         if (InputHandler.getCurrentServer() == null) {
-            InputHandler.showNoConnectionError();
+            InputHandler.showNotConnectedError();
         } else {
             if (channel.startsWith("#")) {
                 channel = channel.substring(1);
