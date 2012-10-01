@@ -11,20 +11,17 @@ import java.util.Iterator;
  */
 public class Input {
     
-    public static AbstractTab currentTab;
-
-
     public static ServerTab getCurrentServer() {
-        return currentTab.getServerTab();
+        return getActiveTab().getServerTab();
     }
 
     public static boolean isChannelTabActive() {
         // TODO instanceof? instanceof ChannelTab
-        return currentTab.getClass().getSimpleName().equals("GTabChannel");
+        return getActiveTab().getClass().getSimpleName().equals("GTabChannel");
     }
 
     public static void outputToCurrentTab(String str) {
-        currentTab.getConnection().getTab().addText(str);
+        getActiveTab().getConnection().getTab().addText(str);
     }
 
     public static void clearText() {
@@ -32,7 +29,7 @@ public class Input {
     }
 
     public static boolean isConnected() {
-        return (currentTab != null && currentTab.getConnection().isConnected() );
+        return (getActiveTab() != null && getActiveTab().getConnection().isConnected() );
     }
 
     public static void showNoConnectionError() {
@@ -51,14 +48,14 @@ public class Input {
      * a uzavrenim socketoveho spojeni.
      */
     public static void handleQuit (String reason) {
-        handleQuit(Input.currentTab, reason);
+        handleQuit(getActiveTab(), reason);
     }
 
     /**
      * Uzavira spojeni - nikoli aktualniho panelu, ale vybraneho.
      */
     public static void handleQuit (AbstractTab tab, String reason) {
-        if (currentTab == null) {
+        if (getActiveTab() == null) {
             showNoConnectionError();
             return;
         }
@@ -83,10 +80,6 @@ public class Input {
 
         server.die(reason);
         server.killMyself();
-
-        if ( GUI.getTabContainer().getTabCount() == 0 ) {
-            Input.currentTab = null;
-        }
     }
 
     /**
@@ -111,7 +104,7 @@ public class Input {
         user = params.substring(0, upto);
         msg  = ":" + params.substring(upto + 1);
 
-        // currentTab.getQuery().privMsg(user, msg);
+        // getActiveTab().getQuery().privMsg(user, msg);
         clearText();
 
         // Otevření nového okna při soukromé zprávě (tzn. uživateli)
@@ -151,7 +144,7 @@ public class Input {
 
         try {
             MainWindow.getInstance().addTab(PanelTypes.PANEL_CHANNEL, channel);
-            // currentTab.getQuery().join(channel);
+            // getActiveTab().getQuery().join(channel);
             clearText();
         } catch (ClientException e) { }
     }
@@ -166,7 +159,7 @@ public class Input {
         }
 
         if (channel == null || channel.trim().length() == 0) {
-            channel = currentTab.getTabName();
+            channel = getActiveTab().getTabName();
             if ( !isChannelTabActive() ) {
                 showNotActiveChannelError();
                 return;
@@ -217,7 +210,7 @@ public class Input {
             return;
         }
 
-        if ( !currentTab.getClass().getSimpleName().equals("GTabChannel") ) {
+        if ( !getActiveTab().getClass().getSimpleName().equals("GTabChannel") ) {
             outputToCurrentTab( mType("error") + "Téma lze změnit pouze ve vybraném kanále.");
             return;
         }
@@ -225,8 +218,8 @@ public class Input {
         if (topic != null)
             topic = topic.trim();
 
-        String channel = currentTab.getTabName().substring(1);
-        // currentTab.getQuery().topic(channel, topic );
+        String channel = getActiveTab().getTabName().substring(1);
+        // getActiveTab().getQuery().topic(channel, topic );
         clearText();
     }
     
@@ -234,7 +227,7 @@ public class Input {
      * Zpracovani prikazu NAMES.
      */
     public static void handleNames(String channels) {
-        // currentTab.getQuery().names(channels);
+        // getActiveTab().getQuery().names(channels);
         clearText();
     }
 
@@ -250,7 +243,7 @@ public class Input {
             return;
         }
 
-        // currentTab.getQuery().mode(params);
+        // getActiveTab().getQuery().mode(params);
         clearText();
     }
 
@@ -289,7 +282,7 @@ public class Input {
             return;
         }
 
-        // currentTab.getQuery().kick(params);
+        // getActiveTab().getQuery().kick(params);
         clearText();
     }
 
@@ -304,9 +297,9 @@ public class Input {
 
         /*
         if (params == null || params.trim().length() == 0)
-            currentTab.getQuery().away(null);
+            getActiveTab().getQuery().away(null);
         else
-            currentTab.getQuery().away( params.trim() );
+            getActiveTab().getQuery().away( params.trim() );
             */
 
         clearText();
@@ -324,7 +317,7 @@ public class Input {
      */
     public static void handleClear() {
         if ( GUI.getTabContainer().getTabCount() > 0)
-            currentTab.clearContent();
+            getActiveTab().clearContent();
 
         clearText();
     }
@@ -384,7 +377,7 @@ public class Input {
             return;
         }
 
-        String channel = currentTab.getTabName();
+        String channel = getActiveTab().getTabName();
 
         params = (params == null) ? null : params.trim();
         clearText();
@@ -400,7 +393,7 @@ public class Input {
      * Oznámení, že vložený příkaz nelze vykonat, neboť nemá obsluhu.
      */
     public static void showError(String invalidCommand) {
-        if (Input.currentTab == null) {
+        if (getActiveTab() == null) {
             new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Neznámý příkaz",
                     "Neznámý příkaz " + invalidCommand.toUpperCase() + ".");
         }
@@ -415,6 +408,10 @@ public class Input {
      */
     public static String mType(String str) {
         return Output.HTML.mType(str);
+    }
+
+    private static AbstractTab getActiveTab() {
+        return MainWindow.getInstance().getActiveTab();
     }
 
 }

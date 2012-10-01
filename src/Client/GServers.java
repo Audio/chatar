@@ -143,16 +143,14 @@ public class GServers extends JFrame implements WindowListener {
      * Pripoji se k vybranemu serveru.
      */
     private void actionConnect() {
-
         String server = (String) list.getSelectedValue();
         try {
             MainWindow.getInstance().addTab(PanelTypes.PANEL_SERVER, server);
             close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba aplikace", "Připojení nelze uskutečnit.");
         }
-
     }
 
     /**

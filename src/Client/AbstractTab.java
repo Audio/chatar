@@ -41,8 +41,9 @@ public abstract class AbstractTab extends JPanel {
      */
     // TODO nevim
     public void changeNickname() {
-        String nick = getConnection().config.nickname;
-        GUI.getInput().setNickname(nick);
+        // String nick = getConnection().config.nickname;
+        String nick = "zatimNic";
+        MainWindow.getInstance().getGInput().setNickname(nick);
     }
 
     /**

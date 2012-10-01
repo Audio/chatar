@@ -396,14 +396,13 @@ public class Reply {
             PrivateChatTab chat = getPrivateChat(prefix.nick);
             if (chat == null) {
                 try {
-                    Input.currentTab = connection.getServerTab();
                     MainWindow.getInstance().addTab(PanelTypes.PANEL_PRIVATE, prefix.nick);
                     chat = getPrivateChat(prefix.nick);
                     chat.setFocus();
                 } catch (ClientException e) { return; }
             }
             output(out, chat);
-            if (Input.currentTab != chat)
+            if (MainWindow.getInstance().getActiveTab() != chat)
                 chat.setToRead(true);
         }
 
@@ -937,13 +936,13 @@ public class Reply {
         String foo = mType("whois") + Output.HTML.bold(target) + ": " + params;
 
         // Jsme v nějakém chatu?
-        boolean activeChat = ( Input.currentTab.getClass().getSimpleName()
+        boolean activeChat = ( MainWindow.getInstance().getActiveTab().getClass().getSimpleName()
                 .equals("GTabPrivateChat") ) ? true : false;
 
         // Píšeme si zrovna s uživatelem, jehož WHOIS vypisujeme?
         boolean chatWithTarget = false;
         if (activeChat) {
-            String nick = Input.currentTab.getTabName();
+            String nick = MainWindow.getInstance().getActiveTab().getTabName();
             if ( nick.equals(target) )
                 chatWithTarget = true;
         }

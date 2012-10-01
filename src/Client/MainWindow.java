@@ -1,6 +1,7 @@
 package Client;
 
 import Client.TabContainer.PanelTypes;
+import java.awt.Component;
 import javax.swing.*;
 
 
@@ -91,6 +92,10 @@ public class MainWindow extends JFrame {
 
     public GInput getGInput() {
         return input;
+    }
+
+    public AbstractTab getActiveTab() {
+        return (AbstractTab) tabContainer.getSelectedComponent();
     }
 
 }

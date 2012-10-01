@@ -222,7 +222,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
      */
     @Override
     public void setFocus() {
-        Input.currentTab = this;
         changeNickname();
         GUI.getTabContainer().setSelectedComponent(this);
         GUI.getMenuBar().toggleDisconectFromServer(true);

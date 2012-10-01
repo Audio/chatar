@@ -51,7 +51,7 @@ public class GInput extends JPanel {
         button.setToolTipText("Kliknutím nastavíte přezdívku (vyžaduje aktivní připojení na server)");
         button.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (Input.currentTab == null)
+                if ( MainWindow.getInstance().getActiveTab() == null )
                     return;
 
                 GUI.showSetNicknameDialog();
@@ -194,16 +194,17 @@ public class GInput extends JPanel {
             return;
         }
 
+        AbstractTab tab = MainWindow.getInstance().getActiveTab();
         // TODO instanceof ?
-        if ( Input.currentTab.getClass().getName().equals("Client.ServerTab") ) {
+        if ( tab.getClass().getName().equals("Client.ServerTab") ) {
             String err = Output.HTML.mType("error");
-            Input.currentTab.addText(err+ "Nelze odeslat zprávu. Toto není chatovací místnost!");
+            tab.addText(err+ "Nelze odeslat zprávu. Toto není chatovací místnost!");
             return;
         }
 
         String msg = textField.getText();
-        String room = Input.currentTab.getTabName();
-        DeprecatedConnection con = Input.currentTab.getConnection();
+        String room = tab.getTabName();
+        DeprecatedConnection con = tab.getConnection();
 
         Input.handlePrivMessage(room + " " + msg);
         con.output(con.config.nickname + ": " + msg);

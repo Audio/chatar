@@ -1,39 +1,23 @@
 package Client;
 
 import Connection.*;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.io.Reader;
-import java.io.StringReader;
+import java.awt.*;
+import java.io.*;
 import javax.swing.*;
-import javax.swing.text.Document;
-import javax.swing.text.EditorKit;
+import javax.swing.text.*;
 
-/**
- * Panel umožnující odesílat zprávy pouze konkrétnímu uživateli.
- * Výpis zpráv zohledněn přes grafické rozhraní.
- * Panel obsahuje informační box s výpisem WHOIS cílového uživatele.
- *
- * @author Martin Fouček
- */
+
 public class PrivateChatTab extends AbstractTab {
 
     private JEditorPane infobox;
     private JEditorPane chat;
-    /**
-     * Název záložky v tabbed panelu a zároveň přezdívka cílového uživatele.
-     */
-    public  String tabName;
+    private String tabName;
     private ServerTab server;
     private Color originalColor;
     private Color unreadMessageColor;
 
-    /**
-     * Konstruktor. Vytváří GUI a lepí se na objekt ServerTab.
-     *
-     * @param nickname
-     */
-    public PrivateChatTab (String nickname) {
+
+    public PrivateChatTab(String nickname) {
 
         // Konstrukce panelu
         SpringLayout layout = new SpringLayout();
@@ -97,36 +81,18 @@ public class PrivateChatTab extends AbstractTab {
 
     }
 
-    /**
-     * Vraci referenci na objekt Connection,
-     * pres ktery komunikuje.
-     *
-     * @return
-     */
     @Override
-    public DeprecatedConnection getConnection () {
+    public DeprecatedConnection getConnection() {
         return server.getConnection();
     }
 
-    /**
-     * Vraci referenci na server (ServerTab), pres ktery je kanal napojen.
-     * V pripade serverove mistnosti vraci ref. na sebe.
-     *
-     * @return
-     */
     @Override
-    public ServerTab getServerTab () {
+    public ServerTab getServerTab() {
         return server;
     }
 
-    /**
-     * Zobrazuje vystupni text - pridava jej na konec.
-     *
-     * @param str
-     */
     @Override
-    public void addText (String str) {
-
+    public void addText(String str) {
         EditorKit kit = chat.getEditorKit();
         Document doc = chat.getDocument();
         try {
@@ -135,23 +101,15 @@ public class PrivateChatTab extends AbstractTab {
             chat.setCaretPosition( doc.getLength() );
         }
         catch (Exception e) { }
-
     }
 
     /**
      * Nastavuje obsah horni casti - vypis informaci o uzivateli.
-     *
-     * @param info
      */
-    public void setOtherUserInfo (String info) {
+    public void setOtherUserInfo(String info) {
         infobox.setText(info);
     }
 
-    /**
-     * Vraci svuj nazev.
-     *
-     * @return
-     */
     @Override
     public String getTabName() {
         return tabName;
@@ -159,22 +117,17 @@ public class PrivateChatTab extends AbstractTab {
 
     /**
      * Nastaveni nazvu (uzivatele mohou sve prezdivky menit).
-     *
-     * @param new_name
      */
-    public void setTabName (String new_name) {
-        tabName = new_name;
+    public void setTabName(String tabName) {
+        this.tabName = tabName;
     }
 
     /**
      * Kanál se přilepí na svůj server (instance ServerTab).
      * Také načte informace o druhém uživateli.
-     * 
-     * @param nickname
      */
     @Override
     public void adapt(String nickname) {
-
         if (Input.getCurrentServer() == null) {
             Input.showNoConnectionError();
         }
@@ -184,48 +137,27 @@ public class PrivateChatTab extends AbstractTab {
             getConnection().setTab(this);
             // getQuery().whois(tabName);
         }
-
     }
 
-    /**
-     * Ukonci cinnost panelu, ale nezavre ho.
-     */
     @Override
     public void die() {
         server.privateChats.remove(this);
     }
 
-    /**
-     * Ukonci cinnost panelu, ale nezavre ho.
-     * Uvedeno s duvodem.
-     *
-     * @param reason
-     */
     @Override
     public void die(String reason) {
         die();
     }
 
-    /**
-     * Urci sama sebe jako aktualni panel.
-     * Pouzito mj. pri zpracovani vstupu od uzivatele.
-     */
     @Override
     public void setFocus() {
-
-        Input.currentTab = this;
-        getConnection().setTab(this);
         changeNickname();
         setToRead(false);
         GUI.getTabContainer().setSelectedComponent(this);
         GUI.getMenuBar().toggleDisconectFromServer(true);
         GUI.focusInput();
-
     }
 
-    /**
-     * Vymaže obsah chatu.
-     */
     @Override
     public void clearContent() {
         chat.setText(null);
@@ -233,11 +165,8 @@ public class PrivateChatTab extends AbstractTab {
 
     /**
      * Výpis informací o uživateli (příkaz WHOIS).
-     *
-     * @param str
      */
-    public void updateUserInfo (String str) {
-
+    public void updateUserInfo(String str) {
         EditorKit kit = infobox.getEditorKit();
         Document doc = infobox.getDocument();
         try {
@@ -246,37 +175,28 @@ public class PrivateChatTab extends AbstractTab {
             infobox.setCaretPosition( doc.getLength() );
         }
         catch (Exception e) { }
-
     }
 
-    /**
-     * Vymaže informace o uživateli z panelu.
-     */
-    public void clearUserInfo () {
+    public void clearUserInfo() {
         infobox.setText(null);
     }
 
     /**
      * Získá původní barvu pozadí záložky v tabbed panelu.
      */
-    private void setupOriginalColor () {
-
+    private void setupOriginalColor() {
         if (originalColor != null)
             return;
 
         int index = GUI.getTabContainer().indexOfComponent(this);
         originalColor = GUI.getTabContainer().getBackgroundAt(index);
-
     }
 
     /**
      * Při příchodu nové zprávy se panel označí červenou barvou záložky
      * v tabbed panelu.
-     *
-     * @param toRead 
      */
-    public void setToRead (boolean toRead) {
-
+    public void setToRead(boolean toRead) {
         setupOriginalColor();
 
         int index = GUI.getTabContainer().indexOfComponent(this);
@@ -285,7 +205,6 @@ public class PrivateChatTab extends AbstractTab {
             GUI.getTabContainer().setBackgroundAt(index, unreadMessageColor);
         else
             GUI.getTabContainer().setBackgroundAt(index, originalColor);
-
     }
 
 }

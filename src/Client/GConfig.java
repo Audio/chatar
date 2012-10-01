@@ -222,14 +222,14 @@ public class GConfig extends JFrame implements WindowListener {
      * @return
      */
     public static Config getConfig () {
-
-        if (Input.currentTab == null) {
+        AbstractTab tab = MainWindow.getInstance().getActiveTab();
+        if (tab == null) {
             Config c = new Config();
             c.loadFromFile();
             return c;
         }
 
-        return Input.currentTab.getConnection().config;
+        return tab.getConnection().config;
 
     }
 

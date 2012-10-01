@@ -4,19 +4,12 @@ import Client.TabContainer.PanelTypes;
 import Connection.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.text.Document;
-import javax.swing.text.EditorKit;
+import javax.swing.text.*;
 
-/**
- * Panel s výpisem informací o/ze kanálu (channel).
- * Grafická komponenta, s serverem komunikuje přes na instanci ServerTab.
- *
- * @author Martin Fouček
- */
+
 public class ChannelTab extends AbstractTab {
 
     private JList users;
@@ -30,11 +23,7 @@ public class ChannelTab extends AbstractTab {
     private String selectedPopupUser;
     private LinkedList<String> tempUserNames;
 
-    /**
-     * Konstruktor. Vytváří GUI a lepí se na objekt ServerTab.
-     *
-     * @param channel
-     */
+
     public ChannelTab(String channel) {
 
         // Konstrukce panelu
@@ -119,6 +108,7 @@ public class ChannelTab extends AbstractTab {
 
         JMenuItem tl1 = new JMenuItem("Poslat zprávu");
         tl1.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 openChatByClick(selectedPopupUser);
             }
@@ -126,6 +116,7 @@ public class ChannelTab extends AbstractTab {
 
         JMenuItem tl2 = new JMenuItem("Získat informace");
         tl2.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 // getQuery().whois(selectedPopupUser);
             }
@@ -133,6 +124,7 @@ public class ChannelTab extends AbstractTab {
 
         JMenuItem tl3 = new JMenuItem("Vyhodit z místnosti");
         tl3.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 String params = getTabName() + " " + selectedPopupUser;
                 // getQuery().kick(params);
@@ -179,34 +171,18 @@ public class ChannelTab extends AbstractTab {
      */
     class PopupListener extends MouseAdapter {
 
-        /**
-         * Odpálí se při kliknutí myší.
-         *
-         * @param e
-         */
         @Override
         public void mousePressed(MouseEvent e) {
             openPrivateChat(e);
             showPopup(e);
         }
 
-        /**
-         * Odpálí se při uvolnění tlačítka myši.
-         *
-         * @param e
-         */
         @Override
         public void mouseReleased(MouseEvent e) {
             showPopup(e);
         }
 
-        /**
-         * Zobrazí popup menu.
-         *
-         * @param e
-         */
         private void showPopup(MouseEvent e) {
-
             if ( !e.isPopupTrigger() )
                 return;
 
@@ -216,23 +192,18 @@ public class ChannelTab extends AbstractTab {
 
             selectedPopupUser = nickname;
             popup.show( e.getComponent() , e.getX() , e.getY() );
-
         }
 
         /**
          * Při dvojkliku na přezdívku nějakého uživatele otevírá novou záložku
          * v tabbed panelu - soukromý chat. Pokud je již otevřený, pouze
          * na něj hodí focus.
-         *
-         * @param e
          */
-        private void openPrivateChat (MouseEvent e) {
-
+        private void openPrivateChat(MouseEvent e) {
             if ( e.getClickCount() < 2 )
                 return;
 
             openChatByClick(e);
-
         }
 
     }
@@ -241,12 +212,8 @@ public class ChannelTab extends AbstractTab {
      * Získá index prvku, na který bylo kliknuto. Dle indexu vrací přezdívku
      * uživatele ze seznamu. Pokud nebylo kliknuto na konkrétní položku
      * JListu, vrací null.
-     *
-     * @param e
-     * @return
      */
-    public String getCellIndexFromListWhereClicked (MouseEvent e) {
-
+    public String getCellIndexFromListWhereClicked(MouseEvent e) {
         // Nejblizsi prvek u mista, kde bylo kliknuto
         int cell = users.locationToIndex( e.getPoint() );
         if (cell == -1)
@@ -264,16 +231,13 @@ public class ChannelTab extends AbstractTab {
         users.setSelectedIndex(cell);
 
         return nickname;
-
     }
 
     /**
      * Otevírá okno se soukromým chatem a nastavuje mu focus.
      * Přezdívku získá z místa v seznamu uživatelů, kam bylo kliknuto.
-     *
-     * @param e
      */
-    public void openChatByClick (MouseEvent e) {
+    public void openChatByClick(MouseEvent e) {
         String nickname = getCellIndexFromListWhereClicked(e);
         openChatByClick(nickname);
     }
@@ -281,11 +245,8 @@ public class ChannelTab extends AbstractTab {
     /**
      * Otevírá okno se soukromým chatem a nastavuje mu focus.
      * Přezdívka je udána parametrem.
-     *
-     * @param nickname
      */
-    public void openChatByClick (String nickname) {
-
+    public void openChatByClick(String nickname) {
         if (nickname == null)
             return;
 
@@ -301,38 +262,31 @@ public class ChannelTab extends AbstractTab {
             } catch (ClientException e) { }
         }
         pc.setFocus();
-
     }
 
     /**
      * Vraci referenci na objekt Connection,
      * pres ktery komunikuje.
-     *
-     * @return
      */
     @Override
-    public DeprecatedConnection getConnection () {
+    public DeprecatedConnection getConnection() {
         return server.getConnection();
     }
 
     /**
      * Vraci referenci na server (ServerTab), pres ktery je kanal napojen.
      * V pripade serverove mistnosti vraci ref. na sebe.
-     *
-     * @return
      */
     @Override
-    public ServerTab getServerTab () {
+    public ServerTab getServerTab() {
         return server;
     }
 
     /**
      * Zobrazuje vystupni text - pridava jej na konec.
-     *
-     * @param str
      */
     @Override
-    public void addText (String str) {
+    public void addText(String str) {
 
         EditorKit kit = chat.getEditorKit();
         Document doc = chat.getDocument();
@@ -349,10 +303,8 @@ public class ChannelTab extends AbstractTab {
      * Nastavuje (vypisuje) prihlase uzivatele v kanale.
      * Vstupni retezec si rozdeli do pole dle mezer.
      * Kazda hodnota v poli predstavuje jednoho uzivatele.
-     *
-     * @param userlist
      */
-    public void setUsers (String userlist) {
+    public void setUsers(String userlist) {
 
         String[] juzrs = userlist.split(" ");
         Arrays.sort(juzrs, String.CASE_INSENSITIVE_ORDER);
@@ -404,20 +356,16 @@ public class ChannelTab extends AbstractTab {
 
     /**
      * Přidá uživatele do seznamu.
-     *
-     * @param nickname
      */
-    public void addUser (String nickname) {
+    public void addUser(String nickname) {
         if ( !hasNick(nickname) )
             usersModel.addElement(nickname);
     }
 
     /**
      * Odebere uživatele se seznamu.
-     *
-     * @param nickname
      */
-    public void removeUser (String nickname) {
+    public void removeUser(String nickname) {
 
         int index = getNick(nickname);
         if (index < 0)
@@ -429,21 +377,16 @@ public class ChannelTab extends AbstractTab {
 
     /**
      * Změní přezdívku vybraného uživatele.
-     *
-     * @param oldname
-     * @param newname
      */
-    public void changeUsersNickname (String oldname, String newname) {
+    public void changeUsersNickname(String oldname, String newname) {
         removeUser(oldname);
         addUser(newname);
     }
 
     /**
      * Nastavuje obsah horni casti - vypis aktualniho tematu.
-     *
-     * @param topic
      */
-    public void setTopic (String topic) {
+    public void setTopic(String topic) {
 
         if (topic == null || topic.trim().length() == 0)
             topic = "Diskusní téma není nastaveno.";
@@ -454,11 +397,6 @@ public class ChannelTab extends AbstractTab {
 
     }
 
-    /**
-     * Vraci svuj nazev.
-     *
-     * @return
-     */
     @Override
     public String getTabName() {
         return "#" + tabName;
@@ -467,16 +405,12 @@ public class ChannelTab extends AbstractTab {
     /**
      * Kanal se prilepi na svuj server (ServerTab).
      * Zatim umisteno v konstruktoru.
-     *
-     * @param channel
      */
     @Override
-    public void adapt (String channel) {
-
+    public void adapt(String channel) {
         if (Input.getCurrentServer() == null) {
             Input.showNoConnectionError();
-        }
-        else {
+        } else {
             if (channel.startsWith("#")) {
                 channel = channel.substring(1);
             }
@@ -485,23 +419,13 @@ public class ChannelTab extends AbstractTab {
             Input.getCurrentServer().channels.add(this);
             getConnection().setTab(this);
         }
-
     }
 
-    /**
-     * Ukonci cinnost panelu, ale nezavre ho.
-     */
     @Override
     public void die() {
         server.channels.remove(this);
     }
 
-    /**
-     * Ukonci cinnost panelu, ale nezavre ho.
-     * Uvedeno s duvodem.
-     *
-     * @param reason
-     */
     @Override
     public void die(String reason) {
         die();
@@ -513,19 +437,12 @@ public class ChannelTab extends AbstractTab {
      */
     @Override
     public void setFocus() {
-
-        Input.currentTab = this;
-        getConnection().setTab(this);
         changeNickname();
         GUI.getTabContainer().setSelectedComponent(this);
         GUI.getMenuBar().toggleDisconectFromServer(true);
         GUI.focusInput();
-
     }
 
-    /**
-     * Vymaže obsah chatu.
-     */
     @Override
     public void clearContent() {
         chat.setText(null);
@@ -534,12 +451,8 @@ public class ChannelTab extends AbstractTab {
     /**
      * Vrací odpověď, zda je uživatel se zvoleným nickem v této místnosti.
      * Kvůli prefixům nelze použít metodu (usersModel.)contains.
-     *
-     * @param user
-     * @return
      */
-    public boolean hasNick (String user) {
-
+    public boolean hasNick(String user) {
         user = Output.User.removePrefix(user).toLowerCase();
 
         int size = usersModel.size();
@@ -553,20 +466,14 @@ public class ChannelTab extends AbstractTab {
         }
 
         return false;
-
     }
-
 
     /**
      * Vrací index v seznamu, na kterém se nachází uživatel se zvoleným nickem.
      * Kvůli prefixům nelze použít metodu (usersModel.)indexOf.
      * Pokud uživatele nenajde, vrací hodnotu -1.
-     *
-     * @param user
-     * @return
      */
-    public int getNick (String user) {
-
+    public int getNick(String user) {
         user = Output.User.removePrefix(user).toLowerCase();
 
         int size = usersModel.size();
@@ -580,16 +487,11 @@ public class ChannelTab extends AbstractTab {
         }
 
         return -1;
-
     }
-
-
 
     /**
      * Třída, která podporuje vkládání obrázků (ikon) do JListu.
      * Využito pro přehledné označení uživatelů s rozdílnými právy (operátor, moderátor..).
-     *
-     * @author Martin Fouček
      */
     class ListImageRenderer extends DefaultListCellRenderer {
 
@@ -604,7 +506,6 @@ public class ChannelTab extends AbstractTab {
             c = Output.User.addIcon(c, (String) value);
 
             return c;
-
         }
 
     }
