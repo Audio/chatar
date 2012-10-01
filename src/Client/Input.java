@@ -11,14 +11,14 @@ import javax.swing.*;
  * Vstup má podobu příkazů nebo obyčejného textu (zpráva na odeslání
  * při komunikaci s ostatními uživateli).
  */
-public class GInput extends JPanel {
+public class Input extends JPanel {
 
     private JButton button;
     private JTextField textField;
 
     private enum Commands {
 
-        UNKNOWN, ACTION, AFK, AWAY, BACK, CLEAR, JOIN, KICK, LEAVE, ME, MODE,
+        UNKNOWN, ACTION, AFK, AWAY, NOT_AFK, CLEAR, JOIN, KICK, LEAVE, ME, MODE,
         NAMES, NICK, OPER, PART, PRIVMSG, QUIT, SERVER, TOPIC, WHOIS
         ;
 
@@ -39,7 +39,7 @@ public class GInput extends JPanel {
      * zprav do kanalu (je-li uzivatel pripojen) a odesilani prikazu
      * vybranemu serveru.
      */
-    public GInput(int width, int height) {
+    public Input(int width, int height) {
         GUI.setPreferredSize(this, width, height);
         setLayout( new BoxLayout(this, BoxLayout.PAGE_AXIS) );
 
@@ -164,33 +164,33 @@ public class GInput extends JPanel {
         CommandHistory.add(inputText);
 
         switch ( Commands.fromString(command) ) {
-            case UNKNOWN:    { Input.showError(command); break; }
-            case QUIT:    { Input.handleQuit(params); break; }
-            case PRIVMSG: { Input.handlePrivMessage(params); break; }
-            case JOIN:    { Input.handleJoin(params); break; }
-            case LEAVE:   { Input.handlePart(params); break; }
-            case PART:    { Input.handlePart(params); break; }
-            case NICK:    { Input.handleNick(params); break; }
-            case TOPIC:   { Input.handleTopic(params); break; }
-            case NAMES:   { Input.handleNames(params); break; }
-            case MODE:    { Input.handleMode(params); break; }
-            case KICK:    { Input.handleKick(params); break; }
-            case AWAY:    { Input.handleAway(params); break; }
-            case AFK:     { Input.handleAway(params); break; }
-            case BACK:    { Input.handleBack(); break; }
-            case CLEAR:   { Input.handleClear(); break; }
-            case OPER:    { Input.handleOper(params); break; }
-            case WHOIS:   { Input.handleWhois(params); break; }
-            case ME:      { Input.handleMe(params); break; }
-            case ACTION:  { Input.handleMe(params); break; }
+            case UNKNOWN: { InputHandler.showError(command); break; }
+            case QUIT:    { InputHandler.handleQuit(params); break; }
+            case PRIVMSG: { InputHandler.handlePrivMessage(params); break; }
+            case JOIN:    { InputHandler.handleJoin(params); break; }
+            case LEAVE:   { InputHandler.handlePart(params); break; }
+            case PART:    { InputHandler.handlePart(params); break; }
+            case NICK:    { InputHandler.handleNick(params); break; }
+            case TOPIC:   { InputHandler.handleTopic(params); break; }
+            case NAMES:   { InputHandler.handleNames(params); break; }
+            case MODE:    { InputHandler.handleMode(params); break; }
+            case KICK:    { InputHandler.handleKick(params); break; }
+            case AWAY:    { InputHandler.handleAway(params); break; }
+            case AFK:     { InputHandler.handleAway(params); break; }
+            case NOT_AFK:    { InputHandler.handleBack(); break; }
+            case CLEAR:   { InputHandler.handleClear(); break; }
+            case OPER:    { InputHandler.handleOper(params); break; }
+            case WHOIS:   { InputHandler.handleWhois(params); break; }
+            case ME:      { InputHandler.handleMe(params); break; }
+            case ACTION:  { InputHandler.handleMe(params); break; }
 
-            case SERVER:  { Input.handleServer(params); break; }
+            case SERVER:  { InputHandler.handleServer(params); break; }
         }
     }
 
     private void handleMessage () {
-        if (Input.getCurrentServer() == null) {
-            Input.showNoConnectionError();
+        if (InputHandler.getCurrentServer() == null) {
+            InputHandler.showNoConnectionError();
             return;
         }
 
@@ -206,7 +206,7 @@ public class GInput extends JPanel {
         String room = tab.getTabName();
         DeprecatedConnection con = tab.getConnection();
 
-        Input.handlePrivMessage(room + " " + msg);
+        InputHandler.handlePrivMessage(room + " " + msg);
         con.output(con.config.nickname + ": " + msg);
     }
 

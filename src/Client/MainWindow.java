@@ -11,7 +11,7 @@ public class MainWindow extends JFrame {
 
     private TabContainer tabContainer;
     private GMenuBar menuBar;
-    private GInput input;
+    private Input input;
 
 
     public static MainWindow getInstance() {
@@ -43,7 +43,7 @@ public class MainWindow extends JFrame {
 
     private void createContentArea() {
         tabContainer = new TabContainer(650, 400);
-        input = new GInput(650, 100);
+        input = new Input(650, 100);
 
         // umisteni panelu ve formulari
         JPanel contentPanel = (JPanel) getContentPane();
@@ -90,7 +90,7 @@ public class MainWindow extends JFrame {
         return menuBar;
     }
 
-    public GInput getGInput() {
+    public Input getGInput() {
         return input;
     }
 

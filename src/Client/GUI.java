@@ -109,7 +109,7 @@ public class GUI {
         return getWindow().getGMenuBar();
     }
 
-    public static GInput getInput() {
+    public static Input getInput() {
         return getWindow().getGInput();
     }
 

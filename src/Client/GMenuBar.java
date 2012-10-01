@@ -1,6 +1,6 @@
 package Client;
 
-import Connection.Input;
+import Connection.InputHandler;
 import java.awt.Component;
 import java.awt.event.*;
 import javax.swing.*;
@@ -86,7 +86,7 @@ public class GMenuBar extends JMenuBar {
         disconnectFromServer.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Input.handleQuit(null);
+                InputHandler.handleQuit(null);
             }
         });
 
@@ -160,7 +160,7 @@ public class GMenuBar extends JMenuBar {
             Component component = array[i];
             if ( component.getClass().getSimpleName().equals("ServerTab") ) {
                 ServerTab c = (ServerTab) component;
-                Input.handleQuit(c, null);
+                InputHandler.handleQuit(c, null);
             }
         }
     }
@@ -176,12 +176,12 @@ public class GMenuBar extends JMenuBar {
 
         // TODO switch
         if ( type.equals("GTabChannel") ) {
-            Input.handlePart(null);
+            InputHandler.handlePart(null);
         } else if ( type.equals("GTabPrivateChat") ) {
             tab.die();
             tab.killMyself();
         } else {
-            Input.handleQuit(null);
+            InputHandler.handleQuit(null);
         }
     }
 

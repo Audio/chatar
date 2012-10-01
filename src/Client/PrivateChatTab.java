@@ -128,12 +128,12 @@ public class PrivateChatTab extends AbstractTab {
      */
     @Override
     public void adapt(String nickname) {
-        if (Input.getCurrentServer() == null) {
-            Input.showNoConnectionError();
+        if (InputHandler.getCurrentServer() == null) {
+            InputHandler.showNoConnectionError();
         }
         else {
-            server = Input.getCurrentServer();
-            Input.getCurrentServer().privateChats.add(this);
+            server = InputHandler.getCurrentServer();
+            InputHandler.getCurrentServer().privateChats.add(this);
             getConnection().setTab(this);
             // getQuery().whois(tabName);
         }

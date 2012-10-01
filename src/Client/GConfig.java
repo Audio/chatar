@@ -1,7 +1,7 @@
 package Client;
 
 import Config.Config;
-import Connection.Input;
+import Connection.InputHandler;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.*;

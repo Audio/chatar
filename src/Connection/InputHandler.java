@@ -5,11 +5,7 @@ import Client.TabContainer.PanelTypes;
 import java.util.Iterator;
 
 
-/**
- * Zpracovává vstup od uživatele (pouze příkazy, které zná). Seznam známých
- * (povolených) příkazů určuje třída GInput, která příkazy načítá.
- */
-public class Input {
+public class InputHandler {
     
     public static ServerTab getCurrentServer() {
         return getActiveTab().getServerTab();
