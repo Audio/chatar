@@ -311,14 +311,12 @@ public class Reply {
             Iterator it = s.channels.iterator();
             while ( it.hasNext() ) {
                 ChannelTab ch = (ChannelTab) it.next();
-                ch.die();
                 ch.killMyself();
             }
 
             it = s.privateChats.iterator();
             while ( it.hasNext() ) {
                 PrivateChatTab ch = (PrivateChatTab) it.next();
-                ch.die();
                 ch.killMyself();
             }
 
@@ -467,7 +465,6 @@ public class Reply {
         if ( connection.isMe(person) ) {
             String msg = mType("info") + "Byl/a jste vyhozen/a z kanálu " + channel + ". Důvod: " + reason;
             output(msg, channel_tab.getServerTab() );
-            channel_tab.die();
             channel_tab.killMyself();
         }
         else {

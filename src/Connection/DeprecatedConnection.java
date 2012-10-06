@@ -63,7 +63,6 @@ public class DeprecatedConnection extends Thread {
                     loadReply();
                 } catch (Exception e) {
                     new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba připojení", "K vybranému serveru se nelze připojit.");
-                    tab.die("Spojení nelze uskutečnit.");
                 }
 
                 Thread.sleep(1000);

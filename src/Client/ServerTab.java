@@ -171,10 +171,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
     /**
      * Ukonci cinnost panelu, ale nezavre ho.
-     *
-     * @param reason
      */
-    @Override
     public void die(String reason) {
 
         if (reason != null)

@@ -384,16 +384,6 @@ public class ChannelTab extends AbstractTab {
         return "#" + tabName;
     }
 
-    @Override
-    public void die() {
-        serverTab.channels.remove(this);
-    }
-
-    @Override
-    public void die(String reason) {
-        die();
-    }
-
     /**
      * Urci sama sebe jako aktualni panel.
      * Pouzito mj. pri zpracovani vstupu od uzivatele.

@@ -154,7 +154,6 @@ public class InputHandler {
         }
 
         // channel_tab.getQuery().leave(channel);
-        channelTab.die();
         channelTab.killMyself();
         clearText();
     }

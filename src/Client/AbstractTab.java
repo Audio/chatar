@@ -42,15 +42,6 @@ public abstract class AbstractTab extends JPanel {
     }
 
     /**
-     * Ukončí činnost panelu, ale nezavře ho.
-     */
-    public void die() {
-        die(null);
-    }
-
-    public abstract void die(String reason);
-
-    /**
      * Odstraní se z tabbed panelu.
      */
     // TODO ehm, finalize?

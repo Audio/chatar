@@ -114,16 +114,6 @@ public class PrivateChatTab extends AbstractTab {
     }
 
     @Override
-    public void die() {
-        serverTab.privateChats.remove(this);
-    }
-
-    @Override
-    public void die(String reason) {
-        die();
-    }
-
-    @Override
     public void setFocus() {
         changeNickname();
         setToRead(false);
