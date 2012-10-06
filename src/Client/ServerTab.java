@@ -188,20 +188,16 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
     }
 
-    /**
-     * Vraci nazev serveru pro pojmenovani zalozky v hl. panelu.
-     * 
-     * @return
-     */
     @Override
     public String getTabName () {
         return tabName;
     }
 
-    /**
-     * Urci sama sebe jako aktualni panel.
-     * Pouzito mj. pri zpracovani vstupu od uzivatele.
-     */
+    @Override
+    public ServerTab getServerTab() {
+        return this;
+    }
+
     @Override
     public void setFocus() {
         changeNickname();

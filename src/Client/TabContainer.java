@@ -18,15 +18,14 @@ public class TabContainer extends JTabbedPane {
         GUI.setPreferredSize(this, width, height);
         setTabPlacement(JTabbedPane.BOTTOM);
 
-        addChangeListener( new ChangeListener() {
+        addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                AbstractTab ref = (AbstractTab) GUI.getTabContainer().getSelectedComponent();
-                if (ref == null)
-                    return;
-                ref.setFocus();
+                AbstractTab tab = (AbstractTab) getSelectedComponent();
+                if (tab != null)
+                    tab.setFocus();
             }
-        } );
+        });
 
     }
 

@@ -214,10 +214,13 @@ public class Input extends JPanel {
 
         String msg = textField.getText();
         String room = tab.getTabName();
+        // TODO neco udelej, okey?
+        /*
         DeprecatedConnection con = tab.getConnection();
 
         InputHandler.handlePrivMessage(room + " " + msg);
         con.output(con.config.nickname + ": " + msg);
+        */
     }
 
 }

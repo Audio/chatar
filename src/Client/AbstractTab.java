@@ -18,7 +18,7 @@ public abstract class AbstractTab extends JPanel {
         return "Panel";
     }
 
-    final public ServerTab getServerTab() {
+    public ServerTab getServerTab() {
         return serverTab;
     }
 
