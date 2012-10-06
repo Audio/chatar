@@ -212,15 +212,9 @@ public class Input extends JPanel {
             return;
         }
 
-        String msg = textField.getText();
-        String room = tab.getTabName();
-        // TODO neco udelej, okey?
-        /*
-        DeprecatedConnection con = tab.getConnection();
-
-        InputHandler.handlePrivMessage(room + " " + msg);
-        con.output(con.config.nickname + ": " + msg);
-        */
+        String message = textField.getText();
+        String target = tab.getTabName();
+        InputHandler.handlePrivMessage(target + " " + message);
     }
 
 }

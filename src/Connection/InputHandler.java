@@ -45,29 +45,21 @@ public class InputHandler {
         tab.getServerTab().destroy();
     }
 
-    /**
-     * Odesle soukromou zpravu vybranemu uzivateli,
-     * nebo odesle zpravu do vybraneho kanalu.
-     */
     public static void handlePrivMessage(String params) {
-        String user;
-        String msg;
         int upto;
-
         if ((upto = params.indexOf(" ")) == -1) {
             outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /privmsg prijemce zprava");
             return;
         }
 
-        user = params.substring(0, upto);
-        msg  = ":" + params.substring(upto + 1);
+        String target = params.substring(0, upto);
+        String message  = params.substring(upto + 1);
 
-        // getActiveTab().getQuery().privMsg(user, msg);
+        getCurrentServerTab().getConnection().sendMessage(target, message);
         clearInput();
 
-        // Otevření nového okna při soukromé zprávě (tzn. uživateli)
-        if ( user.startsWith("#") == false && getCurrentServerTab().getPrivateChatByName(user) == null)
-            getCurrentServerTab().createPrivateChatTab(user);
+        if ( !target.startsWith("#") && getCurrentServerTab().getPrivateChatByName(target) == null)
+            getCurrentServerTab().createPrivateChatTab(target);
     }
 
     public static void handleJoin(String channel) {
