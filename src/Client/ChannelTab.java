@@ -255,12 +255,9 @@ public class ChannelTab extends AbstractTab {
             // return;
 
         PrivateChatTab pc = getServerTab().getPrivateChatByName(nickname);
-        if (pc == null) {
-            try {
-                MainWindow.getInstance().addTab(PanelTypes.PANEL_PRIVATE, nickname);
-                pc = getServerTab().getPrivateChatByName(nickname);
-            } catch (ClientException e) { }
-        }
+        if (pc == null)
+            pc = getServerTab().createPrivateChatTab(nickname);
+
         pc.setFocus();
     }
 

@@ -308,6 +308,7 @@ public class Reply {
             // uzavře vsechny místnosti a soukromé chaty
             ServerTab s = connection.getServerTab();
 
+            /*
             Iterator it = s.channels.iterator();
             while ( it.hasNext() ) {
                 ChannelTab ch = (ChannelTab) it.next();
@@ -319,6 +320,7 @@ public class Reply {
                 PrivateChatTab ch = (PrivateChatTab) it.next();
                 ch.destroy();
             }
+            */
 
             // Znemožní další operace související s připojováním
             connection.setClosedByServer();
@@ -391,6 +393,7 @@ public class Reply {
             }
 
             // otevre okno pro soukromy chat (pokud neni otevreno)
+            /*
             PrivateChatTab chat = getPrivateChat(prefix.nick);
             if (chat == null) {
                 try {
@@ -402,6 +405,7 @@ public class Reply {
             output(out, chat);
             if (MainWindow.getInstance().getActiveTab() != chat)
                 chat.setToRead(true);
+            */
         }
 
     }
@@ -519,6 +523,7 @@ public class Reply {
          * Na některých serverech nelze odeslat prikaz NAMES s více cíly,
          * proto se odešle více příkazů (pro každý kanál jeden).
          */
+        /*
         Iterator it = connection.getServerTab().channels.iterator();
         while ( it.hasNext() ) {
             ChannelTab ch = (ChannelTab) it.next();
@@ -527,11 +532,13 @@ public class Reply {
                 ch.changeUsersNickname(prefix.nick, new_nickname);
             }
         }
+        */
 
         /**
          * Existuje-li panel pro soukromy chat s uzivatelem, ktery si prave
          * zmenil prezdivku, prejmenuje se.
          */
+        /*
         it = connection.getServerTab().privateChats.iterator();
         PrivateChatTab pr = null;
         while ( it.hasNext() ) {
@@ -547,6 +554,7 @@ public class Reply {
                 GUI.getTabContainer().setTitleAt( GUI.getTabContainer().indexOfTab(prefix.nick) , new_nickname);
             }
         }
+        */
 
     }
 
@@ -591,6 +599,7 @@ public class Reply {
         String temp = mType("info") + "Uživatel " + Output.HTML.bold(user)
                 + " se odpojil (" + smileAtMe(params) + ").";
 
+        /*
         Iterator it = connection.getServerTab().channels.iterator();
         while ( it.hasNext() ) {
             ChannelTab ch = (ChannelTab) it.next();
@@ -599,6 +608,7 @@ public class Reply {
                 output(temp, ch);
             }
         }
+        */
 
     }
 
@@ -689,12 +699,14 @@ public class Reply {
         String foo = mType("info") + "Stav nepřítomnosti \"" + afk + "\" byl zrušen.";
 
         output(foo, true);
+        /*
         Iterator it = connection.getServerTab().channels.iterator();
         ChannelTab ch = null;
         while ( it.hasNext() ) {
             ch = (ChannelTab) it.next();
             output(foo, ch);
         }
+        */
 
     }
 
@@ -710,12 +722,14 @@ public class Reply {
         String foo = mType("info") + "Nastaven stav nepřítomnosti (" + afk + ").";
 
         output(foo, true);
+        /*
         Iterator it = connection.getServerTab().channels.iterator();
         ChannelTab ch = null;
         while ( it.hasNext() ) {
             ch = (ChannelTab) it.next();
             output(foo, ch);
         }
+        */
 
     }
 

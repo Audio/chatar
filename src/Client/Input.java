@@ -200,7 +200,7 @@ public class Input extends JPanel {
     }
 
     private void handleMessage () {
-        if (InputHandler.getCurrentServer() == null) {
+        if (InputHandler.getCurrentServerTab() == null) {
             InputHandler.showNotConnectedError();
             return;
         }

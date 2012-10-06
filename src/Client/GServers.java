@@ -145,7 +145,7 @@ public class GServers extends JFrame implements WindowListener {
     private void actionConnect() {
         String server = (String) list.getSelectedValue();
         try {
-            MainWindow.getInstance().addTab(PanelTypes.PANEL_SERVER, server);
+            MainWindow.getInstance().createServerTab(server);
             close();
         } catch (Exception e) {
             e.printStackTrace();

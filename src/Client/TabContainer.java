@@ -2,8 +2,7 @@ package Client;
 
 import java.awt.Color;
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.event.*;
 
 
 public class TabContainer extends JTabbedPane {
@@ -29,41 +28,19 @@ public class TabContainer extends JTabbedPane {
 
     }
 
-    public void addTab(PanelTypes type, String address) throws ClientException {
-        AbstractTab tab = null;
-        AbstractTab currentTab = (AbstractTab) getSelectedComponent();
-
-        switch (type) {
-            case PANEL_SERVER:  {
-                tab = new ServerTab(address);
-                break;
-            }
-            case PANEL_CHANNEL: {
-                if (currentTab == null)
-                    throw new ClientException("Není aktivní žádné připojení");
-
-                tab = new ChannelTab(address, currentTab.getServerTab() );
-                break;
-            }
-            case PANEL_PRIVATE: {
-                if (currentTab == null)
-                    throw new ClientException("Není aktivní žádné připojení");
-
-                tab = new PrivateChatTab(address, currentTab.getServerTab() );
-                break;
-            }
-        }
-
-        insertNewTab(tab, type);
+    public ServerTab createServerTab(String address) {
+        ServerTab tab = new ServerTab(address);
+        insertTab(tab, PanelTypes.PANEL_SERVER);
         tab.setFocus();
         MainWindow.getInstance().getGMenuBar().toggleClosePanel(true);
+        return tab;
     }
 
     public void removeTab(AbstractTab tab) {
         remove(tab);
     }
 
-    private void insertNewTab(AbstractTab tab, PanelTypes type) {
+    public void insertTab(AbstractTab tab, PanelTypes type) {
         int index;
         String tip ;
         String title = tab.getTabName();

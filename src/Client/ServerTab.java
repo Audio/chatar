@@ -1,5 +1,6 @@
 package Client;
 
+import Client.TabContainer.PanelTypes;
 import Connection.*;
 import java.awt.*;
 import java.io.*;
@@ -16,9 +17,8 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     private JLabel channelsLabel;
     private JEditorPane text;
     private String tabName;
-    // TODO zadny public
-    public HashSet channels;
-    public HashSet privateChats;
+    private HashSet<ChannelTab> channelTabs;
+    private HashSet<PrivateChatTab> privateChatTabs;
 
 
     public ServerTab(String address) {
@@ -92,8 +92,8 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
         // Pripojeni na server
         tabName = server;
-        channels = new HashSet<>();
-        privateChats = new HashSet<>();
+        channelTabs = new HashSet<>();
+        privateChatTabs = new HashSet<>();
 
         try {
             connection = new Connection(server, port);
@@ -110,6 +110,20 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         */
     }
 
+    public ChannelTab createChannelTab(String channel) {
+        ChannelTab tab = new ChannelTab(channel, this);
+        channelTabs.add(tab);
+        MainWindow.getInstance().getTabContainer().insertTab(tab, PanelTypes.PANEL_CHANNEL);
+        return tab;
+    }
+
+    public PrivateChatTab createPrivateChatTab(String nickname) {
+        PrivateChatTab tab = new PrivateChatTab(nickname, this);
+        privateChatTabs.add(tab);
+        MainWindow.getInstance().getTabContainer().insertTab(tab, PanelTypes.PANEL_PRIVATE);
+        return tab;
+    }
+
     /**
      * Vraci referenci na kanal, ktery ma dany nazev
      * a je pripojen pres tento server.
@@ -119,6 +133,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         ChannelTab channel = null;
         name = name.toLowerCase();
 
+        /*
         Iterator it = channels.iterator();
         while ( it.hasNext() ) {
             channel = (ChannelTab) it.next();
@@ -127,6 +142,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
             else
                 channel = null;
         }
+        */
 
         return channel;
     }
@@ -141,6 +157,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         PrivateChatTab chat = null;
         nickname = nickname.toLowerCase();
 
+        /*
         Iterator it = privateChats.iterator();
         while ( it.hasNext() ) {
             chat = (PrivateChatTab) it.next();
@@ -149,6 +166,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
             else
                 chat = null;
         }
+        */
 
         return chat;
 
@@ -172,6 +190,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     /**
      * Ukonci cinnost panelu, ale nezavre ho.
      */
+    // TODO nevyuzito
     public void die(String reason) {
 
         if (reason != null)

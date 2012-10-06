@@ -11,7 +11,7 @@ public class InputHandler {
         return MainWindow.getInstance().getActiveTab();
     }
 
-    public static ServerTab getCurrentServer() {
+    public static ServerTab getCurrentServerTab() {
         return getActiveTab().getServerTab();
     }
 
@@ -54,6 +54,7 @@ public class InputHandler {
         ServerTab server = tab.getServerTab();
 
         // pozavira vsechny kanaly
+        /*
         Iterator it = server.channels.iterator();
         while ( it.hasNext() ) {
             ChannelTab channel = (ChannelTab) it.next();
@@ -66,6 +67,7 @@ public class InputHandler {
             PrivateChatTab chat = (PrivateChatTab) it.next();
             chat.destroy();
         }
+        */
 
         clearText();
 
@@ -94,11 +96,8 @@ public class InputHandler {
         clearText();
 
         // Otevření nového okna při soukromé zprávě (tzn. uživateli)
-        if ( user.startsWith("#") == false && getCurrentServer().getPrivateChatByName(user) == null) {
-            try {
-                MainWindow.getInstance().addTab(PanelTypes.PANEL_PRIVATE, user);
-            } catch (ClientException e) { }
-        }
+        if ( user.startsWith("#") == false && getCurrentServerTab().getPrivateChatByName(user) == null)
+            getCurrentServerTab().createPrivateChatTab(user);
     }
 
     /**
@@ -115,18 +114,16 @@ public class InputHandler {
             channel = channel.substring(1);
 
         // neotevre panel, co jiz existuje; pouze prepne
-        ChannelTab exists = getCurrentServer().getChannelTabByName("#" + channel);
+        ChannelTab exists = getCurrentServerTab().getChannelTabByName("#" + channel);
         if (exists != null) {
             GUI.getTabContainer().setSelectedComponent( exists );
             clearText();
             return;
         }
 
-        try {
-            MainWindow.getInstance().addTab(PanelTypes.PANEL_CHANNEL, channel);
-            // getActiveTab().getQuery().join(channel);
-            clearText();
-        } catch (ClientException e) { }
+        getCurrentServerTab().createChannelTab(channel);
+        // TODO nutne clearText?
+        clearText();
     }
 
     /**
@@ -145,7 +142,7 @@ public class InputHandler {
         if ( channel.startsWith("#") )
             channel = channel.substring(1);
 
-        ChannelTab channelTab = getCurrentServer().getChannelTabByName("#" + channel);
+        ChannelTab channelTab = getCurrentServerTab().getChannelTabByName("#" + channel);
 
         // overi existenci panelu
         if (channelTab == null) {
@@ -218,10 +215,9 @@ public class InputHandler {
      */
     public static void handleServer(String address) {
         try {
-            MainWindow.getInstance().addTab(PanelTypes.PANEL_SERVER, address);
+            MainWindow.getInstance().createServerTab(address);
             clearText();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba aplikace", "Připojení nelze uskutečnit.");
         }
     }
