@@ -1,6 +1,5 @@
 package Client;
 
-import Connection.*;
 import java.awt.*;
 import java.io.*;
 import javax.swing.*;
@@ -12,12 +11,14 @@ public class PrivateChatTab extends AbstractTab {
     private JEditorPane infobox;
     private JEditorPane chat;
     private String tabName;
-    private ServerTab server;
     private Color originalColor;
     private Color unreadMessageColor;
 
 
-    public PrivateChatTab(String nickname) {
+    public PrivateChatTab(String nickname, final ServerTab serverTab) {
+        this.serverTab = serverTab;
+        // TODO whois
+        // getQuery().whois(tabName);
 
         // Konstrukce panelu
         SpringLayout layout = new SpringLayout();
@@ -82,16 +83,6 @@ public class PrivateChatTab extends AbstractTab {
     }
 
     @Override
-    public DeprecatedConnection getConnection() {
-        return server.getConnection();
-    }
-
-    @Override
-    public ServerTab getServerTab() {
-        return server;
-    }
-
-    @Override
     public void addText(String str) {
         EditorKit kit = chat.getEditorKit();
         Document doc = chat.getDocument();
@@ -122,26 +113,9 @@ public class PrivateChatTab extends AbstractTab {
         this.tabName = tabName;
     }
 
-    /**
-     * Kanál se přilepí na svůj server (instance ServerTab).
-     * Také načte informace o druhém uživateli.
-     */
-    @Override
-    public void adapt(String nickname) {
-        if (InputHandler.getCurrentServer() == null) {
-            InputHandler.showNotConnectedError();
-        }
-        else {
-            server = InputHandler.getCurrentServer();
-            InputHandler.getCurrentServer().privateChats.add(this);
-            getConnection().setTab(this);
-            // getQuery().whois(tabName);
-        }
-    }
-
     @Override
     public void die() {
-        server.privateChats.remove(this);
+        serverTab.privateChats.remove(this);
     }
 
     @Override

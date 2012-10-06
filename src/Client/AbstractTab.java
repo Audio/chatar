@@ -1,30 +1,25 @@
 package Client;
 
-import Connection.DeprecatedConnection;
+import Connection.Connection;
 import javax.swing.JPanel;
 
 
 public abstract class AbstractTab extends JPanel {
 
-    // TODO pryc
-    public DeprecatedConnection getConnection() {
-        return null;
-    }
+    protected Connection connection;
+    protected ServerTab serverTab;
 
-    /**
-     * U serverových panelů vytváří spojení.
-     * U kanalů přiřadí svoji referenci k serverovému panelu.
-     * @param address
-     */
-    // TODO co s tim?
-    public abstract void adapt(String address);
+
+    public Connection getConnection() {
+        return connection;
+    }
 
     public String getTabName() {
         return "Panel";
     }
 
-    public ServerTab getServerTab() {
-        return null;
+    final public ServerTab getServerTab() {
+        return serverTab;
     }
 
     // TODO append nebo display

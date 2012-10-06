@@ -17,14 +17,14 @@ public class ChannelTab extends AbstractTab {
     private JEditorPane infobox;
     private JEditorPane chat;
     private String tabName;
-    private ServerTab server;
     private JPopupMenu popup;
     private MouseListener popupListener;
     private String selectedPopupUser;
     private LinkedList<String> tempUserNames;
 
 
-    public ChannelTab(String channel) {
+    public ChannelTab(String channel, final ServerTab serverTab) {
+        this.serverTab = serverTab;
 
         // Konstrukce panelu
         SpringLayout layout = new SpringLayout();
@@ -159,7 +159,6 @@ public class ChannelTab extends AbstractTab {
 
         // Vytvori instanci zasobniku
         tempUserNames = new LinkedList<String>();
-
     }
 
     /**
@@ -251,8 +250,9 @@ public class ChannelTab extends AbstractTab {
             return;
 
         // Neklikl uživatel na svou přezdívku?
-        if ( getConnection().isMe(nickname) )
-            return;
+        // TODO check nick
+        // if ( getConnection().isMe(nickname) )
+            // return;
 
         PrivateChatTab pc = getServerTab().getPrivateChatByName(nickname);
         if (pc == null) {
@@ -262,24 +262,6 @@ public class ChannelTab extends AbstractTab {
             } catch (ClientException e) { }
         }
         pc.setFocus();
-    }
-
-    /**
-     * Vraci referenci na objekt Connection,
-     * pres ktery komunikuje.
-     */
-    @Override
-    public DeprecatedConnection getConnection() {
-        return server.getConnection();
-    }
-
-    /**
-     * Vraci referenci na server (ServerTab), pres ktery je kanal napojen.
-     * V pripade serverove mistnosti vraci ref. na sebe.
-     */
-    @Override
-    public ServerTab getServerTab() {
-        return server;
     }
 
     /**
@@ -402,28 +384,9 @@ public class ChannelTab extends AbstractTab {
         return "#" + tabName;
     }
 
-    /**
-     * Kanal se prilepi na svuj server (ServerTab).
-     * Zatim umisteno v konstruktoru.
-     */
-    @Override
-    public void adapt(String channel) {
-        if (InputHandler.getCurrentServer() == null) {
-            InputHandler.showNotConnectedError();
-        } else {
-            if (channel.startsWith("#")) {
-                channel = channel.substring(1);
-            }
-            // TODO prasečina
-            server = InputHandler.getCurrentServer();
-            InputHandler.getCurrentServer().channels.add(this);
-            getConnection().setTab(this);
-        }
-    }
-
     @Override
     public void die() {
-        server.channels.remove(this);
+        serverTab.channels.remove(this);
     }
 
     @Override

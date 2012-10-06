@@ -7,6 +7,10 @@ import java.util.Iterator;
 
 public class InputHandler {
     
+    private static AbstractTab getActiveTab() {
+        return MainWindow.getInstance().getActiveTab();
+    }
+
     public static ServerTab getCurrentServer() {
         return getActiveTab().getServerTab();
     }
@@ -16,15 +20,12 @@ public class InputHandler {
     }
 
     public static void outputToCurrentTab(String str) {
-        getActiveTab().getConnection().getTab().addText(str);
+        getActiveTab().addText(str);
     }
 
+    // TODO potrebuju to?
     public static void clearText() {
         MainWindow.getInstance().getGInput().getTextField().setText(null);
-    }
-
-    public static boolean isConnected() {
-        return (getActiveTab() != null && getActiveTab().getConnection().isConnected() );
     }
 
     public static void showNotConnectedError() {
@@ -110,9 +111,8 @@ public class InputHandler {
             return;
         }
 
-        if (channel.startsWith("#")) {
+        if ( channel.startsWith("#") )
             channel = channel.substring(1);
-        }
 
         // neotevre panel, co jiz existuje; pouze prepne
         ChannelTab exists = getCurrentServer().getChannelTabByName("#" + channel);
@@ -349,10 +349,6 @@ public class InputHandler {
      */
     public static String mType(String str) {
         return Output.HTML.mType(str);
-    }
-
-    private static AbstractTab getActiveTab() {
-        return MainWindow.getInstance().getActiveTab();
     }
 
 }

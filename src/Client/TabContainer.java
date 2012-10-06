@@ -32,14 +32,29 @@ public class TabContainer extends JTabbedPane {
 
     public void addTab(PanelTypes type, String address) throws ClientException {
         AbstractTab tab = null;
+        AbstractTab currentTab = (AbstractTab) getSelectedComponent();
 
         switch (type) {
-            case PANEL_SERVER:  { tab = new ServerTab(address); break; }
-            case PANEL_CHANNEL: { tab = new ChannelTab(address); break; }
-            case PANEL_PRIVATE: { tab = new PrivateChatTab(address); break; }
+            case PANEL_SERVER:  {
+                tab = new ServerTab(address);
+                break;
+            }
+            case PANEL_CHANNEL: {
+                if (currentTab == null)
+                    throw new ClientException("Není aktivní žádné připojení");
+
+                tab = new ChannelTab(address, currentTab.getServerTab() );
+                break;
+            }
+            case PANEL_PRIVATE: {
+                if (currentTab == null)
+                    throw new ClientException("Není aktivní žádné připojení");
+
+                tab = new PrivateChatTab(address, currentTab.getServerTab() );
+                break;
+            }
         }
 
-        tab.adapt(address);
         insertNewTab(tab, type);
         tab.setFocus();
         MainWindow.getInstance().getGMenuBar().toggleClosePanel(true);

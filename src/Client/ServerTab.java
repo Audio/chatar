@@ -16,7 +16,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     private JLabel channelsLabel;
     private JEditorPane text;
     private String tabName;
-    private Connection connection;
     // TODO zadny public
     public HashSet channels;
     public HashSet privateChats;
@@ -103,6 +102,12 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
             new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba připojení", "K vybranému serveru se nelze připojit.");
             // die("Spojení nelze uskutečnit."); // TODO volani z konstruktoru :-/
         }
+
+        // TODO po pripojeni
+        /*
+        GUI.getMenuBar().toggleDisconectFromAll(true);
+        GUI.getMenuBar().toggleUserMenuBar(true);
+        */
     }
 
     /**
@@ -111,7 +116,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
      * Rozlišuje velikost písmen.
      */
     public ChannelTab getChannelTabByName(String name) {
-
         ChannelTab channel = null;
         name = name.toLowerCase();
 
@@ -125,7 +129,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         }
 
         return channel;
-
     }
 
     /**
@@ -164,27 +167,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
             text.setCaretPosition( doc.getLength() );
         }
         catch (Exception e) { }
-    }
-
-    /**
-     * Pripoji se na server. Pro pripojeni vytvori nove vlakno.
-     * Aktuvuje tlačítko v menu - pro odpojení od serveru.
-     *
-     * @param foo
-     */
-    @Override
-    public void adapt (String foo) {
-
-        try {
-            /*
-            connection.connect();
-            connection.start();
-            */
-            GUI.getMenuBar().toggleDisconectFromAll(true);
-            GUI.getMenuBar().toggleUserMenuBar(true);
-        }
-        catch (Exception e) { /* System.err.println( e.getMessage() ); */ }
-
     }
 
     /**
