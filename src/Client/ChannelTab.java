@@ -375,18 +375,6 @@ public class ChannelTab extends AbstractTab {
 
     }
 
-    /**
-     * Urci sama sebe jako aktualni panel.
-     * Pouzito mj. pri zpracovani vstupu od uzivatele.
-     */
-    @Override
-    public void setFocus() {
-        refreshNickname();
-        GUI.getTabContainer().setSelectedComponent(this);
-        GUI.getMenuBar().toggleDisconectFromServer(true);
-        GUI.focusInput();
-    }
-
     @Override
     public void clearContent() {
         chat.setText(null);

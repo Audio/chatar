@@ -28,7 +28,12 @@ public abstract class AbstractTab extends JPanel {
 
     public abstract void clearContent();
 
-    public abstract void setFocus();
+    public void setFocus() {
+        refreshNickname();
+        GUI.getTabContainer().setSelectedComponent(this);
+        GUI.getMenuBar().toggleDisconectFromServer(true);
+        GUI.focusInput();
+    }
 
     public void refreshNickname() {
         String nick = getConnection().getNick();

@@ -80,7 +80,6 @@ public class PrivateChatTab extends AbstractTab {
 
         // Nastavení barev pro singalizaci příchodu nové zprávy
         unreadMessageColor = new Color(255, 128, 128);
-
     }
 
     @Override
@@ -111,11 +110,8 @@ public class PrivateChatTab extends AbstractTab {
 
     @Override
     public void setFocus() {
-        refreshNickname();
-        setToRead(false);
-        GUI.getTabContainer().setSelectedComponent(this);
-        GUI.getMenuBar().toggleDisconectFromServer(true);
-        GUI.focusInput();
+        setNotification(false);
+        super.setFocus();
     }
 
     @Override
@@ -152,19 +148,12 @@ public class PrivateChatTab extends AbstractTab {
         originalColor = GUI.getTabContainer().getBackgroundAt(index);
     }
 
-    /**
-     * Při příchodu nové zprávy se panel označí červenou barvou záložky
-     * v tabbed panelu.
-     */
-    public void setToRead(boolean toRead) {
+    public void setNotification(boolean useNofiticationColor) {
         setupOriginalColor();
 
         int index = GUI.getTabContainer().indexOfComponent(this);
-
-        if (toRead)
-            GUI.getTabContainer().setBackgroundAt(index, unreadMessageColor);
-        else
-            GUI.getTabContainer().setBackgroundAt(index, originalColor);
+        Color color = useNofiticationColor ? unreadMessageColor : originalColor;
+        GUI.getTabContainer().setBackgroundAt(index, color);
     }
 
 }

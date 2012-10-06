@@ -163,14 +163,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         return this;
     }
 
-    @Override
-    public void setFocus() {
-        refreshNickname();
-        GUI.getTabContainer().setSelectedComponent(this);
-        GUI.getMenuBar().toggleDisconectFromServer(true);
-        GUI.focusInput();
-    }
-
     public void setChannelsCount(String count) {
         channelsLabel.setText(count);
     }
