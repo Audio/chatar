@@ -185,6 +185,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         for (ChannelTab channel : channelTabs)
             channel.destroy();
 
+        connection.disconnect();
         super.destroy();
     }
 
