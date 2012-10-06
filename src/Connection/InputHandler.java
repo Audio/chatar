@@ -57,20 +57,20 @@ public class InputHandler {
         Iterator it = server.channels.iterator();
         while ( it.hasNext() ) {
             ChannelTab channel = (ChannelTab) it.next();
-            channel.killMyself();
+            channel.destroy();
         }
 
         // pozavira soukroma okna
         it = server.privateChats.iterator();
         while ( it.hasNext() ) {
             PrivateChatTab chat = (PrivateChatTab) it.next();
-            chat.killMyself();
+            chat.destroy();
         }
 
         clearText();
 
         server.die(reason);
-        server.killMyself();
+        server.destroy();
     }
 
     /**
@@ -154,7 +154,7 @@ public class InputHandler {
         }
 
         // channel_tab.getQuery().leave(channel);
-        channelTab.killMyself();
+        channelTab.destroy();
         clearText();
     }
 

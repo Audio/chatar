@@ -174,7 +174,7 @@ public class GMenuBar extends JMenuBar {
         if (tab instanceof ChannelTab) {
             InputHandler.handlePart(null);
         } else if (tab instanceof PrivateChatTab) {
-            tab.killMyself();
+            tab.destroy();
         } else {
             InputHandler.handleQuit(null);
         }

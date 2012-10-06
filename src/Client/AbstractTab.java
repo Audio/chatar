@@ -45,7 +45,7 @@ public abstract class AbstractTab extends JPanel {
      * Odstraní se z tabbed panelu.
      */
     // TODO ehm, finalize?
-    public void killMyself() {
+    public void destroy() {
         try {
             MainWindow.getInstance().removeTab(this);
             finalize();

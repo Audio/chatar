@@ -311,13 +311,13 @@ public class Reply {
             Iterator it = s.channels.iterator();
             while ( it.hasNext() ) {
                 ChannelTab ch = (ChannelTab) it.next();
-                ch.killMyself();
+                ch.destroy();
             }
 
             it = s.privateChats.iterator();
             while ( it.hasNext() ) {
                 PrivateChatTab ch = (PrivateChatTab) it.next();
-                ch.killMyself();
+                ch.destroy();
             }
 
             // Znemožní další operace související s připojováním
@@ -465,7 +465,7 @@ public class Reply {
         if ( connection.isMe(person) ) {
             String msg = mType("info") + "Byl/a jste vyhozen/a z kanálu " + channel + ". Důvod: " + reason;
             output(msg, channel_tab.getServerTab() );
-            channel_tab.killMyself();
+            channel_tab.destroy();
         }
         else {
             String msg = mType("info") + "Uživatel " + person + " byl vyhozen z místnosti. Důvod: " + reason;
