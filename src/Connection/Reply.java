@@ -936,8 +936,7 @@ public class Reply {
         String foo = mType("whois") + Output.HTML.bold(target) + ": " + params;
 
         // Jsme v nějakém chatu?
-        boolean activeChat = ( MainWindow.getInstance().getActiveTab().getClass().getSimpleName()
-                .equals("GTabPrivateChat") ) ? true : false;
+        boolean activeChat = ( MainWindow.getInstance().getActiveTab() instanceof PrivateChatTab );
 
         // Píšeme si zrovna s uživatelem, jehož WHOIS vypisujeme?
         boolean chatWithTarget = false;

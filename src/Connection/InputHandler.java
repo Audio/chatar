@@ -12,8 +12,7 @@ public class InputHandler {
     }
 
     public static boolean isChannelTabActive() {
-        // TODO instanceof? instanceof ChannelTab
-        return getActiveTab().getClass().getSimpleName().equals("GTabChannel");
+        return getActiveTab() instanceof ChannelTab;
     }
 
     public static void outputToCurrentTab(String str) {
@@ -178,7 +177,7 @@ public class InputHandler {
      * Meni tema ve vybranem kanale.
      */
     public static void handleTopic(String topic) {
-        if ( !getActiveTab().getClass().getSimpleName().equals("GTabChannel") ) {
+        if (getActiveTab() instanceof ChannelTab == false) {
             outputToCurrentTab( mType("error") + "Téma lze změnit pouze ve vybraném kanále.");
             return;
         }

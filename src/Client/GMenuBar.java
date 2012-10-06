@@ -158,7 +158,7 @@ public class GMenuBar extends JMenuBar {
         Component[] array = GUI.getTabContainer().getComponents();
         for (int i = 0; i < array.length; i++) {
             Component component = array[i];
-            if ( component.getClass().getSimpleName().equals("ServerTab") ) {
+            if (component instanceof ServerTab) {
                 ServerTab c = (ServerTab) component;
                 InputHandler.handleQuit(c, null);
             }
@@ -171,13 +171,9 @@ public class GMenuBar extends JMenuBar {
         if (tab == null)
             return;
 
-        // TODO instanceof ?
-        String type = tab.getClass().getSimpleName();
-
-        // TODO switch
-        if ( type.equals("GTabChannel") ) {
+        if (tab instanceof ChannelTab) {
             InputHandler.handlePart(null);
-        } else if ( type.equals("GTabPrivateChat") ) {
+        } else if (tab instanceof PrivateChatTab) {
             tab.die();
             tab.killMyself();
         } else {
