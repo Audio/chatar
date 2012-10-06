@@ -158,23 +158,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         catch (Exception e) { }
     }
 
-    /**
-     * Ukonci cinnost panelu, ale nezavre ho.
-     */
-    // TODO nevyuzito
-    public void die(String reason) {
-
-        if (reason != null)
-            addText( Output.HTML.mType("error") + reason);
-
-        // TODO disconnect asi
-        // if ( connection.isConnected() )
-            // getQuery().disconnect();
-
-        // connection.interrupt(); // TODO Thread asi
-
-    }
-
     @Override
     public ServerTab getServerTab() {
         return this;
@@ -200,6 +183,17 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     @Override
     public void messageReceived(String message) {
         addText(message);
+    }
+
+    @Override
+    public void destroy() {
+        for (PrivateChatTab chat : privateChatTabs)
+            chat.destroy();
+
+        for (ChannelTab channel : channelTabs)
+            channel.destroy();
+
+        super.destroy();
     }
 
 }

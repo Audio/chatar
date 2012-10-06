@@ -30,23 +30,17 @@ public abstract class AbstractTab extends JPanel {
 
     public abstract void setFocus();
 
-    // TODO volat jen pri zmene serveru (focus na servertab)
     public void refreshNickname() {
         String nick = getConnection().getNick();
         MainWindow.getInstance().getGInput().setNickname(nick);
     }
 
-    /**
-     * Odstraní se z tabbed panelu.
-     */
-    // TODO ehm, finalize?
     public void destroy() {
         try {
             MainWindow.getInstance().removeTab(this);
-            finalize();
+        } catch (ClientException e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { }
-        catch (Throwable t) { }
     }
 
 }

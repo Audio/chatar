@@ -36,41 +36,13 @@ public class InputHandler {
                 "Aktivním oknem není kanál (channel).");
     }
 
-    /**
-     * Uzavre vsechny kanaly pridruzene k serveru.
-     * Uzavre panel serveru a ukonci spojeni prikazem QUIT
-     * a uzavrenim socketoveho spojeni.
-     */
     public static void handleQuit(String reason) {
         handleQuit(getActiveTab(), reason);
     }
 
-    /**
-     * Uzavira spojeni - nikoli aktualniho panelu, ale vybraneho.
-     */
     public static void handleQuit(AbstractTab tab, String reason) {
-        ServerTab server = tab.getServerTab();
-
-        /*
-        // pozavira vsechny kanaly
-        Iterator it = server.channels.iterator();
-        while ( it.hasNext() ) {
-            ChannelTab channel = (ChannelTab) it.next();
-            channel.destroy();
-        }
-
-        // pozavira soukroma okna
-        it = server.privateChats.iterator();
-        while ( it.hasNext() ) {
-            PrivateChatTab chat = (PrivateChatTab) it.next();
-            chat.destroy();
-        }
-        */
-
         clearInput();
-
-        server.die(reason);
-        server.destroy();
+        tab.getServerTab().destroy();
     }
 
     /**
