@@ -1,6 +1,5 @@
 package Client;
 
-import Client.TabContainer.PanelTypes;
 import Connection.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -16,7 +15,6 @@ public class ChannelTab extends AbstractTab {
     private DefaultListModel usersModel;
     private JEditorPane infobox;
     private JEditorPane chat;
-    private String tabName;
     private JPopupMenu popup;
     private MouseListener popupListener;
     private String selectedPopupUser;
@@ -25,6 +23,7 @@ public class ChannelTab extends AbstractTab {
 
     public ChannelTab(String channel, final ServerTab serverTab) {
         this.serverTab = serverTab;
+        this.connection = serverTab.getConnection();
 
         // Konstrukce panelu
         SpringLayout layout = new SpringLayout();
@@ -376,18 +375,13 @@ public class ChannelTab extends AbstractTab {
 
     }
 
-    @Override
-    public String getTabName() {
-        return "#" + tabName;
-    }
-
     /**
      * Urci sama sebe jako aktualni panel.
      * Pouzito mj. pri zpracovani vstupu od uzivatele.
      */
     @Override
     public void setFocus() {
-        changeNickname();
+        refreshNickname();
         GUI.getTabContainer().setSelectedComponent(this);
         GUI.getMenuBar().toggleDisconectFromServer(true);
         GUI.focusInput();

@@ -1,7 +1,6 @@
 package Connection;
 
 import Client.*;
-import Client.TabContainer.PanelTypes;
 import java.util.Iterator;
 
 
@@ -23,8 +22,7 @@ public class InputHandler {
         getActiveTab().addText(str);
     }
 
-    // TODO potrebuju to?
-    public static void clearText() {
+    public static void clearInput() {
         MainWindow.getInstance().getGInput().getTextField().setText(null);
     }
 
@@ -43,18 +41,18 @@ public class InputHandler {
      * Uzavre panel serveru a ukonci spojeni prikazem QUIT
      * a uzavrenim socketoveho spojeni.
      */
-    public static void handleQuit (String reason) {
+    public static void handleQuit(String reason) {
         handleQuit(getActiveTab(), reason);
     }
 
     /**
      * Uzavira spojeni - nikoli aktualniho panelu, ale vybraneho.
      */
-    public static void handleQuit (AbstractTab tab, String reason) {
+    public static void handleQuit(AbstractTab tab, String reason) {
         ServerTab server = tab.getServerTab();
 
-        // pozavira vsechny kanaly
         /*
+        // pozavira vsechny kanaly
         Iterator it = server.channels.iterator();
         while ( it.hasNext() ) {
             ChannelTab channel = (ChannelTab) it.next();
@@ -69,7 +67,7 @@ public class InputHandler {
         }
         */
 
-        clearText();
+        clearInput();
 
         server.die(reason);
         server.destroy();
@@ -79,7 +77,7 @@ public class InputHandler {
      * Odesle soukromou zpravu vybranemu uzivateli,
      * nebo odesle zpravu do vybraneho kanalu.
      */
-    public static void handlePrivMessage (String params) {
+    public static void handlePrivMessage(String params) {
         String user;
         String msg;
         int upto;
@@ -93,37 +91,28 @@ public class InputHandler {
         msg  = ":" + params.substring(upto + 1);
 
         // getActiveTab().getQuery().privMsg(user, msg);
-        clearText();
+        clearInput();
 
         // Otevření nového okna při soukromé zprávě (tzn. uživateli)
         if ( user.startsWith("#") == false && getCurrentServerTab().getPrivateChatByName(user) == null)
             getCurrentServerTab().createPrivateChatTab(user);
     }
 
-    /**
-     * Pripoji se na vybrany kanal.
-     * Otevre novy panel pro komunikaci na zminenem kanale.
-     */
     public static void handleJoin(String channel) {
         if (channel == null || channel.trim().length() == 0) {
             outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /join nazev_kanalu");
             return;
         }
 
-        if ( channel.startsWith("#") )
-            channel = channel.substring(1);
-
-        // neotevre panel, co jiz existuje; pouze prepne
-        ChannelTab exists = getCurrentServerTab().getChannelTabByName("#" + channel);
-        if (exists != null) {
-            GUI.getTabContainer().setSelectedComponent( exists );
-            clearText();
-            return;
+        ChannelTab existingTab = getCurrentServerTab().getChannelTabByName(channel);
+        if (existingTab != null) {
+            GUI.getTabContainer().setSelectedComponent(existingTab);
+            clearInput();
+        } else {
+            getCurrentServerTab().createChannelTab(channel);
+            getCurrentServerTab().getConnection().joinChannel(channel);
+            clearInput();
         }
-
-        getCurrentServerTab().createChannelTab(channel);
-        // TODO nutne clearText?
-        clearText();
     }
 
     /**
@@ -146,13 +135,13 @@ public class InputHandler {
 
         // overi existenci panelu
         if (channelTab == null) {
-            clearText();
+            clearInput();
             return;
         }
 
         // channel_tab.getQuery().leave(channel);
         channelTab.destroy();
-        clearText();
+        clearInput();
     }
 
     /**
@@ -166,7 +155,7 @@ public class InputHandler {
         }
 
         // getCurrentServer().getQuery().nick(nick);
-        clearText();
+        clearInput();
     }
 
     /**
@@ -183,7 +172,7 @@ public class InputHandler {
 
         String channel = getActiveTab().getTabName().substring(1);
         // getActiveTab().getQuery().topic(channel, topic );
-        clearText();
+        clearInput();
     }
     
     /**
@@ -191,7 +180,7 @@ public class InputHandler {
      */
     public static void handleNames(String channels) {
         // getActiveTab().getQuery().names(channels);
-        clearText();
+        clearInput();
     }
 
     /**
@@ -207,7 +196,7 @@ public class InputHandler {
         }
 
         // getActiveTab().getQuery().mode(params);
-        clearText();
+        clearInput();
     }
 
     /**
@@ -216,7 +205,7 @@ public class InputHandler {
     public static void handleServer(String address) {
         try {
             MainWindow.getInstance().createServerTab(address);
-            clearText();
+            clearInput();
         } catch (Exception e) {
             new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba aplikace", "Připojení nelze uskutečnit.");
         }
@@ -240,7 +229,7 @@ public class InputHandler {
         }
 
         // getActiveTab().getQuery().kick(params);
-        clearText();
+        clearInput();
     }
 
     /**
@@ -254,7 +243,7 @@ public class InputHandler {
             getActiveTab().getQuery().away( params.trim() );
             */
 
-        clearText();
+        clearInput();
     }
 
     /**
@@ -271,7 +260,7 @@ public class InputHandler {
         if ( GUI.getTabContainer().getTabCount() > 0)
             getActiveTab().clearContent();
 
-        clearText();
+        clearInput();
     }
 
     /**
@@ -279,7 +268,7 @@ public class InputHandler {
      */
     public static void handleOper(String params) {
         params = (params == null) ? null : params.trim();
-        clearText();
+        clearInput();
 
         if (params == null || params.length() == 0 || params.indexOf(" ") == -1) {
             outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /oper uzivatel heslo");
@@ -294,7 +283,7 @@ public class InputHandler {
      */
     public static void handleWhois(String params) {
         params = (params == null) ? null : params.trim();
-        clearText();
+        clearInput();
 
         if (params == null || params.length() == 0) {
             outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /whois [server ]uzivatel");
@@ -316,7 +305,7 @@ public class InputHandler {
         String channel = getActiveTab().getTabName();
 
         params = (params == null) ? null : params.trim();
-        clearText();
+        clearInput();
 
         if (params == null || params.length() == 0) {
             params = "neumi pouzivat IRC klienta."; // :)

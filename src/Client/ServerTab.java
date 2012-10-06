@@ -16,7 +16,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     private JLabel addressLabel;
     private JLabel channelsLabel;
     private JEditorPane text;
-    private String tabName;
     private HashSet<ChannelTab> channelTabs;
     private HashSet<PrivateChatTab> privateChatTabs;
 
@@ -124,52 +123,24 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         return tab;
     }
 
-    /**
-     * Vraci referenci na kanal, ktery ma dany nazev
-     * a je pripojen pres tento server.
-     * Rozlišuje velikost písmen.
-     */
     public ChannelTab getChannelTabByName(String name) {
-        ChannelTab channel = null;
         name = name.toLowerCase();
-
-        /*
-        Iterator it = channels.iterator();
-        while ( it.hasNext() ) {
-            channel = (ChannelTab) it.next();
+        for (ChannelTab channel : channelTabs) {
             if ( channel.getTabName().toLowerCase().equals(name) )
-                break;
-            else
-                channel = null;
+                return channel;
         }
-        */
 
-        return channel;
+        return null;
     }
 
-    /**
-     * Vrati referenci na soukromy chat s uzivatelem, ktery ma zvolenou
-     * prezdivku a je pripojen pres tento server.
-     * Rozlišuje velikost písmen.
-     */
-    public PrivateChatTab getPrivateChatByName (String nickname) {
-
-        PrivateChatTab chat = null;
+    public PrivateChatTab getPrivateChatByName(String nickname) {
         nickname = nickname.toLowerCase();
-
-        /*
-        Iterator it = privateChats.iterator();
-        while ( it.hasNext() ) {
-            chat = (PrivateChatTab) it.next();
+        for (PrivateChatTab chat : privateChatTabs) {
             if ( chat.getTabName().toLowerCase().equals(nickname) )
-                break;
-            else
-                chat = null;
+                return chat;
         }
-        */
 
-        return chat;
-
+        return null;
     }
 
     /**
@@ -205,25 +176,20 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     }
 
     @Override
-    public String getTabName () {
-        return tabName;
-    }
-
-    @Override
     public ServerTab getServerTab() {
         return this;
     }
 
     @Override
     public void setFocus() {
-        changeNickname();
+        refreshNickname();
         GUI.getTabContainer().setSelectedComponent(this);
         GUI.getMenuBar().toggleDisconectFromServer(true);
         GUI.focusInput();
     }
 
-    public void setChannelsCount(String num) {
-        channelsLabel.setText(num);
+    public void setChannelsCount(String count) {
+        channelsLabel.setText(count);
     }
 
     @Override

@@ -10,13 +10,14 @@ public class PrivateChatTab extends AbstractTab {
 
     private JEditorPane infobox;
     private JEditorPane chat;
-    private String tabName;
     private Color originalColor;
     private Color unreadMessageColor;
 
 
     public PrivateChatTab(String nickname, final ServerTab serverTab) {
         this.serverTab = serverTab;
+        this.connection = serverTab.getConnection();
+
         // TODO whois
         // getQuery().whois(tabName);
 
@@ -101,11 +102,6 @@ public class PrivateChatTab extends AbstractTab {
         infobox.setText(info);
     }
 
-    @Override
-    public String getTabName() {
-        return tabName;
-    }
-
     /**
      * Nastaveni nazvu (uzivatele mohou sve prezdivky menit).
      */
@@ -115,7 +111,7 @@ public class PrivateChatTab extends AbstractTab {
 
     @Override
     public void setFocus() {
-        changeNickname();
+        refreshNickname();
         setToRead(false);
         GUI.getTabContainer().setSelectedComponent(this);
         GUI.getMenuBar().toggleDisconectFromServer(true);

@@ -8,14 +8,15 @@ public abstract class AbstractTab extends JPanel {
 
     protected Connection connection;
     protected ServerTab serverTab;
+    protected String tabName;
 
 
     public Connection getConnection() {
         return connection;
     }
 
-    public String getTabName() {
-        return "Panel";
+    final public String getTabName() {
+        return tabName;
     }
 
     public ServerTab getServerTab() {
@@ -29,15 +30,9 @@ public abstract class AbstractTab extends JPanel {
 
     public abstract void setFocus();
 
-    /**
-     * Zmeni uzivatelovu prezdivku na tlacitku (GInput).
-     * Uzivalel ma moznost pripojeni k vice serverum zaroven,
-     * proto bude mit v jeden okamzik prirazeno vice prezdivek.
-     */
-    // TODO nevim
-    public void changeNickname() {
-        // String nick = getConnection().config.nickname;
-        String nick = "zatimNic";
+    // TODO volat jen pri zmene serveru (focus na servertab)
+    public void refreshNickname() {
+        String nick = getConnection().getNick();
         MainWindow.getInstance().getGInput().setNickname(nick);
     }
 
