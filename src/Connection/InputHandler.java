@@ -42,7 +42,7 @@ public class InputHandler {
 
     public static void handleQuit(AbstractTab tab, String reason) {
         clearInput();
-        tab.getServerTab().destroy();
+        tab.getServerTab().closeAllTabs();
     }
 
     public static void handlePrivMessage(String params) {
@@ -79,10 +79,6 @@ public class InputHandler {
         }
     }
 
-    /**
-     * Zavre panel se zvolenym nazvem a odejde z kanalu.
-     * Odstrani se take ze seznamu kanalu v objektu ServerTab.
-     */
     public static void handlePart(String channel) {
         if (channel == null || channel.trim().length() == 0) {
             channel = getActiveTab().getTabName();
@@ -92,33 +88,25 @@ public class InputHandler {
             }
         }
 
-        if ( channel.startsWith("#") )
-            channel = channel.substring(1);
+        ChannelTab channelTab = getCurrentServerTab().getChannelTabByName(channel);
 
-        ChannelTab channelTab = getCurrentServerTab().getChannelTabByName("#" + channel);
-
-        // overi existenci panelu
         if (channelTab == null) {
             clearInput();
             return;
         }
 
-        // channel_tab.getQuery().leave(channel);
-        channelTab.destroy();
+        channelTab.getConnection().partChannel(channel);
+        channelTab.getServerTab().removeChannelTab(channelTab);
         clearInput();
     }
 
-    /**
-     * Mění přezdívku uživatele.
-     */
     public static void handleNick(String nick) {
-        // kontrola syntaxe
         if (nick == null || nick.trim().length() == 0) {
             outputToCurrentTab( mType("error") + "Nebyla zadána nová přezdívka.");
             return;
         }
 
-        // getCurrentServer().getQuery().nick(nick);
+        getCurrentServerTab().getConnection().changeNick(nick);
         clearInput();
     }
 

@@ -69,7 +69,7 @@ public class MainWindow extends JFrame {
         return tabContainer.createServerTab(address);
     }
 
-    public void removeTab(AbstractTab tab) throws ClientException {
+    public void removeTab(AbstractTab tab) {
         tabContainer.removeTab(tab);
 
         if ( tabContainer.getTabCount() == 0 ) {

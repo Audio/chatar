@@ -101,7 +101,7 @@ public class Reply {
     private void parse () {
 
         if (message == null || message.length() == 0) {
-            //System.err.println("NEZNÁMÁ ZPRÁVA: " + message); // Pouze ladění
+            //System.err.println("NEZNAMA ZPRAVA: " + message); // Pouze ladění
             return;
         }
 
@@ -236,7 +236,7 @@ public class Reply {
         }
 
         switch ( Allowed.fromString(type) ) {
-            case fake:    { /*if ( !isNumeric() ) System.err.println("Nezapomeň implementovat obsluhu příkazu " + type + ".");*/ break; }
+            case fake:    { /*if ( !isNumeric() ) System.err.println("Nezapomen implementovat obsluhu prikazu " + type + ".");*/ break; }
             case NOTICE:  { handleNotice(); break; }
             case PING:    { handlePing(); break; }
             case ERROR:   { handleError(); break; }
@@ -462,19 +462,19 @@ public class Reply {
         String person = target;
         String reason = smileAtMe(params);
 
-        ChannelTab channel_tab = getChannel(channel);
-        if (channel_tab == null)
+        ChannelTab channelTab = getChannel(channel);
+        if (channelTab == null)
             return;
 
         if ( connection.isMe(person) ) {
             String msg = mType("info") + "Byl/a jste vyhozen/a z kanálu " + channel + ". Důvod: " + reason;
-            output(msg, channel_tab.getServerTab() );
-            channel_tab.destroy();
+            output(msg, channelTab.getServerTab() );
+            channelTab.getServerTab().removeChannelTab(channelTab);
         }
         else {
             String msg = mType("info") + "Uživatel " + person + " byl vyhozen z místnosti. Důvod: " + reason;
-            output(msg, channel_tab);
-            channel_tab.removeUser(person);
+            output(msg, channelTab);
+            channelTab.removeUser(person);
         }
 
     }

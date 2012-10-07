@@ -116,11 +116,32 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         return tab;
     }
 
+    public void removeChannelTab(ChannelTab tab) {
+        MainWindow.getInstance().removeTab(tab);
+        channelTabs.remove(tab);
+    }
+
     public PrivateChatTab createPrivateChatTab(String nickname) {
         PrivateChatTab tab = new PrivateChatTab(nickname, this);
         privateChatTabs.add(tab);
         MainWindow.getInstance().getTabContainer().insertTab(tab, PanelTypes.PANEL_PRIVATE);
         return tab;
+    }
+
+    public void removePrivateChatTab(PrivateChatTab tab) {
+        MainWindow.getInstance().removeTab(tab);
+        privateChatTabs.remove(tab);
+    }
+
+    public void closeAllTabs() {
+        for (PrivateChatTab chat : privateChatTabs)
+            removePrivateChatTab(chat);
+
+        for (ChannelTab channel : channelTabs)
+            removeChannelTab(channel);
+
+        connection.disconnect();
+        MainWindow.getInstance().removeTab(this);
     }
 
     public ChannelTab getChannelTabByName(String name) {
@@ -175,18 +196,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     @Override
     public void messageReceived(String message) {
         addText(message);
-    }
-
-    @Override
-    public void destroy() {
-        for (PrivateChatTab chat : privateChatTabs)
-            chat.destroy();
-
-        for (ChannelTab channel : channelTabs)
-            channel.destroy();
-
-        connection.disconnect();
-        super.destroy();
     }
 
 }

@@ -40,12 +40,4 @@ public abstract class AbstractTab extends JPanel {
         MainWindow.getInstance().getGInput().setNickname(nick);
     }
 
-    public void destroy() {
-        try {
-            MainWindow.getInstance().removeTab(this);
-        } catch (ClientException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
