@@ -13,7 +13,8 @@ import org.jibble.pircbot.User;
 
 public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
-    private JList users;
+    private JList userList;
+    private UserListRenderer userListRenderer;
     private DefaultListModel usersModel;
     private JEditorPane infobox;
     private JEditorPane chat;
@@ -44,19 +45,20 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         scrollpanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollpanel.setAutoscrolls(true);
 
+        userListRenderer = new UserListRenderer();
         usersModel = new DefaultListModel();
 
-        users = new JList(usersModel);
-        users.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        users.setSelectedIndex(0);
-        users.setLayoutOrientation(JList.VERTICAL);
-        users.setSelectionBackground( new Color(230, 230, 255) );
-        users.setCellRenderer( new ListImageRenderer() );
+        userList = new JList(usersModel);
+        userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        userList.setSelectedIndex(0);
+        userList.setLayoutOrientation(JList.VERTICAL);
+        userList.setSelectionBackground( new Color(230, 230, 255) );
+        userList.setCellRenderer(userListRenderer);
 
-        JScrollPane panel = new JScrollPane(users);
+        JScrollPane panel = new JScrollPane(userList);
         GUI.setPreferredSize(panel, 250, 355);
 
-        scrollpanel.setViewportView(users);
+        scrollpanel.setViewportView(userList);
         userspanel.add(scrollpanel);
 
         // Pravy obsahovy panel - vypis informaci o kanale; vypis chatu
@@ -136,7 +138,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         popup.add(tl3);
 
         popupListener = new PopupListener();
-        users.addMouseListener(popupListener);
+        userList.addMouseListener(popupListener);
 
         // Uskladneni objektu to hlavniho panelu
         add(userspanel);
@@ -219,20 +221,20 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
      */
     public String getCellIndexFromListWhereClicked(MouseEvent e) {
         // Nejblizsi prvek u mista, kde bylo kliknuto
-        int cell = users.locationToIndex( e.getPoint() );
+        int cell = userList.locationToIndex( e.getPoint() );
         if (cell == -1)
             return null;
 
         // Opravdu bylo kliknuto na prvek, nebo jen "nekam blizko" nej?
-        Rectangle r = users.getCellBounds(cell, cell);
+        Rectangle r = userList.getCellBounds(cell, cell);
         if ( !r.contains( e.getPoint() ) )
             return null;
 
         // Získá přezdívku a zároven označí daný element
         // (při kliknutí pravým tlačítkem se neoznačí).
         String nickname = (String) usersModel.getElementAt(cell);
-        nickname = Output.User.removePrefix(nickname);
-        users.setSelectedIndex(cell);
+        nickname = userListRenderer.removePrefix(nickname);
+        userList.setSelectedIndex(cell);
 
         return nickname;
     }
@@ -280,10 +282,10 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     }
 
     public void setUsers(User[] users) {
-        // Arrays.sort(users, String.CASE_INSENSITIVE_ORDER); // TODO need sorting?
+        // Arrays.sort(users); // TODO zprovoznit, znici to obsah pole
         usersModel.clear();
 
-        // TODO nepotrebuju, nie?
+        // TODO potrebuju v novym vlakne?
         Runnable adder = new Runnable () {
             @Override
             public void run () {
@@ -299,7 +301,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         };
 
 
-        // Nastavi uzivatele
         try {
             for (User user : users) {
                 tempUserNames.add( user.getNick() );
@@ -373,13 +374,13 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
      * Kvůli prefixům nelze použít metodu (usersModel.)contains.
      */
     public boolean hasNick(String user) {
-        user = Output.User.removePrefix(user).toLowerCase();
+        user = userListRenderer.removePrefix(user).toLowerCase();
 
         int size = usersModel.size();
         for (int i=0; i < size; i++) {
 
             String nick = (String) usersModel.getElementAt(i);
-            nick = Output.User.removePrefix(nick).toLowerCase();
+            nick = userListRenderer.removePrefix(nick).toLowerCase();
             if ( nick.equals(user) )
                 return true;
 
@@ -394,40 +395,19 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
      * Pokud uživatele nenajde, vrací hodnotu -1.
      */
     public int getNick(String user) {
-        user = Output.User.removePrefix(user).toLowerCase();
+        user = userListRenderer.removePrefix(user).toLowerCase();
 
         int size = usersModel.size();
         for (int i=0; i < size; i++) {
 
             String nick = (String) usersModel.getElementAt(i);
-            nick = Output.User.removePrefix(nick).toLowerCase();
+            nick = userListRenderer.removePrefix(nick).toLowerCase();
             if ( nick.equals(user) )
                 return i;
 
         }
 
         return -1;
-    }
-
-    /**
-     * Třída, která podporuje vkládání obrázků (ikon) do JListu.
-     * Využito pro přehledné označení uživatelů s rozdílnými právy (operátor, moderátor..).
-     */
-    class ListImageRenderer extends DefaultListCellRenderer {
-
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index,
-                                                      boolean isSelected, boolean cellHasFocus) {
-
-            Component c = super.getListCellRendererComponent(list, value,
-                                           index, isSelected, cellHasFocus);
-
-            // přiřadí komponentě ikonu a text
-            c = Output.User.addPrefixBasedIcon(c, (String) value);
-
-            return c;
-        }
-
     }
 
     @Override
