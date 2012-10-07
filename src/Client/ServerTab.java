@@ -96,7 +96,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
         try {
             connection = new Connection();
-            connection.setServerEventListener(this);
+            connection.setServerEventsListener(this);
             connection.connect(server, port);
         } catch (IOException | IrcException e) {
             new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba připojení", "K vybranému serveru se nelze připojit.");
@@ -113,17 +113,21 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     public ChannelTab createChannelTab(String channel) {
         ChannelTab tab = new ChannelTab(channel, this);
         channelTabs.add(tab);
+        connection.addChannelEventsListener(tab);
+        connection.joinChannel(channel);
         MainWindow.getInstance().getTabContainer().insertTab(tab, PanelTypes.PANEL_CHANNEL);
         return tab;
     }
 
     public void removeChannelTab(ChannelTab tab) {
         MainWindow.getInstance().removeTab(tab);
+        connection.removeChannelEventsListener(tab);
         channelTabs.remove(tab);
     }
 
     public PrivateChatTab createPrivateChatTab(String nickname) {
         PrivateChatTab tab = new PrivateChatTab(nickname, this);
+        connection.addPrivateMessagingListener(tab);
         privateChatTabs.add(tab);
         MainWindow.getInstance().getTabContainer().insertTab(tab, PanelTypes.PANEL_PRIVATE);
         return tab;
@@ -131,6 +135,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
     public void removePrivateChatTab(PrivateChatTab tab) {
         MainWindow.getInstance().removeTab(tab);
+        connection.removePrivateMessagingListener(tab);
         privateChatTabs.remove(tab);
     }
 
@@ -148,6 +153,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         }
 
         connection.disconnect();
+        connection.removeServerEventsListener();
         MainWindow.getInstance().removeTab(this);
     }
 

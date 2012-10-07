@@ -160,8 +160,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
         // Vytvori instanci zasobniku
         tempUserNames = new LinkedList<String>();
-        connection.addChannelEventListener(this);
-        connection.joinChannel(channel);
     }
 
     /**

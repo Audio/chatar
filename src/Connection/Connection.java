@@ -47,8 +47,12 @@ public class Connection extends PircBot {
 
     /*         SERVER EVENTS           */
 
-    public void setServerEventListener(ServerEventsListener listener) {
+    public void setServerEventsListener(ServerEventsListener listener) {
         serverEventsListener = listener;
+    }
+
+    public void removeServerEventsListener() {
+        serverEventsListener = null;
     }
 
     @Override
@@ -59,11 +63,11 @@ public class Connection extends PircBot {
 
     /*        CHANNEL EVENTS           */
 
-    public void addChannelEventListener(ChannelEventsListener listener) {
+    public void addChannelEventsListener(ChannelEventsListener listener) {
         channelEventsListeners.add(listener);
     }
 
-    public void removeChannelEventListener(ChannelEventsListener listener) {
+    public void removeChannelEventsListener(ChannelEventsListener listener) {
         channelEventsListeners.remove(listener);
     }
 

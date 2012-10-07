@@ -81,8 +81,6 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
 
         // Nastavení barev pro singalizaci příchodu nové zprávy
         unreadMessageColor = new Color(255, 128, 128);
-
-        connection.addPrivateMessagingListener(this);
     }
 
     @Override
