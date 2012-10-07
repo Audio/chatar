@@ -352,18 +352,13 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         addUser(newname);
     }
 
-    /**
-     * Nastavuje obsah horni casti - vypis aktualniho tematu.
-     */
     public void setTopic(String topic) {
-
         if (topic == null || topic.trim().length() == 0)
             topic = "Diskusní téma není nastaveno.";
         else
             topic = Output.HTML.bold(topic);
 
         infobox.setText(topic);
-
     }
 
     @Override
@@ -505,7 +500,10 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     @Override
     public void topicChanged(String initiator, String topic) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String message = Output.HTML.mType("info") + initiator
+                       + " nastavil téma na " + Output.HTML.bold(topic);
+        addText(message);
+        setTopic(topic);
     }
 
 }

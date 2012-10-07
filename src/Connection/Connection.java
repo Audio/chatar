@@ -159,9 +159,18 @@ public class Connection extends PircBot {
             listener.userUnbanned(initiator, recipient);
     }
 
-    public void notifyAboutTopicChanged(String initiator, String topic) {
-        for (ChannelEventsListener listener : channelEventsListeners)
-            listener.topicChanged(initiator, topic);
+    @Override
+    protected void onTopic(String channel, String topic, String setBy, long date, boolean changed) {
+        notifyAboutTopicChanged(channel, setBy, topic);
+    }
+
+    public void notifyAboutTopicChanged(String channel, String initiator, String topic) {
+        for (ChannelEventsListener listener : channelEventsListeners) {
+            if ( listener.getChannelName().equals(channel) ) {
+                listener.topicChanged(initiator, topic);
+                break;
+            }
+        }
     }
 
     /*        NICKNAME EVENTS          */

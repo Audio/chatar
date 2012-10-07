@@ -35,7 +35,7 @@ public class Reply {
     // vyctovy typ obsahujici povolene prikazy ke zpracovani
     private enum Allowed {
 
-        fake, ERROR, JOIN, KICK, MODE, NICK, NOTICE, PART, PING, PRIVMSG, QUIT, TOPIC,
+        fake, ERROR, JOIN, KICK, MODE, NICK, NOTICE, PART, PING, PRIVMSG, QUIT,
 
         CODE_WELCOME, CODE_221, CODE_251, CODE_252, CODE_253, CODE_254, CODE_255,
         CODE_265, CODE_266,
@@ -241,7 +241,6 @@ public class Reply {
             case JOIN:    { handleJoin(); break; }
             case PART:    { handlePart(); break; }
             case KICK:    { handleKick(); break; }
-            case TOPIC:   { handleTopic(); break; }
             case NICK:    { handleNick(); break; }
             case MODE:    { handleMode(); break; }
             case QUIT:    { handleQuit(); break; }
@@ -458,22 +457,6 @@ public class Reply {
 
     }
 
-
-    /**
-     * Zpracovani prikazu TOPIC.
-     */
-    private void handleTopic () {
-
-        vyparseTarget();
-        String topic = smileAtMe(params);
-
-        ChannelTab channel = connection.getServerTab().getChannelTabByName(target);
-        channel.setTopic(topic);
-
-        topic = Output.HTML.bold(topic);
-        output( mType("info") + prefix.nick + " nastavil téma na " + topic, channel);
-
-    }
 
     /**
      * Zpracovani prikazu NICK. Zprava se vypise do vsech mistnosti (kanalu),
