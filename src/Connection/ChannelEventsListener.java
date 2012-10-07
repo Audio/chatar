@@ -5,6 +5,8 @@ import java.util.EventListener;
 
 public interface ChannelEventsListener extends EventListener {
 
+    public void messageReceived(String sender, String message);
+
     // TODO Half OP?
     public void userGetsOp(String initiator, String recipient);
     public void userLoseOp(String initiator, String recipient);

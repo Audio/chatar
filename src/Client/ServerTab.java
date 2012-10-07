@@ -194,7 +194,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     }
 
     @Override
-    public void messageReceived(String message) {
+    public void serverMessageReceived(String message) {
         addText(message);
     }
 

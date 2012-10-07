@@ -47,11 +47,6 @@ public class Connection extends PircBot {
 
     /*         SERVER EVENTS           */
 
-    @Override
-    protected void onServerResponse(int code, String response) {
-        notifyAboutMessageReceived(response);
-    }
-
     public void addServerEventListener(ServerEventsListener listener) {
         serverEventsListeners.add(listener);
     }
@@ -60,9 +55,14 @@ public class Connection extends PircBot {
         serverEventsListeners.remove(listener);
     }
 
-    public void notifyAboutMessageReceived(String message) {
+    @Override
+    protected void onServerResponse(int code, String response) {
+        notifyAboutServerMessageReceived(response);
+    }
+
+    public void notifyAboutServerMessageReceived(String message) {
         for (ServerEventsListener listener : serverEventsListeners)
-            listener.messageReceived(message);
+            listener.serverMessageReceived(message);
     }
 
 
@@ -74,6 +74,17 @@ public class Connection extends PircBot {
 
     public void removeChannelEventListener(ChannelEventsListener listener) {
         channelEventsListeners.remove(listener);
+    }
+
+    @Override
+    protected void onMessage(String channel, String sender, String login, String hostname, String message) {
+        notifyAboutMessageReceived(channel, sender, message);
+    }
+
+    // TODO pouze vybranemu kanalu
+    public void notifyAboutMessageReceived(String channel, String sender, String message) {
+        for (ChannelEventsListener listener : channelEventsListeners)
+            listener.messageReceived(sender, message);
     }
 
     public void notifyAboutUserGetsOp(String initiator, String recipient) {

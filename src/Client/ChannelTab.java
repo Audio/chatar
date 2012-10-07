@@ -9,7 +9,7 @@ import javax.swing.*;
 import javax.swing.text.*;
 
 
-public class ChannelTab extends AbstractTab {
+public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     private JList users;
     private DefaultListModel usersModel;
@@ -158,6 +158,7 @@ public class ChannelTab extends AbstractTab {
 
         // Vytvori instanci zasobniku
         tempUserNames = new LinkedList<String>();
+        connection.addChannelEventListener(this);
     }
 
     /**
@@ -260,21 +261,17 @@ public class ChannelTab extends AbstractTab {
         pc.setFocus();
     }
 
-    /**
-     * Zobrazuje vystupni text - pridava jej na konec.
-     */
     @Override
     public void addText(String str) {
-
         EditorKit kit = chat.getEditorKit();
         Document doc = chat.getDocument();
         try {
             Reader reader = new StringReader(str);
             kit.read(reader, doc, doc.getLength());
             chat.setCaretPosition( doc.getLength() );
+        } catch (IOException | BadLocationException e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { }
-
     }
 
     /**
@@ -440,6 +437,71 @@ public class ChannelTab extends AbstractTab {
             return c;
         }
 
+    }
+
+    @Override
+    public void messageReceived(String sender, String message) {
+        addText(sender + ": " + message);
+    }
+
+    @Override
+    public void userGetsOp(String initiator, String recipient) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void userLoseOp(String initiator, String recipient) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void userGetsVoice(String initiator, String recipient) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void userLoseVoice(String initiator, String recipient) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void userChangesNick(String oldNick, String newNick) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void userJoined(String nickname) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void userLeft(String nickname) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void userQuit(String nickname, String reason) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void userKicked(String initiator, String recipient) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void userBanned(String initiator, String recipient) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void userUnbanned(String initiator, String recipient) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void topicChanged(String initiator, String topic) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
