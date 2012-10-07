@@ -173,7 +173,7 @@ public class Input extends JPanel {
         } else {
 
             switch (command) {
-                case UNKNOWN: { InputHandler.showError(rawCommand); break; }
+                case UNKNOWN: { InputHandler.showUnknownCommandError(rawCommand); break; }
                 case QUIT:    { InputHandler.handleQuit(params); break; }
                 case PRIVMSG: { InputHandler.handlePrivMessage(params); break; }
                 case JOIN:    { InputHandler.handleJoin(params); break; }

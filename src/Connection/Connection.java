@@ -18,13 +18,14 @@ public class Connection extends PircBot {
     private ArrayList<MyNickChangeListener> myNickChangeListeners;
 
 
+    // TODO vyresit config
     public Connection(String server, int port) throws IOException, IrcException {
         this.config = new Config();
         this.serverEventsListeners = new ArrayList<>();
         this.channelEventsListeners = new ArrayList<>();
         this.myNickChangeListeners = new ArrayList<>();
 
-        setName("pokusnyHovado");
+        setName("pokusnyKrecek");
         setAutoNickChange(true);
         connect(server, port);
     }

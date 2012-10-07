@@ -1,8 +1,6 @@
 package Connection;
 
 import Client.*;
-import Client.TabContainer.PanelTypes;
-import java.util.Iterator;
 
 
 /**
@@ -238,7 +236,6 @@ public class Reply {
         switch ( Allowed.fromString(type) ) {
             case fake:    { /*if ( !isNumeric() ) System.err.println("Nezapomen implementovat obsluhu prikazu " + type + ".");*/ break; }
             case NOTICE:  { handleNotice(); break; }
-            case PING:    { handlePing(); break; }
             case ERROR:   { handleError(); break; }
             case PRIVMSG: { handlePrivMsg(); break; }
             case JOIN:    { handleJoin(); break; }
@@ -350,15 +347,6 @@ public class Reply {
     }
 
     /**
-     * Zpracovani prikazu PING.
-     */
-    private void handlePing () {
-        getQuery().pong(params);
-        String user = Output.HTML.bold( smileAtMe(params) );
-        output( mType("pong") + "Odeslána odezva uživateli " + user + ".", true);
-    }
-
-    /**
      * Zpracovani prikazu PRIVMSG.
      * Existuje-li panel s nazvem stejnym jako adresat prikazu,
      * vypise se zprava do tohoto panelu.
@@ -384,14 +372,6 @@ public class Reply {
         }
         else {
             // soukroma zprava
-
-            // pokud se jedna o PING, nevypisuje se
-            if ( isPing() ) {
-                params = prefix.nick;
-                handlePing();
-                return;
-            }
-
             // otevre okno pro soukromy chat (pokud neni otevreno)
             /*
             PrivateChatTab chat = getPrivateChat(prefix.nick);

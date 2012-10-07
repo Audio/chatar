@@ -35,6 +35,16 @@ public class InputHandler {
                 "Aktivním oknem není kanál (channel).");
     }
 
+    public static void showUnknownCommandError(String unknownCommand) {
+        if (getActiveTab() == null) {
+            new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Neznámý příkaz",
+                    "Neznámý příkaz " + unknownCommand.toUpperCase() + ".");
+        } else {
+            String err = Output.HTML.color( mType("error"), Output.HTML.RED);
+            outputToCurrentTab(err + " Neznámý přijatý příkaz: " + unknownCommand);
+        }
+    }
+
     public static void handleQuit(String reason) {
         handleQuit(getActiveTab(), reason);
     }
@@ -182,11 +192,8 @@ public class InputHandler {
         handleAway(null);
     }
 
-    /**
-     * Vymaže obsah aktualního panelu (záložky).
-     */
     public static void handleClear() {
-        if ( GUI.getTabContainer().getTabCount() > 0)
+        if (getActiveTab() != null)
             getActiveTab().clearContent();
 
         clearInput();
@@ -234,20 +241,6 @@ public class InputHandler {
         String channel = getActiveTab().getTabName();
         getCurrentServerTab().getConnection().sendAction(channel, params);
         clearInput();
-    }
-
-    /**
-     * Oznámení, že vložený příkaz nelze vykonat, neboť nemá obsluhu.
-     */
-    public static void showError(String invalidCommand) {
-        if (getActiveTab() == null) {
-            new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Neznámý příkaz",
-                    "Neznámý příkaz " + invalidCommand.toUpperCase() + ".");
-        }
-        else {
-            String err = Output.HTML.color( mType("error"), Output.HTML.RED);
-            outputToCurrentTab(err + " Neznámý přijatý příkaz: " + invalidCommand);
-        }
     }
 
     /**
