@@ -124,14 +124,6 @@ public class InputHandler {
     }
     
     /**
-     * Zpracovani prikazu NAMES.
-     */
-    public static void handleNames(String channels) {
-        // getActiveTab().getQuery().names(channels);
-        clearInput();
-    }
-
-    /**
      * Zpracovani prikazu MODE.
      */
     public static void handleMode(String params) {
