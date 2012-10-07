@@ -204,4 +204,10 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         addText(message);
     }
 
+    @Override
+    public void privateMessageWithoutListenerReceived(String sender, String message) {
+        PrivateChatTab tab = createPrivateChatTab(sender);
+        tab.addText(sender + ": " + message);
+    }
+
 }

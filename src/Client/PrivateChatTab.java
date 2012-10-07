@@ -1,12 +1,13 @@
 package Client;
 
+import Connection.PrivateMessagingListener;
 import java.awt.*;
 import java.io.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
 
-public class PrivateChatTab extends AbstractTab {
+public class PrivateChatTab extends AbstractTab implements PrivateMessagingListener {
 
     private JEditorPane infobox;
     private JEditorPane chat;
@@ -80,6 +81,8 @@ public class PrivateChatTab extends AbstractTab {
 
         // Nastavení barev pro singalizaci příchodu nové zprávy
         unreadMessageColor = new Color(255, 128, 128);
+
+        connection.addPrivateMessagingListener(this);
     }
 
     @Override
@@ -154,6 +157,16 @@ public class PrivateChatTab extends AbstractTab {
         int index = GUI.getTabContainer().indexOfComponent(this);
         Color color = useNofiticationColor ? unreadMessageColor : originalColor;
         GUI.getTabContainer().setBackgroundAt(index, color);
+    }
+
+    @Override
+    public String getSenderNick() {
+        return tabName;
+    }
+
+    @Override
+    public void privateMessageReceived(String sender, String message) {
+        addText(sender + ": " + message);
     }
 
 }

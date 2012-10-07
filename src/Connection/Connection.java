@@ -15,6 +15,7 @@ public class Connection extends PircBot {
 
     private ArrayList<ServerEventsListener> serverEventsListeners;
     private ArrayList<ChannelEventsListener> channelEventsListeners;
+    private ArrayList<PrivateMessagingListener> privateMessagingListeners;
     private ArrayList<MyNickChangeListener> myNickChangeListeners;
 
 
@@ -23,6 +24,7 @@ public class Connection extends PircBot {
         this.config = new Config();
         this.serverEventsListeners = new ArrayList<>();
         this.channelEventsListeners = new ArrayList<>();
+        this.privateMessagingListeners = new ArrayList<>();
         this.myNickChangeListeners = new ArrayList<>();
 
         setName("pokusnyKrecek");
@@ -171,6 +173,33 @@ public class Connection extends PircBot {
                 break;
             }
         }
+    }
+
+    /*    PRIVATE MESSAGING EVENTS     */
+
+    public void addPrivateMessagingListener(PrivateMessagingListener listener) {
+        privateMessagingListeners.add(listener);
+    }
+
+    public void removePrivateMessagingListener(PrivateMessagingListener listener) {
+        privateMessagingListeners.remove(listener);
+    }
+
+    @Override
+    protected void onPrivateMessage(String sender, String login, String hostname, String message) {
+        notifyAboutPrivateMessageReceived(sender, message);
+    }
+
+    public void notifyAboutPrivateMessageReceived(String sender, String message) {
+        for (PrivateMessagingListener listener : privateMessagingListeners) {
+            if ( listener.getSenderNick().equals(sender) ) {
+                listener.privateMessageReceived(sender, message);
+                return;
+            }
+        }
+
+        // TODO vzdy jen 1
+        serverEventsListeners.get(0).privateMessageWithoutListenerReceived(sender, message);
     }
 
     /*        NICKNAME EVENTS          */
