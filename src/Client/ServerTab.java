@@ -16,6 +16,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     private JLabel addressLabel;
     private JLabel channelsLabel;
     private JEditorPane text;
+    private Connection connection;
     private HashSet<ChannelTab> channelTabs;
     private HashSet<PrivateChatTab> privateChatTabs;
 
@@ -108,6 +109,11 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         GUI.getMenuBar().toggleDisconectFromAll(true);
         GUI.getMenuBar().toggleUserMenuBar(true);
         */
+    }
+
+    @Override
+    public Connection getConnection() {
+        return connection;
     }
 
     public ChannelTab createChannelTab(String channel) {

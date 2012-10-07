@@ -25,7 +25,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     public ChannelTab(String channel, final ServerTab serverTab) {
         this.serverTab = serverTab;
-        this.connection = serverTab.getConnection();
 
         // Konstrukce panelu
         SpringLayout layout = new SpringLayout();
@@ -160,6 +159,11 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
         // Vytvori instanci zasobniku
         tempUserNames = new LinkedList<String>();
+    }
+
+    @Override
+    public Connection getConnection() {
+        return serverTab.getConnection();
     }
 
     /**

@@ -6,14 +6,11 @@ import javax.swing.JPanel;
 
 public abstract class AbstractTab extends JPanel {
 
-    protected Connection connection;
     protected ServerTab serverTab;
     protected String tabName;
 
 
-    public Connection getConnection() {
-        return connection;
-    }
+    public abstract Connection getConnection();
 
     final public String getTabName() {
         return tabName;

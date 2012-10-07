@@ -1,6 +1,6 @@
 package Client;
 
-import Connection.PrivateMessagingListener;
+import Connection.*;
 import java.awt.*;
 import java.io.*;
 import javax.swing.*;
@@ -17,7 +17,6 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
 
     public PrivateChatTab(String nickname, final ServerTab serverTab) {
         this.serverTab = serverTab;
-        this.connection = serverTab.getConnection();
 
         // TODO whois
         // getQuery().whois(tabName);
@@ -81,6 +80,11 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
 
         // Nastavení barev pro singalizaci příchodu nové zprávy
         unreadMessageColor = new Color(255, 128, 128);
+    }
+
+    @Override
+    public Connection getConnection() {
+        return serverTab.getConnection();
     }
 
     @Override
