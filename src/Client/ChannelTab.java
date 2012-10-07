@@ -421,7 +421,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
                                            index, isSelected, cellHasFocus);
 
             // přiřadí komponentě ikonu a text
-            c = Output.User.addIcon(c, (String) value);
+            c = Output.User.addPrefixBasedIcon(c, (String) value);
 
             return c;
         }
