@@ -41,7 +41,7 @@ public class Reply {
         CODE_265, CODE_266,
         
         CODE_301, CODE_305, CODE_306, CODE_311, CODE_312, CODE_313, CODE_317,
-        CODE_318, CODE_319, CODE_332, CODE_353, CODE_366, CODE_372, CODE_375, CODE_376,
+        CODE_318, CODE_319, CODE_332, CODE_366, CODE_372, CODE_375, CODE_376,
 
         CODE_401, CODE_404, CODE_422, CODE_432,
         CODE_433, CODE_451, CODE_482,
@@ -268,7 +268,6 @@ public class Reply {
             case CODE_318: { handleCode318(); break; }
             case CODE_319: { handleCode319(); break; }
             case CODE_332: { handleCode332(); break; }
-            case CODE_353: { handleCode353(); break; }
             case CODE_401: { handleCode401(); break; }
             case CODE_404: { handleCode404(); break; }
             case CODE_432: { handleCode432(); break; }
@@ -795,29 +794,6 @@ public class Reply {
         ChannelTab ch = getChannel(channel);
         output( mType("info") + "Aktuální téma je " + topic, ch);
         ch.setTopic(topic);
-
-    }
-
-    /**
-     * Vypis seznamu uzivatelu na kanale(ch).
-     */
-    private void handleCode353 () {
-
-        // TODO feature: prvni znak: * & = mody kanalu
-
-        // odstrani rovniko a mezeru
-        params = params.substring(2);
-
-        // vse do prvni mezery je nazev kanalu
-        int upto = params.indexOf(" ");
-        String channel = params.substring(0, upto);
-        params = params.substring(upto + 2);
-
-        ChannelTab ch = getChannel(channel);
-        if (ch == null)
-            return;
-
-        ch.setUsers(params);
 
     }
 

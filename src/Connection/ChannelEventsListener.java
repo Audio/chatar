@@ -1,11 +1,15 @@
 package Connection;
 
 import java.util.EventListener;
+import org.jibble.pircbot.User;
 
 
 public interface ChannelEventsListener extends EventListener {
 
+    public String getChannelName();
+
     public void messageReceived(String sender, String message);
+    public void userListReceived(User[] users);
 
     // TODO Half OP?
     public void userGetsOp(String initiator, String recipient);
@@ -23,7 +27,5 @@ public interface ChannelEventsListener extends EventListener {
     public void userUnbanned(String initiator, String recipient);
 
     public void topicChanged(String initiator, String topic);
-
-    // TODO onUserList
 
 }

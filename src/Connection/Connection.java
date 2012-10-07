@@ -81,10 +81,27 @@ public class Connection extends PircBot {
         notifyAboutMessageReceived(channel, sender, message);
     }
 
-    // TODO pouze vybranemu kanalu
     public void notifyAboutMessageReceived(String channel, String sender, String message) {
-        for (ChannelEventsListener listener : channelEventsListeners)
-            listener.messageReceived(sender, message);
+        for (ChannelEventsListener listener : channelEventsListeners) {
+            if ( listener.getChannelName().equals(channel) ) {
+                listener.messageReceived(sender, message);
+                break;
+            }
+        }
+    }
+
+    @Override
+    protected void onUserList(String channel, User[] users) {
+        notifyAboutUserListReceived(channel, users);
+    }
+
+    public void notifyAboutUserListReceived(String channel, User[] users) {
+        for (ChannelEventsListener listener : channelEventsListeners) {
+            if ( listener.getChannelName().equals(channel) ) {
+                listener.userListReceived(users);
+                break;
+            }
+        }
     }
 
     public void notifyAboutUserGetsOp(String initiator, String recipient) {

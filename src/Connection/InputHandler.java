@@ -77,15 +77,12 @@ public class InputHandler {
             return;
         }
 
-        ChannelTab existingTab = getCurrentServerTab().getChannelTabByName(channel);
-        if (existingTab != null) {
-            GUI.getTabContainer().setSelectedComponent(existingTab);
-            clearInput();
-        } else {
-            getCurrentServerTab().createChannelTab(channel);
-            getCurrentServerTab().getConnection().joinChannel(channel);
-            clearInput();
-        }
+        ChannelTab tab = getCurrentServerTab().getChannelTabByName(channel);
+        if (tab == null)
+            tab = getCurrentServerTab().createChannelTab(channel);
+
+        GUI.getTabContainer().setSelectedComponent(tab);
+        clearInput();
     }
 
     public static void handlePart(String channel) {

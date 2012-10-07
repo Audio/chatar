@@ -4,9 +4,11 @@ import Connection.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.text.*;
+import org.jibble.pircbot.User;
 
 
 public class ChannelTab extends AbstractTab implements ChannelEventsListener {
@@ -159,6 +161,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         // Vytvori instanci zasobniku
         tempUserNames = new LinkedList<String>();
         connection.addChannelEventListener(this);
+        connection.joinChannel(channel);
     }
 
     /**
@@ -274,44 +277,37 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         }
     }
 
-    /**
-     * Nastavuje (vypisuje) prihlase uzivatele v kanale.
-     * Vstupni retezec si rozdeli do pole dle mezer.
-     * Kazda hodnota v poli predstavuje jednoho uzivatele.
-     */
-    public void setUsers(String userlist) {
-
-        String[] juzrs = userlist.split(" ");
-        Arrays.sort(juzrs, String.CASE_INSENSITIVE_ORDER);
+    public void setUsers(User[] users) {
+        // Arrays.sort(users, String.CASE_INSENSITIVE_ORDER); // TODO need sorting?
         usersModel.clear();
 
+        // TODO nepotrebuju, nie?
         Runnable adder = new Runnable () {
-
             @Override
             public void run () {
                 String tempUserName = tempUserNames.poll();
                 if (tempUserName != null) {
                     usersModel.addElement(tempUserName);
-                }
-                else {
+                } else {
                     // Provede seřazení uživatelů dle abecedy vzestupně
                     // TODO feature řazení při změně/přidání
                     // http://java.sun.com/developer/technicalArticles/J2SE/Desktop/sorted_jlist/
                 }
             }
-
         };
 
 
         // Nastavi uzivatele
         try {
-            for (int i = 0; i < juzrs.length; i++) {
-                tempUserNames.add( juzrs[i] );
+            for (User user : users) {
+                tempUserNames.add( user.getNick() );
                 if ( SwingUtilities.isEventDispatchThread() )
                     SwingUtilities.invokeLater(adder);
                 else
                     SwingUtilities.invokeAndWait(adder);
 
+                // TODO coto?
+                /*
                 if (i+1 == juzrs.length) {
                     tempUserNames.add(null);
                     if ( SwingUtilities.isEventDispatchThread() )
@@ -319,14 +315,12 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
                     else
                         SwingUtilities.invokeAndWait(adder);
                 }
-
+                */
             }
-        }
-        catch (Exception e) {
+        } catch (InterruptedException | InvocationTargetException e) {
             ClientLogger.log("Chyba pri nastavovani seznamu uzivatelu: " + e.getMessage(), ClientLogger.ERROR);
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -440,8 +434,18 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     }
 
     @Override
+    public String getChannelName() {
+        return tabName;
+    }
+
+    @Override
     public void messageReceived(String sender, String message) {
         addText(sender + ": " + message);
+    }
+
+    @Override
+    public void userListReceived(User[] users) {
+        setUsers(users);
     }
 
     @Override
