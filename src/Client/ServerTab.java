@@ -134,11 +134,17 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     }
 
     public void closeAllTabs() {
-        for (PrivateChatTab chat : privateChatTabs)
-            removePrivateChatTab(chat);
+        Iterator<PrivateChatTab> chatIterator = privateChatTabs.iterator();
+        while ( chatIterator.hasNext() ) {
+            MainWindow.getInstance().removeTab( chatIterator.next() );
+            chatIterator.remove();
+        }
 
-        for (ChannelTab channel : channelTabs)
-            removeChannelTab(channel);
+        Iterator<ChannelTab> channelIterator = channelTabs.iterator();
+        while ( channelIterator.hasNext() ) {
+            MainWindow.getInstance().removeTab( channelIterator.next() );
+            channelIterator.remove();
+        }
 
         connection.disconnect();
         MainWindow.getInstance().removeTab(this);

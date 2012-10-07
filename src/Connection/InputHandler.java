@@ -46,12 +46,12 @@ public class InputHandler {
     }
 
     public static void handleQuit(String reason) {
-        handleQuit(getActiveTab(), reason);
+        handleQuit( getCurrentServerTab(), reason);
     }
 
-    public static void handleQuit(AbstractTab tab, String reason) {
+    public static void handleQuit(ServerTab serverTab, String reason) {
         clearInput();
-        tab.getServerTab().closeAllTabs();
+        serverTab.closeAllTabs();
     }
 
     public static void handlePrivMessage(String params) {
