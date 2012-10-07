@@ -2,6 +2,7 @@ package Client;
 
 import java.awt.Component;
 import javax.swing.*;
+import org.jibble.pircbot.User;
 
 
 public class UserListRenderer extends DefaultListCellRenderer {
@@ -13,7 +14,7 @@ public class UserListRenderer extends DefaultListCellRenderer {
                                 PREFIX_BOT = "&";
 
 
-    public Component addPrefixBasedIcon(Component c, String nick) {
+    private Component addPrefixBasedIcon(Component c, String nick) {
         String prefix = nick.substring(0, 1);
         switch (prefix) {
             case PREFIX_OWNER:          setOwnerIcon(c); break;
@@ -24,8 +25,7 @@ public class UserListRenderer extends DefaultListCellRenderer {
             default:                    setCommonUserIcon(c);
         }
 
-        nick = removePrefix(nick);
-        ((JLabel) c).setText(nick);
+        ((JLabel) c).setText( removePrefix(nick) );
 
         return c;
     }

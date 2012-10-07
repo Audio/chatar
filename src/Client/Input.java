@@ -189,8 +189,8 @@ public class Input extends JPanel {
                 case CLEAR:   { InputHandler.handleClear(); break; }
                 case OPER:    { InputHandler.handleOper(params); break; }
                 case WHOIS:   { InputHandler.handleWhois(params); break; }
-                case ME:      { InputHandler.handleMe(params); break; }
-                case ACTION:  { InputHandler.handleMe(params); break; }
+                case ME:      { InputHandler.handleAction(params); break; }
+                case ACTION:  { InputHandler.handleAction(params); break; }
 
                 case SERVER:  { InputHandler.handleServer(params); break; }
             }

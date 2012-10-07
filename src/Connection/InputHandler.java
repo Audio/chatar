@@ -17,11 +17,11 @@ public class InputHandler {
         return getActiveTab() instanceof ChannelTab;
     }
 
-    public static void outputToCurrentTab(String str) {
+    private static void outputToCurrentTab(String str) {
         getActiveTab().addText(str);
     }
 
-    public static void clearInput() {
+    private static void clearInput() {
         MainWindow.getInstance().getGInput().getTextField().setText(null);
     }
 
@@ -93,7 +93,7 @@ public class InputHandler {
         if (tab == null)
             tab = getCurrentServerTab().createChannelTab(channel);
 
-        GUI.getTabContainer().setSelectedComponent(tab);
+        tab.setFocus();
         clearInput();
     }
 
@@ -238,7 +238,7 @@ public class InputHandler {
         // getCurrentServer().getQuery().whois(params);
     }
 
-    public static void handleMe(String params) {
+    public static void handleAction(String params) {
         if ( !isChannelTabActive() ) {
             showNotActiveChannelError();
             return;
@@ -249,6 +249,9 @@ public class InputHandler {
 
         String channel = getActiveTab().getTabName();
         getCurrentServerTab().getConnection().sendAction(channel, params);
+
+        String nick = getActiveTab().getConnection().getNick();
+        getActiveTab().addText( Output.HTML.italic(nick + " " + params) );
         clearInput();
     }
 

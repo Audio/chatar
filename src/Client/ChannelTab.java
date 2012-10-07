@@ -15,13 +15,13 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     private JList userList;
     private UserListRenderer userListRenderer;
-    private DefaultListModel usersModel;
+    private DefaultListModel<String> usersModel;
     private JEditorPane infobox;
     private JEditorPane chat;
     private JPopupMenu popup;
     private MouseListener popupListener;
     private String selectedPopupUser;
-    private LinkedList<String> tempUserNames;
+    private LinkedList<String> usersQueue;
 
 
     public ChannelTab(String channel, final ServerTab serverTab) {
@@ -160,7 +160,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         setTopic(null);
 
         // Vytvori instanci zasobniku
-        tempUserNames = new LinkedList<String>();
+        usersQueue = new LinkedList<>();
     }
 
     @Override
@@ -286,24 +286,19 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         usersModel.clear();
 
         // TODO potrebuju v novym vlakne?
+        // TODO feature řazení při změně/přidání
+        // http://java.sun.com/developer/technicalArticles/J2SE/Desktop/sorted_jlist/
         Runnable adder = new Runnable () {
             @Override
             public void run () {
-                String tempUserName = tempUserNames.poll();
-                if (tempUserName != null) {
-                    usersModel.addElement(tempUserName);
-                } else {
-                    // Provede seřazení uživatelů dle abecedy vzestupně
-                    // TODO feature řazení při změně/přidání
-                    // http://java.sun.com/developer/technicalArticles/J2SE/Desktop/sorted_jlist/
-                }
+                usersModel.addElement( usersQueue.poll() );
             }
         };
 
 
         try {
             for (User user : users) {
-                tempUserNames.add( user.getNick() );
+                usersQueue.add( user.getPrefix() + user.getNick() );
                 if ( SwingUtilities.isEventDispatchThread() )
                     SwingUtilities.invokeLater(adder);
                 else
@@ -326,33 +321,37 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         }
     }
 
-    /**
-     * Přidá uživatele do seznamu.
-     */
     public void addUser(String nickname) {
-        if ( !hasNick(nickname) )
-            usersModel.addElement(nickname);
+        usersModel.addElement(nickname);
     }
 
-    /**
-     * Odebere uživatele se seznamu.
-     */
     public void removeUser(String nickname) {
-
-        int index = getNick(nickname);
+        int index = getNickIndex(nickname);
         if (index < 0)
             return;
 
         usersModel.remove(index);
-
     }
 
     /**
-     * Změní přezdívku vybraného uživatele.
+     * Vrací index v seznamu, na kterém se nachází uživatel se zvoleným nickem.
+     * Kvůli prefixům nelze použít metodu (usersModel.)indexOf.
+     * Pokud uživatele nenajde, vrací hodnotu -1.
      */
-    public void changeUsersNickname(String oldname, String newname) {
-        removeUser(oldname);
-        addUser(newname);
+    public int getNickIndex(String user) {
+        user = userListRenderer.removePrefix(user).toLowerCase();
+
+        int size = usersModel.size();
+        for (int i=0; i < size; i++) {
+
+            String nick = usersModel.getElementAt(i);
+            nick = userListRenderer.removePrefix(nick).toLowerCase();
+            if ( nick.equals(user) )
+                return i;
+
+        }
+
+        return -1;
     }
 
     public void setTopic(String topic) {
@@ -367,47 +366,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     @Override
     public void clearContent() {
         chat.setText(null);
-    }
-
-    /**
-     * Vrací odpověď, zda je uživatel se zvoleným nickem v této místnosti.
-     * Kvůli prefixům nelze použít metodu (usersModel.)contains.
-     */
-    public boolean hasNick(String user) {
-        user = userListRenderer.removePrefix(user).toLowerCase();
-
-        int size = usersModel.size();
-        for (int i=0; i < size; i++) {
-
-            String nick = (String) usersModel.getElementAt(i);
-            nick = userListRenderer.removePrefix(nick).toLowerCase();
-            if ( nick.equals(user) )
-                return true;
-
-        }
-
-        return false;
-    }
-
-    /**
-     * Vrací index v seznamu, na kterém se nachází uživatel se zvoleným nickem.
-     * Kvůli prefixům nelze použít metodu (usersModel.)indexOf.
-     * Pokud uživatele nenajde, vrací hodnotu -1.
-     */
-    public int getNick(String user) {
-        user = userListRenderer.removePrefix(user).toLowerCase();
-
-        int size = usersModel.size();
-        for (int i=0; i < size; i++) {
-
-            String nick = (String) usersModel.getElementAt(i);
-            nick = userListRenderer.removePrefix(nick).toLowerCase();
-            if ( nick.equals(user) )
-                return i;
-
-        }
-
-        return -1;
     }
 
     @Override
@@ -447,27 +405,30 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     @Override
     public void userChangesNick(String oldNick, String newNick) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        removeUser(oldNick);
+        addUser(newNick);
     }
 
     @Override
     public void userJoined(String nickname) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        addUser(nickname);
     }
 
     @Override
     public void userLeft(String nickname) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        removeUser(nickname);
     }
 
     @Override
     public void userQuit(String nickname, String reason) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        addText( Output.HTML.italic(nickname + " odešel (důvod: " + reason + ")") );
+        removeUser(nickname);
     }
 
     @Override
-    public void userKicked(String initiator, String recipient) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void userKicked(String initiator, String recipient, String reason) {
+        addText( Output.HTML.italic(initiator + " vykopnul " + recipient + " (" + reason + ")") );
+        removeUser(recipient);
     }
 
     @Override
