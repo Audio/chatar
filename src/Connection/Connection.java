@@ -69,58 +69,68 @@ public class Connection extends PircBot {
         channelEventsListeners.remove(listener);
     }
 
+    private ChannelEventsListener getChannelEventsListener(String name) {
+        for (ChannelEventsListener listener : channelEventsListeners) {
+            if ( listener.getChannelName().equals(name) )
+                return listener;
+        }
+
+        return null;
+    }
+
     @Override
     protected void onMessage(String channel, String sender, String login, String hostname, String message) {
-        for (ChannelEventsListener listener : channelEventsListeners) {
-            if ( listener.getChannelName().equals(channel) ) {
-                listener.messageReceived(sender, message);
-                break;
-            }
-        }
+        ChannelEventsListener listener = getChannelEventsListener(channel);
+        if (listener != null)
+            listener.messageReceived(sender, message);
     }
 
     @Override
     protected void onUserList(String channel, User[] users) {
-        for (ChannelEventsListener listener : channelEventsListeners) {
-            if ( listener.getChannelName().equals(channel) ) {
-                listener.userListReceived(users);
-                break;
-            }
-        }
+        ChannelEventsListener listener = getChannelEventsListener(channel);
+        if (listener != null)
+            listener.userListReceived(users);
     }
 
-    public void notifyAboutUserGetsOp(String initiator, String recipient) {
-        for (ChannelEventsListener listener : channelEventsListeners)
+    public void notifyAboutUserGetsOp(String channel, String initiator, String recipient) {
+        ChannelEventsListener listener = getChannelEventsListener(channel);
+        if (listener != null)
             listener.userGetsOp(initiator, recipient);
     }
 
-    public void notifyAboutUserLoseOp(String initiator, String recipient) {
-        for (ChannelEventsListener listener : channelEventsListeners)
+    public void notifyAboutUserLoseOp(String channel, String initiator, String recipient) {
+        ChannelEventsListener listener = getChannelEventsListener(channel);
+        if (listener != null)
             listener.userLoseOp(initiator, recipient);
     }
 
-    public void notifyAboutUserGetsVoice(String initiator, String recipient) {
-        for (ChannelEventsListener listener : channelEventsListeners)
+    public void notifyAboutUserGetsVoice(String channel, String initiator, String recipient) {
+        ChannelEventsListener listener = getChannelEventsListener(channel);
+        if (listener != null)
             listener.userGetsVoice(initiator, recipient);
     }
 
-    public void notifyAboutUserLoseVoice(String initiator, String recipient) {
-        for (ChannelEventsListener listener : channelEventsListeners)
+    public void notifyAboutUserLoseVoice(String channel, String initiator, String recipient) {
+        ChannelEventsListener listener = getChannelEventsListener(channel);
+        if (listener != null)
             listener.userLoseVoice(initiator, recipient);
     }
 
-    public void notifyAboutUserChangesNick(String oldNick, String newNick) {
-        for (ChannelEventsListener listener : channelEventsListeners)
+    public void notifyAboutUserChangesNick(String channel, String oldNick, String newNick) {
+        ChannelEventsListener listener = getChannelEventsListener(channel);
+        if (listener != null)
             listener.userChangesNick(oldNick, newNick);
     }
 
-    public void notifyAboutUserJoined(String nickname) {
-        for (ChannelEventsListener listener : channelEventsListeners)
+    public void notifyAboutUserJoined(String channel, String nickname) {
+        ChannelEventsListener listener = getChannelEventsListener(channel);
+        if (listener != null)
             listener.userJoined(nickname);
     }
 
-    public void notifyAboutUserLeft(String nickname) {
-        for (ChannelEventsListener listener : channelEventsListeners)
+    public void notifyAboutUserLeft(String channel, String nickname) {
+        ChannelEventsListener listener = getChannelEventsListener(channel);
+        if (listener != null)
             listener.userLeft(nickname);
     }
 
@@ -129,18 +139,21 @@ public class Connection extends PircBot {
             listener.userQuit(nickname, reason);
     }
 
-    public void notifyAboutUserKicked(String initiator, String recipient) {
-        for (ChannelEventsListener listener : channelEventsListeners)
+    public void notifyAboutUserKicked(String channel, String initiator, String recipient) {
+        ChannelEventsListener listener = getChannelEventsListener(channel);
+        if (listener != null)
             listener.userKicked(initiator, recipient);
     }
 
-    public void notifyAboutUserBanned(String initiator, String recipient) {
-        for (ChannelEventsListener listener : channelEventsListeners)
+    public void notifyAboutUserBanned(String channel, String initiator, String recipient) {
+        ChannelEventsListener listener = getChannelEventsListener(channel);
+        if (listener != null)
             listener.userBanned(initiator, recipient);
     }
 
-    public void notifyAboutUserUnbanned(String initiator, String recipient) {
-        for (ChannelEventsListener listener : channelEventsListeners)
+    public void notifyAboutUserUnbanned(String channel, String initiator, String recipient) {
+        ChannelEventsListener listener = getChannelEventsListener(channel);
+        if (listener != null)
             listener.userUnbanned(initiator, recipient);
     }
 
