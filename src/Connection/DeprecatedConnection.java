@@ -34,7 +34,6 @@ public class DeprecatedConnection extends Thread {
     private boolean authenticated;
     private boolean closedByServer;
 
-    private ArrayList<MyNickChangeListener> myNickChangeListeners;
     private ArrayList<ChannelEventsListener> channelEventsListeners;
 
 
@@ -49,7 +48,6 @@ public class DeprecatedConnection extends Thread {
         this.config = new Config();
         this.authenticated = false;
         this.closedByServer = false;
-        this.myNickChangeListeners = new ArrayList<>();
         this.channelEventsListeners = new ArrayList<>();
     }
 

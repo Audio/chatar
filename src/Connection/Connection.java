@@ -16,7 +16,6 @@ public class Connection extends PircBot {
     private ServerEventsListener serverEventsListener;
     private ArrayList<ChannelEventsListener> channelEventsListeners;
     private ArrayList<PrivateMessagingListener> privateMessagingListeners;
-    private ArrayList<MyNickChangeListener> myNickChangeListeners;
 
 
     // TODO vyresit config
@@ -24,7 +23,6 @@ public class Connection extends PircBot {
         this.config = new Config();
         this.channelEventsListeners = new ArrayList<>();
         this.privateMessagingListeners = new ArrayList<>();
-        this.myNickChangeListeners = new ArrayList<>();
 
         setName("pokusnyKrecek");
         setAutoNickChange(true);
@@ -177,21 +175,6 @@ public class Connection extends PircBot {
 
         if (serverEventsListener != null)
             serverEventsListener.privateMessageWithoutListenerReceived(sender, message);
-    }
-
-    /*        NICKNAME EVENTS          */
-
-    public void addMyNickChangeListener(MyNickChangeListener listener) {
-        myNickChangeListeners.add(listener);
-    }
-
-    public void removeMyNickChangeListener(MyNickChangeListener listener) {
-        myNickChangeListeners.remove(listener);
-    }
-
-    public void notifyAboutMyNickChange(String newNickname) {
-        for (MyNickChangeListener listener : myNickChangeListeners)
-            listener.myNickHasChanged(newNickname);
     }
 
 }
