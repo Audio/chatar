@@ -13,7 +13,7 @@ public class Connection extends PircBot {
     // TODO config tu nema co delat bych rek
     public Config config;
 
-    private ArrayList<ServerEventsListener> serverEventsListeners;
+    private ServerEventsListener serverEventsListener;
     private ArrayList<ChannelEventsListener> channelEventsListeners;
     private ArrayList<PrivateMessagingListener> privateMessagingListeners;
     private ArrayList<MyNickChangeListener> myNickChangeListeners;
@@ -22,7 +22,6 @@ public class Connection extends PircBot {
     // TODO vyresit config
     public Connection(String server, int port) throws IOException, IrcException {
         this.config = new Config();
-        this.serverEventsListeners = new ArrayList<>();
         this.channelEventsListeners = new ArrayList<>();
         this.privateMessagingListeners = new ArrayList<>();
         this.myNickChangeListeners = new ArrayList<>();
@@ -49,12 +48,8 @@ public class Connection extends PircBot {
 
     /*         SERVER EVENTS           */
 
-    public void addServerEventListener(ServerEventsListener listener) {
-        serverEventsListeners.add(listener);
-    }
-
-    public void removeServerEventListener(ServerEventsListener listener) {
-        serverEventsListeners.remove(listener);
+    public void setServerEventListener(ServerEventsListener listener) {
+        serverEventsListener = listener;
     }
 
     @Override
@@ -63,8 +58,7 @@ public class Connection extends PircBot {
     }
 
     public void notifyAboutServerMessageReceived(String message) {
-        for (ServerEventsListener listener : serverEventsListeners)
-            listener.serverMessageReceived(message);
+        serverEventsListener.serverMessageReceived(message);
     }
 
 
@@ -198,8 +192,7 @@ public class Connection extends PircBot {
             }
         }
 
-        // TODO vzdy jen 1
-        serverEventsListeners.get(0).privateMessageWithoutListenerReceived(sender, message);
+        serverEventsListener.privateMessageWithoutListenerReceived(sender, message);
     }
 
     /*        NICKNAME EVENTS          */

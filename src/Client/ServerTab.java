@@ -96,7 +96,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
         try {
             connection = new Connection(server, port);
-            connection.addServerEventListener(this);
+            connection.setServerEventListener(this);
         } catch (IOException | IrcException e) {
             new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba připojení", "K vybranému serveru se nelze připojit.");
             // addText("Spojení nelze uskutečnit."); // TODO volani z konstruktoru :-/
