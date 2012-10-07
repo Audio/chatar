@@ -122,15 +122,14 @@ public class InputHandler {
         getActiveTab().getConnection().setTopic(channel, topic );
         clearInput();
     }
-    
+
     /**
      * Zpracovani prikazu MODE.
      */
     public static void handleMode(String params) {
         if (params != null && params.trim().length() > 0) {
             params = params.trim();
-        }
-        else {
+        } else {
             outputToCurrentTab( mType("error") + "Příkaz MODE: nesprávná syntaxe příkazu. Použijte /mode {UZIVATEL|KANAL}");
             return;
         }
@@ -139,9 +138,6 @@ public class InputHandler {
         clearInput();
     }
 
-    /**
-     * Pripojeni na zvoleny server.
-     */
     public static void handleServer(String address) {
         try {
             MainWindow.getInstance().createServerTab(address);
@@ -172,23 +168,16 @@ public class InputHandler {
         clearInput();
     }
 
-    /**
-     * Nastavení ci zrušení nepřítomnosti (AFK - away from keyboard).
-     */
     public static void handleAway(String params) {
-        /*
+        Connection con = getCurrentServerTab().getConnection();
         if (params == null || params.trim().length() == 0)
-            getActiveTab().getQuery().away(null);
+            con.sendRawLine("AWAY");
         else
-            getActiveTab().getQuery().away( params.trim() );
-            */
+            con.sendRawLine("AWAY :" + params);
 
         clearInput();
     }
 
-    /**
-     * Zrušení nepřítomnosti (AFK).
-     */
     public static void handleNotAway() {
         handleAway(null);
     }
