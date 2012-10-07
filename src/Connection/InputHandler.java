@@ -67,8 +67,20 @@ public class InputHandler {
         getCurrentServerTab().getConnection().sendMessage(target, message);
         clearInput();
 
-        if ( !target.startsWith("#") && getCurrentServerTab().getPrivateChatByName(target) == null)
-            getCurrentServerTab().createPrivateChatTab(target);
+        AbstractTab tab;
+        ServerTab serverTab = getCurrentServerTab();
+        if ( target.startsWith("#") ) {
+            tab = serverTab.getChannelTabByName(target);
+        } else {
+            tab = serverTab.getPrivateChatByName(target);
+            if (tab  == null )
+                tab = serverTab.createPrivateChatTab(target);
+        }
+
+        if (tab != null) {
+            String myNick = serverTab.getConnection().getNick();
+            tab.addText(myNick + ": " + message);
+        }
     }
 
     public static void handleJoin(String channel) {
