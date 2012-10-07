@@ -1,7 +1,6 @@
 package Connection;
 
 import Client.*;
-import java.util.Iterator;
 
 
 public class InputHandler {
@@ -110,20 +109,17 @@ public class InputHandler {
         clearInput();
     }
 
-    /**
-     * Meni tema ve vybranem kanale.
-     */
     public static void handleTopic(String topic) {
         if (getActiveTab() instanceof ChannelTab == false) {
             outputToCurrentTab( mType("error") + "Téma lze změnit pouze ve vybraném kanále.");
             return;
         }
 
-        if (topic != null)
-            topic = topic.trim();
+        if (topic == null)
+            return;
 
-        String channel = getActiveTab().getTabName().substring(1);
-        // getActiveTab().getQuery().topic(channel, topic );
+        String channel = getActiveTab().getTabName();
+        getActiveTab().getConnection().setTopic(channel, topic );
         clearInput();
     }
     
