@@ -20,7 +20,7 @@ public class Connection extends PircBot {
 
 
     // TODO vyresit config
-    public Connection(String server, int port) throws IOException, IrcException {
+    public Connection() throws IOException, IrcException {
         this.config = new Config();
         this.channelEventsListeners = new ArrayList<>();
         this.privateMessagingListeners = new ArrayList<>();
@@ -28,7 +28,6 @@ public class Connection extends PircBot {
 
         setName("pokusnyKrecek");
         setAutoNickChange(true);
-        connect(server, port);
     }
 
     // TODO odezva
@@ -54,13 +53,9 @@ public class Connection extends PircBot {
 
     @Override
     protected void onServerResponse(int code, String response) {
-        notifyAboutServerMessageReceived(response);
+        if (serverEventsListener != null)
+            serverEventsListener.serverMessageReceived(response);
     }
-
-    public void notifyAboutServerMessageReceived(String message) {
-        serverEventsListener.serverMessageReceived(message);
-    }
-
 
     /*        CHANNEL EVENTS           */
 
@@ -74,10 +69,6 @@ public class Connection extends PircBot {
 
     @Override
     protected void onMessage(String channel, String sender, String login, String hostname, String message) {
-        notifyAboutMessageReceived(channel, sender, message);
-    }
-
-    public void notifyAboutMessageReceived(String channel, String sender, String message) {
         for (ChannelEventsListener listener : channelEventsListeners) {
             if ( listener.getChannelName().equals(channel) ) {
                 listener.messageReceived(sender, message);
@@ -88,10 +79,6 @@ public class Connection extends PircBot {
 
     @Override
     protected void onUserList(String channel, User[] users) {
-        notifyAboutUserListReceived(channel, users);
-    }
-
-    public void notifyAboutUserListReceived(String channel, User[] users) {
         for (ChannelEventsListener listener : channelEventsListeners) {
             if ( listener.getChannelName().equals(channel) ) {
                 listener.userListReceived(users);
@@ -157,13 +144,9 @@ public class Connection extends PircBot {
 
     @Override
     protected void onTopic(String channel, String topic, String setBy, long date, boolean changed) {
-        notifyAboutTopicChanged(channel, setBy, topic);
-    }
-
-    public void notifyAboutTopicChanged(String channel, String initiator, String topic) {
         for (ChannelEventsListener listener : channelEventsListeners) {
             if ( listener.getChannelName().equals(channel) ) {
-                listener.topicChanged(initiator, topic);
+                listener.topicChanged(setBy, topic);
                 break;
             }
         }
@@ -181,10 +164,6 @@ public class Connection extends PircBot {
 
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message) {
-        notifyAboutPrivateMessageReceived(sender, message);
-    }
-
-    public void notifyAboutPrivateMessageReceived(String sender, String message) {
         for (PrivateMessagingListener listener : privateMessagingListeners) {
             if ( listener.getSenderNick().equals(sender) ) {
                 listener.privateMessageReceived(sender, message);
@@ -192,7 +171,8 @@ public class Connection extends PircBot {
             }
         }
 
-        serverEventsListener.privateMessageWithoutListenerReceived(sender, message);
+        if (serverEventsListener != null)
+            serverEventsListener.privateMessageWithoutListenerReceived(sender, message);
     }
 
     /*        NICKNAME EVENTS          */
