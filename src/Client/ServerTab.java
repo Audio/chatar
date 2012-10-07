@@ -17,8 +17,8 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     private JLabel channelsLabel;
     private JEditorPane text;
     private Connection connection;
-    private HashSet<ChannelTab> channelTabs;
-    private HashSet<PrivateChatTab> privateChatTabs;
+    private ArrayList<ChannelTab> channelTabs;
+    private ArrayList<PrivateChatTab> privateChatTabs;
 
 
     public ServerTab(String address) {
@@ -92,8 +92,8 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
         // Pripojeni na server
         tabName = server;
-        channelTabs = new HashSet<>();
-        privateChatTabs = new HashSet<>();
+        channelTabs = new ArrayList<>();
+        privateChatTabs = new ArrayList<>();
 
         try {
             connection = new Connection();
@@ -146,17 +146,11 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     }
 
     public void closeAllTabs() {
-        Iterator<PrivateChatTab> chatIterator = privateChatTabs.iterator();
-        while ( chatIterator.hasNext() ) {
-            MainWindow.getInstance().removeTab( chatIterator.next() );
-            chatIterator.remove();
-        }
+        while (privateChatTabs.size() > 0)
+            removePrivateChatTab( privateChatTabs.get(0) );
 
-        Iterator<ChannelTab> channelIterator = channelTabs.iterator();
-        while ( channelIterator.hasNext() ) {
-            MainWindow.getInstance().removeTab( channelIterator.next() );
-            channelIterator.remove();
-        }
+        while (channelTabs.size() > 0)
+            removeChannelTab( channelTabs.get(0) );
 
         connection.disconnect();
         connection.removeServerEventsListener();
