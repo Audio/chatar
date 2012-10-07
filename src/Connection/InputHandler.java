@@ -245,25 +245,18 @@ public class InputHandler {
         // getCurrentServer().getQuery().whois(params);
     }
 
-    /**
-     * Vypíše do kanálu, že uživatel provádí akci speficikovanou parametrem.
-     */
     public static void handleMe(String params) {
         if ( !isChannelTabActive() ) {
             showNotActiveChannelError();
             return;
         }
 
-        String channel = getActiveTab().getTabName();
-
-        params = (params == null) ? null : params.trim();
-        clearInput();
-
-        if (params == null || params.length() == 0) {
+        if (params == null || params.trim().length() == 0)
             params = "neumi pouzivat IRC klienta."; // :)
-        }
 
-        // getCurrentServer().getQuery().me(channel, params);
+        String channel = getActiveTab().getTabName();
+        getCurrentServerTab().getConnection().sendAction(channel, params);
+        clearInput();
     }
 
     /**
