@@ -2,12 +2,11 @@ package Client;
 
 import java.awt.Component;
 import javax.swing.*;
-import org.jibble.pircbot.User;
 
 
 public class UserListRenderer extends DefaultListCellRenderer {
 
-    private static final String PREFIX_OWNER = "~",
+    public static final String PREFIX_OWNER = "~",
                                 PREFIX_OPERATOR = "@",
                                 PREFIX_HALF_OPERATOR = "%",
                                 PREFIX_VOICE = "+",

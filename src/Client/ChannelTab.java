@@ -15,7 +15,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     private JList userList;
     private UserListRenderer userListRenderer;
-    private DefaultListModel<String> usersModel;
+    private SortedListModel<String> usersModel;
     private JEditorPane infobox;
     private JEditorPane chat;
     private JPopupMenu popup;
@@ -46,7 +46,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         scrollpanel.setAutoscrolls(true);
 
         userListRenderer = new UserListRenderer();
-        usersModel = new DefaultListModel();
+        usersModel = new SortedListModel<>();
 
         userList = new JList(usersModel);
         userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -282,16 +282,13 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     }
 
     public void setUsers(User[] users) {
-        // Arrays.sort(users); // TODO zprovoznit, znici to obsah pole
         usersModel.clear();
 
         // TODO potrebuju v novym vlakne?
-        // TODO feature řazení při změně/přidání
-        // http://java.sun.com/developer/technicalArticles/J2SE/Desktop/sorted_jlist/
         Runnable adder = new Runnable () {
             @Override
             public void run () {
-                usersModel.addElement( usersQueue.poll() );
+                usersModel.add( usersQueue.poll() );
             }
         };
 
@@ -303,17 +300,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
                     SwingUtilities.invokeLater(adder);
                 else
                     SwingUtilities.invokeAndWait(adder);
-
-                // TODO coto?
-                /*
-                if (i+1 == juzrs.length) {
-                    tempUserNames.add(null);
-                    if ( SwingUtilities.isEventDispatchThread() )
-                        SwingUtilities.invokeLater(adder);
-                    else
-                        SwingUtilities.invokeAndWait(adder);
-                }
-                */
             }
         } catch (InterruptedException | InvocationTargetException e) {
             ClientLogger.log("Chyba pri nastavovani seznamu uzivatelu: " + e.getMessage(), ClientLogger.ERROR);
@@ -322,7 +308,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     }
 
     public void addUser(String nickname) {
-        usersModel.addElement(nickname);
+        usersModel.add(nickname);
     }
 
     public void removeUser(String nickname) {
@@ -341,7 +327,8 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     public int getNickIndex(String user) {
         user = userListRenderer.removePrefix(user).toLowerCase();
 
-        int size = usersModel.size();
+        // TODO implementovat v modelu
+        int size = usersModel.getSize();
         for (int i=0; i < size; i++) {
 
             String nick = usersModel.getElementAt(i);
@@ -385,22 +372,30 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     @Override
     public void userGetsOp(String initiator, String recipient) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        addText( Output.HTML.italic(recipient + " +o (" + initiator + ")") );
+        removeUser(recipient);
+        addUser(UserListRenderer.PREFIX_OPERATOR + recipient);
     }
 
     @Override
     public void userLoseOp(String initiator, String recipient) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        addText( Output.HTML.italic(recipient + " -o (" + initiator + ")") );
+        removeUser(recipient);
+        addUser(recipient);
     }
 
     @Override
     public void userGetsVoice(String initiator, String recipient) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        addText( Output.HTML.italic(recipient + " +v (" + initiator + ")") );
+        removeUser(recipient);
+        addUser(UserListRenderer.PREFIX_VOICE + recipient);
     }
 
     @Override
     public void userLoseVoice(String initiator, String recipient) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        addText( Output.HTML.italic(recipient + " -v (" + initiator + ")") );
+        removeUser(recipient);
+        addUser(recipient);
     }
 
     @Override
