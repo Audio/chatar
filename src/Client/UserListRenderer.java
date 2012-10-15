@@ -7,20 +7,20 @@ import javax.swing.*;
 public class UserListRenderer extends DefaultListCellRenderer {
 
     public static final String PREFIX_OWNER = "~",
-                                PREFIX_OPERATOR = "@",
-                                PREFIX_HALF_OPERATOR = "%",
-                                PREFIX_VOICE = "+",
-                                PREFIX_BOT = "&";
+                               PREFIX_ADMIN = "&",
+                               PREFIX_OPERATOR = "@",
+                               PREFIX_HALF_OPERATOR = "%",
+                               PREFIX_VOICE = "+";
 
 
     private Component addPrefixBasedIcon(Component c, String nick) {
         String prefix = nick.substring(0, 1);
         switch (prefix) {
             case PREFIX_OWNER:          setOwnerIcon(c); break;
+            case PREFIX_ADMIN:          setAdminIcon(c); break;
             case PREFIX_OPERATOR:       setOperatorIcon(c); break;
             case PREFIX_HALF_OPERATOR:  setHalfOperatorIcon(c); break;
             case PREFIX_VOICE:          setVoiceIcon(c); break;
-            case PREFIX_BOT:            setBotIcon(c); break;
             default:                    setCommonUserIcon(c);
         }
 
@@ -33,6 +33,10 @@ public class UserListRenderer extends DefaultListCellRenderer {
         return nick.startsWith(PREFIX_OWNER);
     }
 
+    private boolean isAdmin(String nick) {
+        return nick.startsWith(PREFIX_ADMIN);
+    }
+
     private boolean isOperator(String nick) {
         return nick.startsWith(PREFIX_OPERATOR);
     }
@@ -43,10 +47,6 @@ public class UserListRenderer extends DefaultListCellRenderer {
 
     private boolean isVoice(String nick) {
         return nick.startsWith(PREFIX_VOICE);
-    }
-
-    private boolean isBot(String nick) {
-        return nick.startsWith(PREFIX_BOT);
     }
 
     private Component setCommonUserIcon(Component c) {
@@ -75,13 +75,13 @@ public class UserListRenderer extends DefaultListCellRenderer {
         return c;
     }
 
-    private Component setBotIcon(Component c) {
+    private Component setAdminIcon(Component c) {
         ((JLabel) c).setIcon( new ImageIcon("img/bot.png") );
         return c;
     }
 
     public String removePrefix(String nick) {
-        if ( isOwner(nick) || isOperator(nick) || isHalfOperator(nick) || isVoice(nick) || isBot(nick) )
+        if ( isOwner(nick) || isOperator(nick) || isHalfOperator(nick) || isVoice(nick) || isAdmin(nick) )
             return nick.substring(1);
 
         return nick;
