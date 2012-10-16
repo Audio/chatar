@@ -1,6 +1,5 @@
 package Client;
 
-import Client.TabContainer.PanelTypes;
 import Connection.*;
 import java.awt.*;
 import java.io.*;
@@ -120,7 +119,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         channelTabs.add(tab);
         connection.addChannelEventsListener(tab);
         connection.joinChannel(channel);
-        MainWindow.getInstance().getTabContainer().insertTab(tab, PanelTypes.PANEL_CHANNEL);
+        MainWindow.getInstance().getTabContainer().insertTab(tab);
         return tab;
     }
 
@@ -134,7 +133,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         PrivateChatTab tab = new PrivateChatTab(nickname, this);
         connection.addPrivateMessagingListener(tab);
         privateChatTabs.add(tab);
-        MainWindow.getInstance().getTabContainer().insertTab(tab, PanelTypes.PANEL_PRIVATE);
+        MainWindow.getInstance().getTabContainer().insertTab(tab);
         return tab;
     }
 

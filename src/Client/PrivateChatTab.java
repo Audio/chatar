@@ -101,11 +101,10 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
         infobox.setText(info);
     }
 
-    /**
-     * Nastaveni nazvu (uzivatele mohou sve prezdivky menit).
-     */
     public void setTabName(String tabName) {
         this.tabName = tabName;
+        MainWindow.getInstance().getTabContainer().removeTab(this);
+        MainWindow.getInstance().getTabContainer().insertTab(this);
     }
 
     @Override
@@ -162,8 +161,8 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
     }
 
     @Override
-    public void privateMessageReceived(String sender, String message) {
-        addText(sender + ": " + message);
+    public void privateMessageReceived(String message) {
+        addText( getNickname() + ": " + message);
     }
 
     @Override

@@ -212,7 +212,7 @@ public class Connection extends PircBot {
     protected void onPrivateMessage(String sender, String login, String hostname, String message) {
         for (PrivateMessagingListener listener : privateMessagingListeners) {
             if ( listener.getNickname().equals(sender) ) {
-                listener.privateMessageReceived(sender, message);
+                listener.privateMessageReceived(message);
                 return;
             }
         }

@@ -1,6 +1,5 @@
 package Client;
 
-import Client.TabContainer.PanelTypes;
 import Config.Servers;
 import java.awt.*;
 import java.awt.event.*;
