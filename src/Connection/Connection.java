@@ -88,8 +88,10 @@ public class Connection extends PircBot {
     @Override
     protected void onUserList(String channel, User[] users) {
         ChannelEventsListener listener = getChannelEventsListener(channel);
-        if (listener != null)
-            listener.userListReceived(users);
+        if (listener != null) {
+            Client.User[] u = Client.User.toUsers(users);
+            listener.userListReceived(u);
+        }
     }
 
     @Override

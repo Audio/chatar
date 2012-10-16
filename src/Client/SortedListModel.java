@@ -10,7 +10,7 @@ public class SortedListModel<E> extends AbstractListModel {
 
 
     public SortedListModel() {
-        model = new TreeSet(String.CASE_INSENSITIVE_ORDER);
+        model = new TreeSet();
     }
 
     @Override
@@ -18,6 +18,7 @@ public class SortedListModel<E> extends AbstractListModel {
         return model.size();
     }
 
+    // TODO obcas to hazi java.lang.ArrayIndexOutOfBoundsException: 0
     @Override
     public E getElementAt(int index) {
         return (E) model.toArray()[index];

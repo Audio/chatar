@@ -1,7 +1,7 @@
 package Connection;
 
+import Client.User;
 import java.util.EventListener;
-import org.jibble.pircbot.User;
 
 
 public interface ChannelEventsListener extends EventListener {

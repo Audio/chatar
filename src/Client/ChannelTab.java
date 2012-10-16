@@ -8,20 +8,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.text.*;
-import org.jibble.pircbot.User;
 
 
 public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     private JList userList;
     private UserListRenderer userListRenderer;
-    private SortedListModel<String> usersModel;
+    private SortedListModel<User> usersModel;
     private JEditorPane infobox;
     private JEditorPane chat;
     private JPopupMenu popup;
     private MouseListener popupListener;
     private String selectedPopupUser;
-    private LinkedList<String> usersQueue;
+    private LinkedList<User> usersQueue;
 
 
     public ChannelTab(String channel, final ServerTab serverTab) {
@@ -227,8 +226,8 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
         // Získá přezdívku a zároven označí daný element
         // (při kliknutí pravým tlačítkem se neoznačí).
-        String nickname = (String) usersModel.getElementAt(cell);
-        nickname = userListRenderer.removePrefix(nickname);
+        User user = usersModel.getElementAt(cell);
+        String nickname = user.getNickname();
         userList.setSelectedIndex(cell);
 
         return nickname;
@@ -287,10 +286,9 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
             }
         };
 
-
         try {
             for (User user : users) {
-                usersQueue.add( user.getPrefix() + user.getNick() );
+                usersQueue.add(user);
                 if ( SwingUtilities.isEventDispatchThread() )
                     SwingUtilities.invokeLater(adder);
                 else
@@ -303,7 +301,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     }
 
     public void addUser(String nickname) {
-        usersModel.add(nickname);
+        usersModel.add( new User(nickname) );
     }
 
     public void removeUser(String nickname) {
@@ -320,9 +318,10 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
      * Pokud uživatele nenajde, vrací hodnotu -1.
      */
     public int getNickIndex(String user) {
+        // TODO implementovat v modelu
+        /*
         user = userListRenderer.removePrefix(user).toLowerCase();
 
-        // TODO implementovat v modelu
         int size = usersModel.getSize();
         for (int i=0; i < size; i++) {
 
@@ -333,6 +332,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
         }
 
+        */
         return -1;
     }
 
@@ -369,7 +369,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     public void userGetsOp(String initiator, String recipient) {
         addText( Output.HTML.italic(recipient + " +o (" + initiator + ")") );
         removeUser(recipient);
-        addUser(UserListRenderer.PREFIX_OPERATOR + recipient);
+        addUser(User.PREFIX_OPERATOR + recipient);
     }
 
     @Override
@@ -383,7 +383,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     public void userGetsVoice(String initiator, String recipient) {
         addText( Output.HTML.italic(recipient + " +v (" + initiator + ")") );
         removeUser(recipient);
-        addUser(UserListRenderer.PREFIX_VOICE + recipient);
+        addUser(User.PREFIX_VOICE + recipient);
     }
 
     @Override
