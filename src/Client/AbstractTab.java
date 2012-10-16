@@ -1,6 +1,5 @@
 package Client;
 
-import Connection.Connection;
 import javax.swing.JPanel;
 
 
@@ -9,8 +8,6 @@ public abstract class AbstractTab extends JPanel {
     protected ServerTab serverTab;
     protected String tabName;
 
-
-    public abstract Connection getConnection();
 
     final public String getTabName() {
         return tabName;
@@ -33,7 +30,7 @@ public abstract class AbstractTab extends JPanel {
     }
 
     public void refreshNickname() {
-        String nick = getConnection().getNick();
+        String nick = getServerTab().getConnection().getNick();
         MainWindow.getInstance().getGInput().setNickname(nick);
     }
 

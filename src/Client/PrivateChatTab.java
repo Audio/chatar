@@ -83,11 +83,6 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
     }
 
     @Override
-    public Connection getConnection() {
-        return serverTab.getConnection();
-    }
-
-    @Override
     public void addText(String str) {
         EditorKit kit = chat.getEditorKit();
         Document doc = chat.getDocument();

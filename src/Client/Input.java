@@ -166,8 +166,8 @@ public class Input extends JPanel {
         Commands command = Commands.fromString(rawCommand);
 
         AbstractTab tab = MainWindow.getInstance().getActiveTab();
-        boolean connectionRequired = (command != Commands.CLEAR && command != Commands.SERVER);
-        boolean isConnected = (tab == null) ? false : tab.getConnection().isConnected();
+        boolean connectionRequired = (command != Commands.CLEAR && command != Commands.SERVER && command != Commands.C);
+        boolean isConnected = (tab == null) ? false : tab.getServerTab().getConnection().isConnected();
         if (connectionRequired && !isConnected) {
             InputHandler.showNotConnectedError();
         } else {

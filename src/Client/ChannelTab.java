@@ -163,11 +163,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         usersQueue = new LinkedList<>();
     }
 
-    @Override
-    public Connection getConnection() {
-        return serverTab.getConnection();
-    }
-
     /**
      * Třída rozbrazující PopupMenu - pouze pokud je kliknuto nad nějakou
      * přezdívkou v seznamu uživatelů.

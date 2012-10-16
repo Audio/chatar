@@ -1,11 +1,11 @@
 package Client;
 
 import Config.Config;
-import Connection.InputHandler;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.*;
 import javax.swing.*;
+
 
 /**
  * Okno pro nastavení osobních údajů.
@@ -229,8 +229,7 @@ public class GConfig extends JFrame implements WindowListener {
             return c;
         }
 
-        return tab.getConnection().config;
-
+        return null; // tab.getConnection().config;
     }
 
     /**

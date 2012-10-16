@@ -113,7 +113,7 @@ public class InputHandler {
             return;
         }
 
-        channelTab.getConnection().partChannel(channel);
+        channelTab.getServerTab().getConnection().partChannel(channel);
         channelTab.getServerTab().removeChannelTab(channelTab);
         clearInput();
     }
@@ -138,7 +138,7 @@ public class InputHandler {
             return;
 
         String channel = getActiveTab().getTabName();
-        getActiveTab().getConnection().setTopic(channel, topic );
+        getCurrentServerTab().getConnection().setTopic(channel, topic );
         clearInput();
     }
 
@@ -250,7 +250,7 @@ public class InputHandler {
         String channel = getActiveTab().getTabName();
         getCurrentServerTab().getConnection().sendAction(channel, params);
 
-        String nick = getActiveTab().getConnection().getNick();
+        String nick = getCurrentServerTab().getConnection().getNick();
         getActiveTab().addText( Output.HTML.italic(nick + " " + params) );
         clearInput();
     }

@@ -111,7 +111,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         */
     }
 
-    @Override
     public Connection getConnection() {
         return connection;
     }
