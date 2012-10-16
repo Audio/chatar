@@ -25,7 +25,7 @@ public class DeprecatedConnection extends Thread {
     private Socket socket;
     private BufferedWriter out;
     private BufferedReader in;
-    private CommandQuery query;
+    private DeprecatedCommandQuery query;
     /**
      * Přidružený konfigurační objekt.
      */
@@ -44,7 +44,7 @@ public class DeprecatedConnection extends Thread {
     public DeprecatedConnection(String server, int port) {
         this.server = server;
         this.port = port;
-        this.query = new CommandQuery(this);
+        this.query = new DeprecatedCommandQuery(this);
         this.config = new Config();
         this.authenticated = false;
         this.closedByServer = false;
@@ -75,7 +75,7 @@ public class DeprecatedConnection extends Thread {
      * Vraci referenci na objekt CommandQuery,
      * pres ktery komunikuje.
      */
-    public CommandQuery getQuery() {
+    public DeprecatedCommandQuery getQuery() {
         return query;
     }
 
@@ -207,7 +207,7 @@ public class DeprecatedConnection extends Thread {
             }
             // zpracovani odpovedi
             if (reply != null)
-                Reply.create(reply, this);
+                DeprecatedReply.create(reply, this);
         } while (reply != null);
 
         query.goOn();

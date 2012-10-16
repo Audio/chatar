@@ -6,7 +6,7 @@ package Connection;
  * <servername> | <nick> [ '!' <user> ] [ '@' <host> ]
  * source: http://www.irchelp.org/irchelp/rfc/chapter2.html#c2_3_1
  */
-public class Prefix {
+public class DeprecatedPrefix {
 
     public String originalPrefix;
     public String nick;
@@ -14,7 +14,7 @@ public class Prefix {
     public String hostname;
 
 
-    public Prefix(String prefix) {
+    public DeprecatedPrefix(String prefix) {
         originalPrefix = prefix;
 
         int upto;

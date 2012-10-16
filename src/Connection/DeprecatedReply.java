@@ -11,14 +11,14 @@ import Client.*;
  *
  * @author Martin Fouček
  */
-public class Reply {
+public class DeprecatedReply {
 
     private String message;
     private DeprecatedConnection connection;
     private boolean numeric;
 
     // casti zpravy
-    private Prefix prefix;
+    private DeprecatedPrefix prefix;
     private String type;
     private String target;
     private String params;
@@ -62,7 +62,7 @@ public class Reply {
      * @param str
      * @param connection
      */
-    private Reply(String str, DeprecatedConnection connection) {
+    private DeprecatedReply(String str, DeprecatedConnection connection) {
 
         this.message = str;
         this.connection = connection;
@@ -77,7 +77,7 @@ public class Reply {
      *
      * @return
      */
-    private CommandQuery getQuery () {
+    private DeprecatedCommandQuery getQuery () {
         return connection.getQuery();
     }
 
@@ -89,7 +89,7 @@ public class Reply {
      * @param connection
      */
     public static void create (String str, DeprecatedConnection connection) {
-        new Reply(str, connection);
+        new DeprecatedReply(str, connection);
     }
 
     /**
@@ -110,7 +110,7 @@ public class Reply {
         // ma zprava odesilatele?
         if (temp_message.startsWith(":")) {
             upto = temp_message.indexOf(" ");
-            prefix = new Prefix(temp_message.substring(1, upto));
+            prefix = new DeprecatedPrefix(temp_message.substring(1, upto));
             temp_message = temp_message.substring(upto + 1);
         }
 
@@ -917,8 +917,6 @@ public class Reply {
     /**
      * Příznak, zda se jedná o zprávu typu ACTION.
      * Lze vysledovat až z těla zprávy.
-     *
-     * @return
      */
     private boolean isAction () {
         return ( smileAtMe(params) ).startsWith("ACTION");
@@ -926,8 +924,6 @@ public class Reply {
 
     /**
      * Modifikuje výstup zprávy při ACTION.
-     *
-     * @return
      */
     private String modifyAction () {
         String out = prefix.nick + " " + smileAtMe(params).substring(7);
@@ -935,20 +931,7 @@ public class Reply {
     }
 
     /**
-     * Příznak, zda se jedná o zprávu typu PING (ne od server, ale klienta).
-     * Lze vysledovat až z těla zprávy.
-     *
-     * @return
-     */
-    private boolean isPing () {
-        return ( smileAtMe(params) ).startsWith("PING");
-    }
-
-    /**
      * Vymaže znak z řetězce - nenahradí, ale vymaže.
-     *
-     * @param str
-     * @param ch
      */
     private String removeChar (String str, char ch) {
 
@@ -965,8 +948,6 @@ public class Reply {
     /**
      * Vraci informaci, zda byla odpoved vyjadrena cislem (kodem odpovedi).
      * Typy odpovedi: http://www.irchelp.org/irchelp/rfc/chapter6.html
-     *
-     * @return
      */
     public boolean isNumeric () {
         return numeric;
@@ -974,8 +955,6 @@ public class Reply {
 
     /**
      * Tunel pro vypis vystupniho textu do prislusneho panelu.
-     *
-     * @param str
      */
     public void output (String str) {
         output(str, false);
@@ -983,9 +962,6 @@ public class Reply {
 
     /**
      * Tunel pro vypis vystupniho textu do panelu serveru.
-     *
-     * @param str
-     * @param server
      */
     public void output (String str, boolean server) {
 
@@ -998,9 +974,6 @@ public class Reply {
 
     /**
      * Tunel pro vypis vystupniho textu do libovolneho panelu.
-     *
-     * @param str
-     * @param tab
      */
     public void output (String str, AbstractTab tab) {
         tab.addText(str);
@@ -1008,8 +981,6 @@ public class Reply {
 
     /**
      * Vrati puvodni odpoved serveru.
-     *
-     * @return
      */
     @Override
     public String toString () {
