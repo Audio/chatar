@@ -125,11 +125,16 @@ public class Connection extends PircBot {
             listener.userLoseVoice(sourceNick, recipient);
     }
 
-    // TODO pouze kanalum, kde je ten clovek pripojen
     @Override
     protected void onNickChange(String oldNick, String login, String hostname, String newNick) {
-        for (ChannelEventsListener listener : channelEventsListeners)
-            listener.userChangesNick(oldNick, newNick);
+        for (ChannelEventsListener listener : channelEventsListeners) {
+            if ( listener.contains(oldNick) )
+                listener.userChangesNick(oldNick, newNick);
+        }
+
+        PrivateMessagingListener listener = getPrivateMessagingListener(oldNick);
+        if (listener != null)
+            listener.userChangesNick(newNick);
     }
 
     @Override
@@ -146,11 +151,12 @@ public class Connection extends PircBot {
             listener.userLeft(sender);
     }
 
-    // TODO pouze kanalum, kde je ten clovek pripojen
     @Override
     protected void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason) {
-        for (ChannelEventsListener listener : channelEventsListeners)
-            listener.userQuit(sourceNick, reason);
+        for (ChannelEventsListener listener : channelEventsListeners) {
+            if ( listener.contains(sourceNick) )
+                listener.userQuit(sourceNick, reason);
+        }
     }
 
     @Override
@@ -193,10 +199,19 @@ public class Connection extends PircBot {
         privateMessagingListeners.remove(listener);
     }
 
+    private PrivateMessagingListener getPrivateMessagingListener(String nickname) {
+        for (PrivateMessagingListener listener : privateMessagingListeners) {
+            if ( listener.getNickname().equals(nickname) )
+                return listener;
+        }
+
+        return null;
+    }
+
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message) {
         for (PrivateMessagingListener listener : privateMessagingListeners) {
-            if ( listener.getSenderNick().equals(sender) ) {
+            if ( listener.getNickname().equals(sender) ) {
                 listener.privateMessageReceived(sender, message);
                 return;
             }

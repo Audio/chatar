@@ -35,7 +35,7 @@ public class DeprecatedReply {
     // vyctovy typ obsahujici povolene prikazy ke zpracovani
     private enum Allowed {
 
-        fake, ERROR, JOIN, KICK, MODE, NICK, NOTICE, PART, PING, PRIVMSG, QUIT,
+        fake, ERROR, KICK, MODE, NOTICE, PART, PRIVMSG, QUIT,
 
         CODE_WELCOME, CODE_221, CODE_251, CODE_252, CODE_253, CODE_254, CODE_255,
         CODE_265, CODE_266,
@@ -164,9 +164,6 @@ public class DeprecatedReply {
     /**
      * Modifikuje vystupni informaci.
      * Nici prvni dvojtecku, kterou nalezne.
-     *
-     * @param str
-     * @return
      */
     public String smileAtMe (String str) {
 
@@ -184,9 +181,6 @@ public class DeprecatedReply {
 
     /**
      * Tunýlek pro stejnojmennou metodu v Output.HTML - kvůli přehlednosti.
-     *
-     * @param str
-     * @return
      */
     public static String mType (String str) {
         return Output.HTML.mType(str);
@@ -195,9 +189,6 @@ public class DeprecatedReply {
     /**
      * Vrati refenci na prislusny kanal.
      * Implementovano kvuli prehlednosti.
-     *
-     * @param name
-     * @return
      */
     private ChannelTab getChannel (String name) {
         return connection.getServerTab().getChannelTabByName(name);
@@ -238,10 +229,7 @@ public class DeprecatedReply {
             case NOTICE:  { handleNotice(); break; }
             case ERROR:   { handleError(); break; }
             case PRIVMSG: { handlePrivMsg(); break; }
-            case JOIN:    { handleJoin(); break; }
-            case PART:    { handlePart(); break; }
             case KICK:    { handleKick(); break; }
-            case NICK:    { handleNick(); break; }
             case MODE:    { handleMode(); break; }
             case QUIT:    { handleQuit(); break; }
 
@@ -389,41 +377,6 @@ public class DeprecatedReply {
     }
 
     /**
-     * Zpracovani prikazu JOIN.
-     */
-    private void handleJoin () {
-
-        String channel = smileAtMe(params);
-        ChannelTab ch = getChannel(channel);
-        if (ch == null)
-            return;
-
-        output( mType("info") + prefix.nick + " se připojil na " + channel, ch);
-        ch.addUser(prefix.nick);
-
-    }
-
-    /**
-     * Zpracovani prikazu PART.
-     * Pokud odesel nas uzivatel, zadna z akci se neprovede,
-     * zvoleny kanal (panel) se totiz zavre.
-     */
-    private void handlePart () {
-
-        if ( connection.isMe(prefix.nick) )
-            return;
-
-        String channel = smileAtMe(params);
-        ChannelTab ch = getChannel(channel);
-        if (ch == null)
-            return;
-
-        output( mType("info") + prefix.nick + " odešel z místnosti.", ch);
-        ch.removeUser(prefix.nick);
-
-    }
-
-    /**
      * Zpracovani prikazu KICK.
      *
      * Nastane jeden z dvou ruznych pripadu:
@@ -454,69 +407,6 @@ public class DeprecatedReply {
             output(msg, channelTab);
             channelTab.removeUser(person);
         }
-
-    }
-
-
-    /**
-     * Zpracovani prikazu NICK. Zprava se vypise do vsech mistnosti (kanalu),
-     * do zalozky se serverem, a meni i nastaveni soukromeho chatu (je-li aktivni).
-     */
-    private void handleNick () {
-
-        String new_nickname = smileAtMe(params);
-        String temp = "";
-        boolean isMe = connection.isMe(prefix.nick);
-
-        if (isMe) {
-            connection.config.nickname = new_nickname;
-            temp = mType("info") + "Nyní vystupujete pod přezdívkou "
-                    + Output.HTML.bold(new_nickname) + ".";
-            output(temp, true);
-            GUI.getInput().setNickname(new_nickname);
-        }
-        else {
-            temp = mType("info") + prefix.nick + " si změnil předívku na "
-                    + Output.HTML.bold(new_nickname) + ".";
-        }
-
-        /* Získa nový seznam uživatelů ve vybraných kanalech.
-         *
-         * Na některých serverech nelze odeslat prikaz NAMES s více cíly,
-         * proto se odešle více příkazů (pro každý kanál jeden).
-         */
-        /*
-        Iterator it = connection.getServerTab().channels.iterator();
-        while ( it.hasNext() ) {
-            ChannelTab ch = (ChannelTab) it.next();
-            if (isMe || ch.hasNick(prefix.nick) ) {
-                output(temp, ch);
-                ch.changeUsersNickname(prefix.nick, new_nickname);
-            }
-        }
-        */
-
-        /**
-         * Existuje-li panel pro soukromy chat s uzivatelem, ktery si prave
-         * zmenil prezdivku, prejmenuje se.
-         */
-        /*
-        it = connection.getServerTab().privateChats.iterator();
-        PrivateChatTab pr = null;
-        while ( it.hasNext() ) {
-            pr = (PrivateChatTab) it.next();
-            if (isMe) {
-                // oznameni o zmene meho nicku do soukromych mistnosti
-                output(temp, pr);
-            }
-            else if ( pr.getTabName().equals(prefix.nick) ) {
-                // uzivatel, se kterym si pisi soukromne, zmenil prezdivku
-                output(temp, pr);
-                pr.setTabName(new_nickname);
-                GUI.getTabContainer().setTitleAt( GUI.getTabContainer().indexOfTab(prefix.nick) , new_nickname);
-            }
-        }
-        */
 
     }
 

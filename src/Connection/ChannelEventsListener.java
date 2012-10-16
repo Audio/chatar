@@ -7,6 +7,7 @@ import java.util.EventListener;
 public interface ChannelEventsListener extends EventListener {
 
     public String getChannelName();
+    public boolean contains(String nickname);
 
     public void messageReceived(String sender, String message);
     public void userListReceived(User[] users);

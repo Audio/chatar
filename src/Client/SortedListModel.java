@@ -43,8 +43,8 @@ public class SortedListModel extends AbstractListModel {
         contentChanged();
     }
 
-    public boolean contains(User element) {
-        return model.contains(element);
+    public boolean contains(String nickname) {
+        return getUser(nickname) != null;
     }
 
     public boolean remove(int index) {

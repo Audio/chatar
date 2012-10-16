@@ -27,12 +27,16 @@ public class User implements Comparable<User> {
         return prefix;
     }
 
-    public String setPrefix(String prefix) {
-        return this.prefix = prefix;
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
     }
 
     public String getNickname() {
         return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getPrefixedNickname() {

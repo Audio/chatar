@@ -328,6 +328,11 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     }
 
     @Override
+    public boolean contains(String nickname) {
+        return usersModel.contains(nickname);
+    }
+
+    @Override
     public void messageReceived(String sender, String message) {
         addText(sender + ": " + message);
     }
@@ -367,29 +372,41 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     @Override
     public void userChangesNick(String oldNick, String newNick) {
-        removeUser(oldNick);
-        addUser(newNick);
+        boolean isMe = getServerTab().getConnection().getNick().equals(oldNick);
+        String message;
+        if (isMe) {
+            message = Output.HTML.mType("info") + "Nyní vystupujete pod přezdívkou "
+                    + Output.HTML.bold(newNick) + ".";
+        } else {
+            message = Output.HTML.mType("info") + oldNick + " si změnil přezdívku na "
+                    + Output.HTML.bold(newNick) + ".";
+        }
+        addText(message);
+        usersModel.getUser(oldNick).setNickname(newNick);
+        usersModel.contentChanged();
     }
 
     @Override
     public void userJoined(String nickname) {
+        addText( Output.HTML.mType("info") + nickname + " přišel se připojil na " + getTabName() );
         addUser(nickname);
     }
 
     @Override
     public void userLeft(String nickname) {
+        addText( Output.HTML.mType("info") + nickname + " odešel z místnosti." );
         removeUser(nickname);
     }
 
     @Override
     public void userQuit(String nickname, String reason) {
-        addText( Output.HTML.italic(nickname + " odešel (důvod: " + reason + ")") );
+        addText( Output.HTML.mType(nickname + " odešel (důvod: " + reason + ")") );
         removeUser(nickname);
     }
 
     @Override
     public void userKicked(String initiator, String recipient, String reason) {
-        addText( Output.HTML.italic(initiator + " vykopnul " + recipient + " (" + reason + ")") );
+        addText( Output.HTML.mType(initiator + " vykopnul " + recipient + " (" + reason + ")") );
         removeUser(recipient);
     }
 

@@ -157,13 +157,18 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
     }
 
     @Override
-    public String getSenderNick() {
+    public String getNickname() {
         return tabName;
     }
 
     @Override
     public void privateMessageReceived(String sender, String message) {
         addText(sender + ": " + message);
+    }
+
+    @Override
+    public void userChangesNick(String newNick) {
+        setTabName(newNick);
     }
 
 }
