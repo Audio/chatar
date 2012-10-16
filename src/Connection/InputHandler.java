@@ -84,7 +84,7 @@ public class InputHandler {
     }
 
     public static void handleJoin(String channel) {
-        if (channel == null || channel.trim().length() == 0) {
+        if ( channel.isEmpty() ) {
             outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /join nazev_kanalu");
             return;
         }
@@ -98,7 +98,7 @@ public class InputHandler {
     }
 
     public static void handlePart(String channel) {
-        if (channel == null || channel.trim().length() == 0) {
+        if ( channel.isEmpty() ) {
             channel = getActiveTab().getTabName();
             if ( !isChannelTabActive() ) {
                 showNotActiveChannelError();
@@ -119,7 +119,7 @@ public class InputHandler {
     }
 
     public static void handleNick(String nick) {
-        if (nick == null || nick.trim().length() == 0) {
+        if ( nick.isEmpty() ) {
             outputToCurrentTab( mType("error") + "Nebyla zadána nová přezdívka.");
             return;
         }
@@ -142,18 +142,16 @@ public class InputHandler {
         clearInput();
     }
 
-    /**
-     * Zpracovani prikazu MODE.
-     */
     public static void handleMode(String params) {
-        if (params != null && params.trim().length() > 0) {
-            params = params.trim();
-        } else {
-            outputToCurrentTab( mType("error") + "Příkaz MODE: nesprávná syntaxe příkazu. Použijte /mode {UZIVATEL|KANAL}");
+        String errorMessage = mType("error") + "Příkaz MODE: nesprávná syntaxe příkazu. Použijte /mode #KANAL MOD";
+        String match = "#[a-zA-Z_0-9]+ .+";
+        if ( !params.matches(match) ) {
+            outputToCurrentTab(errorMessage);
             return;
         }
 
-        // getActiveTab().getQuery().mode(params);
+        String[] parts = params.split(" ", 2);
+        getCurrentServerTab().getConnection().setMode(parts[0], parts[1]);
         clearInput();
     }
 
@@ -169,13 +167,8 @@ public class InputHandler {
     /**
      * Vyhozeni uzivatele z kanalu.
      * Syntaxe: KICK #kanal uzivatel [:duvod]
-     *
-     * @param params
      */
     public static void handleKick(String params) {
-        if (params == null)
-            return;
-
         String syntax = mType("error") + "Nesprávná syntaxe příkazu: KICK #kanal uzivatel [:duvod]";
         String match = "#[a-zA-Z_0-9]+ [a-zA-Z_0-9]+( :.+)?";
         if ( !params.matches(match) ) {
@@ -187,12 +180,12 @@ public class InputHandler {
         clearInput();
     }
 
-    public static void handleAway(String params) {
+    public static void handleAway(String reason) {
         Connection con = getCurrentServerTab().getConnection();
-        if (params == null || params.trim().length() == 0)
+        if ( reason.isEmpty() )
             con.sendRawLine("AWAY");
         else
-            con.sendRawLine("AWAY :" + params);
+            con.sendRawLine("AWAY :" + reason);
 
         clearInput();
     }
@@ -212,10 +205,9 @@ public class InputHandler {
      * Žádost uživatele o přidělení práv operátora (mode +o).
      */
     public static void handleOper(String params) {
-        params = (params == null) ? null : params.trim();
         clearInput();
 
-        if (params == null || params.length() == 0 || params.indexOf(" ") == -1) {
+        if (params.isEmpty() || params.indexOf(" ") == -1) {
             outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /oper uzivatel heslo");
             return;
         }
@@ -226,11 +218,10 @@ public class InputHandler {
     /**
      * Informace o uživateli.
      */
-    public static void handleWhois(String params) {
-        params = (params == null) ? null : params.trim();
+    public static void handleWhois(String nick) {
         clearInput();
 
-        if (params == null || params.length() == 0) {
+        if ( nick.isEmpty() ) {
             outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /whois [server ]uzivatel");
             return;
         }
@@ -244,7 +235,7 @@ public class InputHandler {
             return;
         }
 
-        if (params == null || params.trim().length() == 0)
+        if ( params.isEmpty() )
             params = "neumi pouzivat IRC klienta."; // :)
 
         String channel = getActiveTab().getTabName();

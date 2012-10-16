@@ -4,9 +4,9 @@ import javax.swing.*;
 import java.util.*;
 
 
-public class SortedListModel<E> extends AbstractListModel {
+public class SortedListModel extends AbstractListModel {
 
-    private SortedSet<E> model;
+    private SortedSet<User> model;
 
 
     public SortedListModel() {
@@ -20,21 +20,30 @@ public class SortedListModel<E> extends AbstractListModel {
 
     // TODO obcas to hazi java.lang.ArrayIndexOutOfBoundsException: 0
     @Override
-    public E getElementAt(int index) {
-        return (E) model.toArray()[index];
+    public User getElementAt(int index) {
+        return (User) model.toArray()[index];
     }
 
-    public void add(E element) {
+    public User getUser(String nickname) {
+        for (User user : model) {
+            if ( user.getNickname().equals(nickname) )
+                return user;
+        }
+
+        return null;
+    }
+
+    public void add(User element) {
         if ( model.add(element) )
-            fireContentsChanged(this, 0, getSize() );
+            contentChanged();
     }
 
     public void clear() {
         model.clear();
-        fireContentsChanged(this, 0, getSize() );
+        contentChanged();
     }
 
-    public boolean contains(E element) {
+    public boolean contains(User element) {
         return model.contains(element);
     }
 
@@ -42,12 +51,16 @@ public class SortedListModel<E> extends AbstractListModel {
         return remove( getElementAt(index) );
     }
 
-    public boolean remove(E element) {
+    public boolean remove(User element) {
         boolean removed = model.remove(element);
         if (removed)
-            fireContentsChanged(this, 0, getSize() );
+            contentChanged();
 
         return removed;
+    }
+
+    public void contentChanged() {
+        fireContentsChanged(this, 0, getSize() );
     }
 
 }

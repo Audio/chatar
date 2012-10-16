@@ -14,7 +14,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     private JList userList;
     private UserListRenderer userListRenderer;
-    private SortedListModel<User> usersModel;
+    private SortedListModel usersModel;
     private JEditorPane infobox;
     private JEditorPane chat;
     private JPopupMenu popup;
@@ -45,7 +45,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         scrollpanel.setAutoscrolls(true);
 
         userListRenderer = new UserListRenderer();
-        usersModel = new SortedListModel<>();
+        usersModel = new SortedListModel();
 
         userList = new JList(usersModel);
         userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -305,35 +305,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     }
 
     public void removeUser(String nickname) {
-        int index = getNickIndex(nickname);
-        if (index < 0)
-            return;
-
-        usersModel.remove(index);
-    }
-
-    /**
-     * Vrací index v seznamu, na kterém se nachází uživatel se zvoleným nickem.
-     * Kvůli prefixům nelze použít metodu (usersModel.)indexOf.
-     * Pokud uživatele nenajde, vrací hodnotu -1.
-     */
-    public int getNickIndex(String user) {
-        // TODO implementovat v modelu
-        /*
-        user = userListRenderer.removePrefix(user).toLowerCase();
-
-        int size = usersModel.getSize();
-        for (int i=0; i < size; i++) {
-
-            String nick = usersModel.getElementAt(i);
-            nick = userListRenderer.removePrefix(nick).toLowerCase();
-            if ( nick.equals(user) )
-                return i;
-
-        }
-
-        */
-        return -1;
+        usersModel.remove( usersModel.getUser(nickname) );
     }
 
     public void setTopic(String topic) {
@@ -368,29 +340,29 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     @Override
     public void userGetsOp(String initiator, String recipient) {
         addText( Output.HTML.italic(recipient + " +o (" + initiator + ")") );
-        removeUser(recipient);
-        addUser(User.PREFIX_OPERATOR + recipient);
+        usersModel.getUser(recipient).setOperator();
+        usersModel.contentChanged();
     }
 
     @Override
     public void userLoseOp(String initiator, String recipient) {
         addText( Output.HTML.italic(recipient + " -o (" + initiator + ")") );
-        removeUser(recipient);
-        addUser(recipient);
+        usersModel.getUser(recipient).setCommon();
+        usersModel.contentChanged();
     }
 
     @Override
     public void userGetsVoice(String initiator, String recipient) {
         addText( Output.HTML.italic(recipient + " +v (" + initiator + ")") );
-        removeUser(recipient);
-        addUser(User.PREFIX_VOICE + recipient);
+        usersModel.getUser(recipient).setVoice();
+        usersModel.contentChanged();
     }
 
     @Override
     public void userLoseVoice(String initiator, String recipient) {
         addText( Output.HTML.italic(recipient + " -v (" + initiator + ")") );
-        removeUser(recipient);
-        addUser(recipient);
+        usersModel.getUser(recipient).setCommon();
+        usersModel.contentChanged();
     }
 
     @Override

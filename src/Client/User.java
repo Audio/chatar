@@ -3,11 +3,11 @@ package Client;
 
 public class User implements Comparable<User> {
 
-    public static final String PREFIX_OWNER = "~",
-                               PREFIX_ADMIN = "&",
-                               PREFIX_OPERATOR = "@",
-                               PREFIX_HALF_OPERATOR = "%",
-                               PREFIX_VOICE = "+";
+    private static final String PREFIX_OWNER = "~",
+                                PREFIX_ADMIN = "&",
+                                PREFIX_OPERATOR = "@",
+                                PREFIX_HALF_OPERATOR = "%",
+                                PREFIX_VOICE = "+";
 
     private String prefix;
     private String nickname;
@@ -25,6 +25,10 @@ public class User implements Comparable<User> {
 
     public String getPrefix() {
         return prefix;
+    }
+
+    public String setPrefix(String prefix) {
+        return this.prefix = prefix;
     }
 
     public String getNickname() {
@@ -53,6 +57,30 @@ public class User implements Comparable<User> {
 
     public boolean isVoice() {
         return prefix.equals(PREFIX_VOICE);
+    }
+
+    public void setOwner() {
+        prefix = PREFIX_OWNER;
+    }
+
+    public void setAdmin() {
+        prefix = PREFIX_ADMIN;
+    }
+
+    public void setOperator() {
+        prefix = PREFIX_OPERATOR;
+    }
+
+    public void setHalfOperator() {
+        prefix = PREFIX_HALF_OPERATOR;
+    }
+
+    public void setVoice() {
+        prefix = PREFIX_VOICE;
+    }
+
+    public void setCommon() {
+        prefix = "";
     }
 
     public static User[] toUsers(org.jibble.pircbot.User[] botUsers) {

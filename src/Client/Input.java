@@ -148,12 +148,12 @@ public class Input extends JPanel {
     private void handleCommand() {
         String inputText = textField.getText();
         String rawCommand;
-        String params = null;
+        String params = "";
         int upto;
 
         if ( (upto = inputText.indexOf(" ") ) > -1 ) {
             rawCommand = inputText.substring(1, upto);
-            params  = inputText.substring(upto + 1);
+            params = inputText.substring(upto + 1).trim();
         }
         else {
             rawCommand = inputText.substring(1);
