@@ -88,8 +88,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         chatscroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         chatscroll.setAutoscrolls(true);
 
-        content = GUI.createHTMLPane();
-
         chatscroll.setViewportView(content);
         bottompanel.add(chatscroll);
 

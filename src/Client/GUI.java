@@ -1,8 +1,6 @@
 package Client;
 
 import java.awt.*;
-import javax.swing.*;
-import javax.swing.text.html.HTMLDocument;
 
 
 public class GUI {
@@ -90,18 +88,6 @@ public class GUI {
 
     public static Input getInput() {
         return getWindow().getGInput();
-    }
-
-    public static JEditorPane createHTMLPane() {
-        JEditorPane chat = new JEditorPane();
-        chat.setContentType("text/html");
-        chat.setEditable(false);
-
-        Font font = UIManager.getFont("Label.font");
-        String bodyRule = "body { font-family: " + font.getFamily() + "; " + "font-size: 13pt; }";
-        ((HTMLDocument) chat.getDocument()).getStyleSheet().addRule(bodyRule);
-
-        return chat;
     }
 
     public static void focusInput() {

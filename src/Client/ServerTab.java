@@ -69,9 +69,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         scrollpanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollpanel.setAutoscrolls(true);
 
-        content = GUI.createHTMLPane();
-        content.setBackground( new Color(255, 255, 255) );
-
         scrollpanel.setViewportView(content);
         textpanel.add(scrollpanel);
 

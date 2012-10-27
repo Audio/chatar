@@ -1,8 +1,10 @@
 package Client;
 
+import java.awt.Font;
 import java.io.*;
 import javax.swing.*;
 import javax.swing.text.*;
+import javax.swing.text.html.HTMLDocument;
 
 
 public abstract class AbstractTab extends JPanel {
@@ -12,12 +14,26 @@ public abstract class AbstractTab extends JPanel {
     protected JEditorPane content;
 
 
+    public AbstractTab() {
+        createContent();
+    }
+
     final public String getTabName() {
         return tabName;
     }
 
     public ServerTab getServerTab() {
         return serverTab;
+    }
+
+    private void createContent() {
+        content = new JEditorPane();
+        content.setContentType("text/html");
+        content.setEditable(false);
+
+        Font font = UIManager.getFont("Label.font");
+        String bodyRule = "body { font-family: " + font.getFamily() + "; " + "font-size: 13pt; }";
+        ((HTMLDocument) content.getDocument()).getStyleSheet().addRule(bodyRule);
     }
 
     public void appendText(String str) {
