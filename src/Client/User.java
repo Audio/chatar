@@ -17,6 +17,13 @@ public class User implements Comparable<User> {
                                 MODE_HALF_OPERATOR = "h",
                                 MODE_VOICE = "v";
 
+    private static final String TEXT_OWNER = "Owner",
+                                TEXT_ADMIN = "Admin",
+                                TEXT_OPERATOR = "Operator",
+                                TEXT_HALF_OPERATOR = "Half operator",
+                                TEXT_VOICE = "Voice",
+                                TEXT_USER = "User";
+
     private HashSet<String> prefixes;
     private String nickname;
 
@@ -62,23 +69,40 @@ public class User implements Comparable<User> {
         return getPrefix() + getNickname();
     }
 
-    public String getTextRepresentation() {
+    public static String getTextualRepresentation(String mode) {
+        switch (mode) {
+            case MODE_OWNER:
+                return TEXT_OWNER;
+            case MODE_ADMIN:
+                return TEXT_ADMIN;
+            case MODE_OPERATOR:
+                return TEXT_OPERATOR;
+            case MODE_HALF_OPERATOR:
+                return TEXT_HALF_OPERATOR;
+            case MODE_VOICE:
+                return TEXT_VOICE;
+            default:
+                return TEXT_USER;
+        }
+    }
+
+    public String getTextualRepresentation() {
         if ( prefixes.contains(PREFIX_OWNER) )
-            return "Owner";
+            return TEXT_OWNER;
 
         if ( prefixes.contains(PREFIX_ADMIN) )
-            return "Admin";
+            return TEXT_ADMIN;
 
         if ( prefixes.contains(PREFIX_OPERATOR) )
-            return "Operator";
+            return TEXT_OPERATOR;
 
         if ( prefixes.contains(PREFIX_HALF_OPERATOR) )
-            return "Half operator";
+            return TEXT_HALF_OPERATOR;
 
         if ( prefixes.contains(PREFIX_VOICE) )
-            return "Voice";
+            return TEXT_VOICE;
 
-        return "User";
+        return TEXT_USER;
     }
 
     private void addPrefix(String prefix) {

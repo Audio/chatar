@@ -321,14 +321,16 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     @Override
     public void userModeGranted(String initiator, String recipient, String mode) {
-        appendText( HTML.italic(recipient + " +" + mode + " (" + initiator + ")") );
+        String modeName = User.getTextualRepresentation(mode);
+        appendInfo(initiator + " udělil " + recipient + " právo " + modeName);
         usersModel.getUser(recipient).addPrefixBasedOnMode(mode);
         usersModel.contentChanged();
     }
 
     @Override
     public void userModeRevoked(String initiator, String recipient, String mode) {
-        appendText( HTML.italic(recipient + " -" + mode + " (" + initiator + ")") );
+        String modeName = User.getTextualRepresentation(mode);
+        appendInfo(initiator + " odebral " + recipient + " právo " + modeName);
         usersModel.getUser(recipient).removePrefixBasedOnMode(mode);
         usersModel.contentChanged();
     }
