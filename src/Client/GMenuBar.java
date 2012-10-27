@@ -114,7 +114,9 @@ public class GMenuBar extends JMenuBar {
         afk.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GUI.showSetAwayDialog();
+                String reason = GUI.showSetAwayDialog();
+                if (reason != null)
+                    InputHandler.handleAway( reason.trim() );
             }
         });
 
@@ -122,7 +124,7 @@ public class GMenuBar extends JMenuBar {
         notAfk.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GUI.setNotAfk();
+                InputHandler.handleNotAway();
             }
         });
 

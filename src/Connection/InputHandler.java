@@ -180,17 +180,16 @@ public class InputHandler {
     }
 
     public static void handleAway(String reason) {
-        Connection con = getCurrentServerTab().getConnection();
         if ( reason.isEmpty() )
-            con.sendRawLine("AWAY");
-        else
-            con.sendRawLine("AWAY :" + reason);
+            reason = "Prostě se flákam.";
 
+        getCurrentServerTab().getConnection().sendRawLine("AWAY :" + reason);
         clearInput();
     }
 
     public static void handleNotAway() {
-        handleAway(null);
+        getCurrentServerTab().getConnection().sendRawLine("AWAY");
+        clearInput();
     }
 
     public static void handleClear() {

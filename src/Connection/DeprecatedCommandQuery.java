@@ -281,20 +281,6 @@ public class DeprecatedCommandQuery {
     }
 
     /**
-     * Nastaveni/zruseni stavu nepritomnosti (AFK).
-     *
-     * @param reason
-     */
-    public void away (String reason) {
-
-        if (reason == null)
-            addCommand("AWAY");
-        else
-            addCommand("AWAY :" + reason);
-
-    }
-
-    /**
      * Získání informací o uživateli s daným nickem.
      *
      * @param who

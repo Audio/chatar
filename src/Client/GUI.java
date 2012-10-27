@@ -52,23 +52,9 @@ public class GUI {
 
     }
 
-    /**
-     * Okno pro nastaveni duvodu nepritomnosti.
-     */
-    public static void showSetAwayDialog() {
-
+    public static String showSetAwayDialog() {
         MessageDialog question = new MessageDialog(MessageDialog.GROUP_INPUT, MessageDialog.TYPE_QUESTION, "Nastavení vlastní zprávy", "Nastavte důvod své nepřítomnosti, nebo nechte pole prázdné.");
-        String ans = question.strConfirm;
-
-        if (ans == null) // cancel
-            return;
-
-        ans = ans.trim();
-        if (ans.length() == 0)
-            ans = "I'll be back soon.";
-
-        // Input.getCurrentServer().getQuery().away(ans);
-
+        return question.strConfirm;
     }
 
     /**
@@ -88,13 +74,6 @@ public class GUI {
 
         // Input.getCurrentServer().getQuery().nick(ans);
 
-    }
-
-    /**
-     * Zruseni nepritomnosti. Bez grafickeho vykresleni.
-     */
-    public static void setNotAfk() {
-        // Input.getCurrentServer().getQuery().away(null);
     }
 
     public static MainWindow getWindow() {
