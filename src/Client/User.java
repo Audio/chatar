@@ -1,5 +1,7 @@
 package Client;
 
+import java.util.HashSet;
+
 
 public class User implements Comparable<User> {
 
@@ -9,26 +11,42 @@ public class User implements Comparable<User> {
                                 PREFIX_HALF_OPERATOR = "%",
                                 PREFIX_VOICE = "+";
 
-    private String prefix;
+    private static final String MODE_ADMIN = "a",
+                                MODE_OPERATOR = "o",
+                                MODE_HALF_OPERATOR = "h",
+                                MODE_VOICE = "v";
+
+    private HashSet<String> prefixes;
     private String nickname;
 
 
     public User(String nickname) {
-        this.prefix = "";
+        this.prefixes = new HashSet<>();
         this.nickname = nickname;
     }
 
     public User(org.jibble.pircbot.User botUser) {
-        this.prefix = botUser.getPrefix();
-        this.nickname = botUser.getNick();
+        this( botUser.getNick() );
+        this.addPrefix( botUser.getPrefix() );
     }
 
     public String getPrefix() {
-        return prefix;
-    }
+        if ( prefixes.contains(PREFIX_OWNER) )
+            return PREFIX_OWNER;
 
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
+        if ( prefixes.contains(PREFIX_ADMIN) )
+            return PREFIX_ADMIN;
+
+        if ( prefixes.contains(PREFIX_OPERATOR) )
+            return PREFIX_OPERATOR;
+
+        if ( prefixes.contains(PREFIX_HALF_OPERATOR) )
+            return PREFIX_HALF_OPERATOR;
+
+        if ( prefixes.contains(PREFIX_VOICE) )
+            return PREFIX_VOICE;
+
+        return "";
     }
 
     public String getNickname() {
@@ -40,39 +58,63 @@ public class User implements Comparable<User> {
     }
 
     public String getPrefixedNickname() {
-        return prefix + nickname;
+        return getPrefix() + getNickname();
     }
 
-    public boolean isOwner() {
-        return prefix.equals(PREFIX_OWNER);
+    public String getTextRepresentation() {
+        if ( prefixes.contains(PREFIX_OWNER) )
+            return "Owner";
+
+        if ( prefixes.contains(PREFIX_ADMIN) )
+            return "Admin";
+
+        if ( prefixes.contains(PREFIX_OPERATOR) )
+            return "Operator";
+
+        if ( prefixes.contains(PREFIX_HALF_OPERATOR) )
+            return "Half operator";
+
+        if ( prefixes.contains(PREFIX_VOICE) )
+            return "Voice";
+
+        return "User";
     }
 
-    public boolean isAdmin() {
-        return prefix.equals(PREFIX_ADMIN);
-    }
-
-    public boolean isOperator() {
-        return prefix.equals(PREFIX_OPERATOR);
-    }
-
-    public boolean isHalfOperator() {
-        return prefix.equals(PREFIX_HALF_OPERATOR);
-    }
-
-    public boolean isVoice() {
-        return prefix.equals(PREFIX_VOICE);
-    }
-
-    public void setType(String prefix) {
+    private void addPrefix(String prefix) {
         switch (prefix) {
             case PREFIX_OWNER:
             case PREFIX_ADMIN:
             case PREFIX_OPERATOR:
             case PREFIX_HALF_OPERATOR:
             case PREFIX_VOICE:
-                this.prefix = prefix;
+                prefixes.add(prefix);
+        }
+    }
+
+    private void removePrefix(String prefix) {
+        prefixes.remove(prefix);
+    }
+
+    public void addPrefixBasedOnMode(String mode) {
+        addPrefix( getPrefixForMode(mode) );
+    }
+
+    public void removePrefixBasedOnMode(String mode) {
+        removePrefix( getPrefixForMode(mode) );
+    }
+
+    public final String getPrefixForMode(String mode) {
+        switch (mode) {
+            case MODE_ADMIN:
+                return PREFIX_ADMIN;
+            case MODE_OPERATOR:
+                return PREFIX_OPERATOR;
+            case MODE_HALF_OPERATOR:
+                return PREFIX_HALF_OPERATOR;
+            case MODE_VOICE:
+                return PREFIX_VOICE;
             default:
-                this.prefix = "";
+                return "";
         }
     }
 

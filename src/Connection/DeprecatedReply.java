@@ -35,7 +35,7 @@ public class DeprecatedReply {
     // vyctovy typ obsahujici povolene prikazy ke zpracovani
     private enum Allowed {
 
-        fake, ERROR, KICK, MODE, NOTICE, PART, PRIVMSG, QUIT,
+        fake, ERROR, KICK, NOTICE, PART, PRIVMSG, QUIT,
 
         CODE_WELCOME, CODE_221, CODE_251, CODE_252, CODE_253, CODE_254, CODE_255,
         CODE_265, CODE_266,
@@ -230,7 +230,6 @@ public class DeprecatedReply {
             case ERROR:   { handleError(); break; }
             case PRIVMSG: { handlePrivMsg(); break; }
             case KICK:    { handleKick(); break; }
-            case MODE:    { handleMode(); break; }
             case QUIT:    { handleQuit(); break; }
 
             // Uvitaci zpravy.
@@ -406,37 +405,6 @@ public class DeprecatedReply {
             String msg = mType("info") + "Uživatel " + person + " byl vyhozen z místnosti. Důvod: " + reason;
             output(msg, channelTab);
             channelTab.removeUser(person);
-        }
-
-    }
-
-    /**
-     * Zpracovani prikazu MODE.
-     */
-    private void handleMode () {
-
-        vyparseTarget();
-
-        String channel = target;
-        ChannelTab ch = getChannel(channel);
-        if (ch == null)
-            return;
-
-        // tyka se kanalu
-        if ( params.trim().indexOf(" ") == -1 ) {
-            String mode = Output.HTML.bold( smileAtMe(params) );
-            output( mType("info") + "Mód kanálu byl změněn: " + mode + " (" + prefix.nick + ")", ch);
-        }
-        // tyka se uzivatele
-        else {
-            vyparseTarget();
-            String mode = Output.HTML.bold(target);
-            String user = smileAtMe(params);
-
-            output( mType("info") + "Mód uživatele " + user + " byl změněn: " + mode + " (" + prefix.nick + ")", ch);
-
-            // TODO feature: zmena mode
-            // getQuery().names(channel);
         }
 
     }
