@@ -7,8 +7,10 @@ import org.jibble.pircbot.*;
 
 
 // TODO threading
-public class Connection extends PircBot {
+public class Connection extends PircBot implements Runnable {
 
+    private String server;
+    private int port;
     // TODO public config jo? bere se z nej nickname asi
     // TODO config tu nema co delat bych rek
     public Config config;
@@ -19,7 +21,9 @@ public class Connection extends PircBot {
 
 
     // TODO vyresit config
-    public Connection() throws IOException, IrcException {
+    public Connection(String server, int port) {
+        this.server = server;
+        this.port = port;
         this.config = new Config();
         this.channelEventsListeners = new ArrayList<>();
         this.privateMessagingListeners = new ArrayList<>();
@@ -28,19 +32,17 @@ public class Connection extends PircBot {
         setAutoNickChange(true);
     }
 
-    // TODO odezva
-    /*
-    throw new ConnectionException("Adresa serveru není vyplněna.");
-    output( Output.HTML.mType("info") +  "Přihlašuji se s přezdívkou " + config.nickname + ".");
-    GUI.getInput().setNickname(config.nickname);
-    ClientLogger.log("Nelze se připojit: " + e.getMessage(), ClientLogger.ERROR);
-    */
-
-    // TODO pri send:
-    /*
-    if ( !isConnected() )
-        throw new ConnectionException("Klient není připojen k serveru.");
-    */
+    @Override
+    public void run() {
+        try {
+            connect(server, port);
+            if (serverEventsListener != null)
+                serverEventsListener.connected();
+        } catch (IOException | IrcException e) {
+            if (serverEventsListener != null)
+                serverEventsListener.connectionCantBeEstabilished( e.getMessage() );
+        }
+    }
 
 
     /*         SERVER EVENTS           */

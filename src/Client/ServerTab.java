@@ -94,20 +94,9 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         channelTabs = new ArrayList<>();
         privateChatTabs = new ArrayList<>();
 
-        try {
-            connection = new Connection();
-            connection.setServerEventsListener(this);
-            connection.connect(server, port);
-        } catch (IOException | IrcException e) {
-            new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba připojení", "K vybranému serveru se nelze připojit.");
-            // addText("Spojení nelze uskutečnit."); // TODO volani z konstruktoru :-/
-        }
-
-        // TODO po pripojeni
-        /*
-        GUI.getMenuBar().toggleDisconectFromAll(true);
-        GUI.getMenuBar().toggleUserMenuBar(true);
-        */
+        connection = new Connection(server, port);
+        connection.setServerEventsListener(this);
+        (new Thread(connection)).start();
     }
 
     public Connection getConnection() {
@@ -202,6 +191,21 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     @Override
     public void clearContent() {
         text.setText(null);
+    }
+
+    @Override
+    public void connected() {
+        GUI.getMenuBar().toggleDisconectFromAll(true);
+        GUI.getMenuBar().toggleUserMenuBar(true);
+        GUI.getInput().setNickname( connection.getNick() );
+    }
+
+    @Override
+    public void connectionCantBeEstabilished(String reason) {
+        new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba připojení",
+            "K vybranému serveru se nelze připojit.");
+        addText("Spojení nelze uskutečnit: " + reason);
+        ClientLogger.log("Nelze se připojit: " + reason, ClientLogger.ERROR);
     }
 
     @Override
