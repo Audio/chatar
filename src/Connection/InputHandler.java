@@ -137,13 +137,13 @@ public class InputHandler {
             return;
 
         String channel = getActiveTab().getTabName();
-        getCurrentServerTab().getConnection().setTopic(channel, topic );
+        getCurrentServerTab().getConnection().setTopic(channel, topic);
         clearInput();
     }
 
     public static void handleMode(String params) {
-        String errorMessage = "Příkaz MODE: nesprávná syntaxe příkazu. Použijte /mode #KANAL MOD";
-        String match = "#[a-zA-Z_0-9]+ .+";
+        String errorMessage = "Příkaz MODE: nesprávná syntaxe příkazu. Použijte /mode #kanal mod";
+        String match = "#\\w+ .+";
         if ( !params.matches(match) ) {
             appendError(errorMessage);
             return;
@@ -163,19 +163,25 @@ public class InputHandler {
         }
     }
 
-    /**
-     * Vyhozeni uzivatele z kanalu.
-     * Syntaxe: KICK #kanal uzivatel [:duvod]
-     */
     public static void handleKick(String params) {
-        String syntax = "Nesprávná syntaxe příkazu: KICK #kanal uzivatel [:duvod]";
-        String match = "#[a-zA-Z_0-9]+ [a-zA-Z_0-9]+( :.+)?";
+        String syntax = "Nesprávná syntaxe příkazu: KICK #kanal uživatel [důvod]";
+        String match = "#\\w+ \\S+( .+)?";
         if ( !params.matches(match) ) {
             appendError(syntax);
             return;
         }
 
-        // getActiveTab().getQuery().kick(params);
+        String[] parts = params.split(" ", 3);
+        String channel = parts[0];
+        String nickname = parts[1];
+
+        if (parts.length == 2) {
+            getCurrentServerTab().getConnection().kick(channel, nickname);
+        } else {
+            String reason = parts[2];
+            getCurrentServerTab().getConnection().kick(channel, nickname, reason);
+        }
+
         clearInput();
     }
 

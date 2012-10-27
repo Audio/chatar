@@ -184,50 +184,6 @@ public class DeprecatedCommandQuery {
     }
 
     /**
-     * Odchod z kanalu.
-     *
-     * @param channel
-     */
-    public void leave (String channel) {
-        addCommand("PART #" + channel);
-    }
-
-    /**
-     * Ziskani aktualniho tematu.
-     *
-     * @param channel
-     */
-    public void topic (String channel) {
-        topic(channel, null);
-    }
-
-    /**
-     * Zmena aktualniho tematu.
-     *
-     * @param channel
-     * @param topic
-     */
-    public void topic (String channel, String topic) {
-
-        String to;
-        if (topic == null)
-            to = "#" + channel;
-        else
-            to = "#" + channel + " :" + topic;
-        addCommand("TOPIC " + to);
-
-    }
-
-    /**
-     * Odezva uzivateli / serveru.
-     *
-     * @param target
-     */
-    public void pong (String target) {
-        addCommand("PONG " + target);
-    }
-
-    /**
      * Odeslani zpravy.
      * Adresatem je budto uzivatel, nebo kanal.
      *
@@ -262,42 +218,12 @@ public class DeprecatedCommandQuery {
     }
 
     /**
-     * Nastaveni Modu kanalu/uzivatele.
-     *
-     * @param params
-     */
-    public void mode (String params) {
-        addCommand("MODE " + params);
-    }
-
-    /**
-     * Vyhozeni uzivatele z daneho kanalu.
-     * Muze obsahovat komentar (duvod vyhozeni).
-     *
-     * @param params
-     */
-    public void kick (String params) {
-        addCommand("KICK " + params);
-    }
-
-    /**
      * Získání informací o uživateli s daným nickem.
      *
      * @param who
      */
     public void whois (String who) {
         addCommand("WHOIS " + who);
-    }
-
-    /**
-     * Odesílá oznámení, že uživatel provedl akci spefikovanou parametrem.
-     * Akce je textovy rezetec, ktery uzivatel zada - tzn. libovolny.
-     *
-     * @param channel
-     * @param action
-     */
-    public void me (String channel, String action) {
-        privMsg(channel, ":" + SOH + "ACTION " + action + SOH);
     }
 
 }

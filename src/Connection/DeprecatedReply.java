@@ -35,13 +35,13 @@ public class DeprecatedReply {
     // vyctovy typ obsahujici povolene prikazy ke zpracovani
     private enum Allowed {
 
-        fake, ERROR, KICK, NOTICE, PART, PRIVMSG, QUIT,
+        fake, ERROR, NOTICE,
 
         CODE_WELCOME, CODE_221, CODE_251, CODE_252, CODE_253, CODE_254, CODE_255,
         CODE_265, CODE_266,
         
         CODE_301, CODE_305, CODE_306, CODE_311, CODE_312, CODE_313, CODE_317,
-        CODE_318, CODE_319, CODE_332, CODE_366, CODE_372, CODE_375, CODE_376,
+        CODE_318, CODE_319, CODE_366, CODE_372, CODE_375, CODE_376,
 
         CODE_401, CODE_404, CODE_422, CODE_432,
         CODE_433, CODE_451, CODE_482,
@@ -228,9 +228,6 @@ public class DeprecatedReply {
             case fake:    { /*if ( !isNumeric() ) System.err.println("Nezapomen implementovat obsluhu prikazu " + type + ".");*/ break; }
             case NOTICE:  { handleNotice(); break; }
             case ERROR:   { handleError(); break; }
-            case PRIVMSG: { handlePrivMsg(); break; }
-            case KICK:    { handleKick(); break; }
-            case QUIT:    { handleQuit(); break; }
 
             // Uvitaci zpravy.
             case CODE_WELCOME: { handleCodeWelcome(); break; }
@@ -253,7 +250,6 @@ public class DeprecatedReply {
             case CODE_317: { handleCode317(); break; }
             case CODE_318: { handleCode318(); break; }
             case CODE_319: { handleCode319(); break; }
-            case CODE_332: { handleCode332(); break; }
             case CODE_401: { handleCode401(); break; }
             case CODE_404: { handleCode404(); break; }
             case CODE_432: { handleCode432(); break; }
@@ -326,107 +322,6 @@ public class DeprecatedReply {
             output( HTML.red( mType("auth") ) + HTML.bold(params), true);
         else
             output( mType("info") + params, true);
-
-    }
-
-    /**
-     * Zpracovani prikazu PRIVMSG.
-     * Existuje-li panel s nazvem stejnym jako adresat prikazu,
-     * vypise se zprava do tohoto panelu.
-     * V opacnem pripade se vypise do aktualne zvoleneho panelu.
-     */
-    private void handlePrivMsg () {
-
-        vyparseTarget();
-        String out = prefix.nick + ": " + smileAtMe(params);
-
-        // Jedná se o kanál nebo uživatele, co mi píše soukromou zprávu?
-        if ( !target.equals(connection.config.nickname) ) {
-            // kanál
-            if ( isAction() )
-                out = modifyAction();
-
-            // výstup
-            ChannelTab channel = getChannel(target);
-            if (channel == null)
-                output(out);
-            else
-                output(out, channel);
-        }
-        else {
-            // soukroma zprava
-            // otevre okno pro soukromy chat (pokud neni otevreno)
-            /*
-            PrivateChatTab chat = getPrivateChat(prefix.nick);
-            if (chat == null) {
-                try {
-                    MainWindow.getInstance().addTab(PanelTypes.PANEL_PRIVATE, prefix.nick);
-                    chat = getPrivateChat(prefix.nick);
-                    chat.setFocus();
-                } catch (Exception e) { return; }
-            }
-            output(out, chat);
-            if (MainWindow.getInstance().getActiveTab() != chat)
-                chat.setToRead(true);
-            */
-        }
-
-    }
-
-    /**
-     * Zpracovani prikazu KICK.
-     *
-     * Nastane jeden z dvou ruznych pripadu:
-     * 1/ Je vyhozen uzivatel tohoto klienta. V takovem pripade se uzavre
-     *    panel se zvolenym kanalem (odkud byl vyhozen). Informace o vyhazovu
-     *    je pote zobrazena v panelu serveru.
-     * 2/ Je vyhozen nekdo jiny. Ve vybranem kanale zobrazi danou informaci.
-     */
-    private void handleKick () {
-        
-        vyparseTarget();
-        String channel = target;
-        vyparseTarget();
-        String person = target;
-        String reason = smileAtMe(params);
-
-        ChannelTab channelTab = getChannel(channel);
-        if (channelTab == null)
-            return;
-
-        if ( connection.isMe(person) ) {
-            String msg = mType("info") + "Byl/a jste vyhozen/a z kanálu " + channel + ". Důvod: " + reason;
-            output(msg, channelTab.getServerTab() );
-            channelTab.getServerTab().removeChannelTab(channelTab);
-        }
-        else {
-            String msg = mType("info") + "Uživatel " + person + " byl vyhozen z místnosti. Důvod: " + reason;
-            output(msg, channelTab);
-            channelTab.removeUser(person);
-        }
-
-    }
-
-    /**
-     * Zpracování příkazu QUIT.
-     * Zpráva se zobrazí pouze v kanálech, ve kterých daný uživatel byl.
-     */
-    private void handleQuit () {
-
-        String user = prefix.nick;
-        String temp = mType("info") + "Uživatel " + HTML.bold(user)
-                + " se odpojil (" + smileAtMe(params) + ").";
-
-        /*
-        Iterator it = connection.getServerTab().channels.iterator();
-        while ( it.hasNext() ) {
-            ChannelTab ch = (ChannelTab) it.next();
-            if ( ch.hasNick(user) ) {
-                ch.removeUser(user);
-                output(temp, ch);
-            }
-        }
-        */
 
     }
 
@@ -622,21 +517,6 @@ public class DeprecatedReply {
     }
 
     /**
-     * Oznameni o nastaveni tematu prislusneho kanalu.
-     */
-    private void handleCode332 () {
-
-        vyparseTarget();
-        String channel = target;
-        String topic = HTML.bold( smileAtMe(params) );
-
-        ChannelTab ch = getChannel(channel);
-        output( mType("info") + "Aktuální téma je " + topic, ch);
-        ch.setTopic(topic);
-
-    }
-
-    /**
      * Neexistujici prezdivka / nazev kanalu.
      */
     private void handleCode401 () {
@@ -771,22 +651,6 @@ public class DeprecatedReply {
     }
 
     /**
-     * Příznak, zda se jedná o zprávu typu ACTION.
-     * Lze vysledovat až z těla zprávy.
-     */
-    private boolean isAction () {
-        return ( smileAtMe(params) ).startsWith("ACTION");
-    }
-
-    /**
-     * Modifikuje výstup zprávy při ACTION.
-     */
-    private String modifyAction () {
-        String out = prefix.nick + " " + smileAtMe(params).substring(7);
-        return HTML.italic(out);
-    }
-
-    /**
      * Vymaže znak z řetězce - nenahradí, ale vymaže.
      */
     private String removeChar (String str, char ch) {
@@ -798,8 +662,6 @@ public class DeprecatedReply {
         return str;
 
     }
-
-
 
     /**
      * Vraci informaci, zda byla odpoved vyjadrena cislem (kodem odpovedi).

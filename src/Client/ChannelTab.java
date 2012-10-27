@@ -123,7 +123,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String params = getTabName() + " " + selectedPopupUser;
-                // getQuery().kick(params);
+                InputHandler.handleKick(params);
             }
         } );
 
@@ -146,15 +146,10 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         layout.putConstraint(SpringLayout.NORTH, userspanel, 5, SpringLayout.NORTH, rightbox);
         layout.putConstraint(SpringLayout.SOUTH, userspanel, 0, SpringLayout.SOUTH, rightbox);
 
-
-        // Priradi nazev zalozky
         tabName = channel;
-
-        // Reset nazvu tematu
-        setTopic(null);
-
-        // Vytvori instanci zasobniku
         usersQueue = new LinkedList<>();
+
+        setTopic(null);
     }
 
     /**
@@ -290,7 +285,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         usersModel.remove( usersModel.getUser(nickname) );
     }
 
-    public void setTopic(String topic) {
+    private void setTopic(String topic) {
         if (topic == null || topic.trim().length() == 0)
             topic = "Diskusní téma není nastaveno.";
         else
@@ -371,8 +366,13 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     @Override
     public void userKicked(String initiator, String recipient, String reason) {
-        appendInfo(initiator + " vykopnul " + recipient + " (" + reason + ")");
-        removeUser(recipient);
+        String myNick = getServerTab().getConnection().getNick();
+        if ( recipient.equals(myNick) ) {
+            getServerTab().removeChannelTab(this);
+        } else {
+            appendInfo(initiator + " vykopnul " + recipient + " (důvod: " + reason + ")");
+            removeUser(recipient);
+        }
     }
 
     @Override
