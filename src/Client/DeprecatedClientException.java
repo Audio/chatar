@@ -1,14 +1,14 @@
 package Client;
 
 
-public class ClientException extends Exception {
+public class DeprecatedClientException extends Exception {
 
-    public ClientException(String str) {
+    public DeprecatedClientException(String str) {
         super(str);
         ClientLogger.log("ClientException: " + str, ClientLogger.ERROR);
     }
 
-    public ClientException(Throwable obj) {
+    public DeprecatedClientException(Throwable obj) {
         super(obj);
         ClientLogger.log("ClientException: " + obj.toString(), ClientLogger.ERROR);
     }
