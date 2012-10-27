@@ -37,12 +37,16 @@ public abstract class AbstractTab extends JPanel {
     }
 
     public void appendText(String str) {
-        EditorKit kit = content.getEditorKit();
-        Document doc = content.getDocument();
+        appendText(str, content);
+    }
+
+    public void appendText(String str, JEditorPane panel) {
+        EditorKit kit = panel.getEditorKit();
+        Document doc = panel.getDocument();
         try {
             Reader reader = new StringReader(str);
             kit.read(reader, doc, doc.getLength());
-            content.setCaretPosition( doc.getLength() );
+            panel.setCaretPosition( doc.getLength() );
         } catch (IOException | BadLocationException e) {
             e.printStackTrace();
         }

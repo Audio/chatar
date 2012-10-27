@@ -40,8 +40,8 @@ public class DeprecatedReply {
         CODE_WELCOME, CODE_221, CODE_251, CODE_252, CODE_253, CODE_254, CODE_255,
         CODE_265, CODE_266,
         
-        CODE_301, CODE_305, CODE_306, CODE_311, CODE_312, CODE_313, CODE_317,
-        CODE_318, CODE_319, CODE_366, CODE_372, CODE_375, CODE_376,
+        CODE_301, CODE_305, CODE_306, 
+        CODE_366, CODE_372, CODE_375, CODE_376,
 
         CODE_401, CODE_404, CODE_422, CODE_432,
         CODE_433, CODE_451, CODE_482,
@@ -244,12 +244,6 @@ public class DeprecatedReply {
             case CODE_301: { handleCode301(); break; }
             case CODE_305: { handleCode305(); break; }
             case CODE_306: { handleCode306(); break; }
-            case CODE_311: { handleCode311(); break; }
-            case CODE_312: { handleCode312(); break; }
-            case CODE_313: { handleCode313(); break; }
-            case CODE_317: { handleCode317(); break; }
-            case CODE_318: { handleCode318(); break; }
-            case CODE_319: { handleCode319(); break; }
             case CODE_401: { handleCode401(); break; }
             case CODE_404: { handleCode404(); break; }
             case CODE_432: { handleCode432(); break; }
@@ -447,76 +441,6 @@ public class DeprecatedReply {
     }
 
     /**
-     * WHOIS - RPL_WHOISUSER - nickname, username, host..
-     */
-    private void handleCode311 () {
-
-        vyparseTarget();
-        params = target + " Uživatel " + HTML.bold( smileAtMe(target) ) + ": "
-               + smileAtMe(params) + ".";
-        handleWhois();
-
-    }
-
-    /**
-     * WHOIS - RPL_WHOISSERVER - server info.
-     */
-    private void handleCode312 () {
-
-        vyparseTarget();
-        params = target + " Připojen k " + HTML.bold( smileAtMe(params) ) + ".";
-        handleWhois();
-
-    }
-
-    /**
-     * WHOIS - RPL_WHOISOPERATOR - na jakých kanálech je uživatel operátorem.
-     */
-    private void handleCode313 () {
-
-        vyparseTarget();
-        params = target + " Operátorem na " + HTML.bold( smileAtMe(params) ) + ".";
-        handleWhois();
-
-    }
-
-    /**
-     * WHOIS - RPL_WHOISIDLE - neaktivita vyjádřená v sekundách.
-     * Do první mezery je čas nečinnosti (v sekundách).
-     */
-    private void handleCode317 () {
-
-        vyparseTarget();
-        String time = params.substring(0, params.indexOf(' ') );
-        params = target + " Nečinný " + HTML.bold(time + " sekund") + ".";
-
-        handleWhois();
-
-    }
-
-    /**
-     * WHOIS - RPL_ENDOFWHOIS - konec výpisu.
-     */
-    private void handleCode318 () {
-
-        vyparseTarget();
-        params = target + " Konec výpisu /WHOIS.";
-        handleWhois();
-
-    }
-
-    /**
-     * WHOIS - RPL_WHOISCHANNELS - na jakých kanálech se uživatel právě nachází.
-     */
-    private void handleCode319 () {
-
-        vyparseTarget();
-        params = target + " Přítomen na " + HTML.bold( smileAtMe(params) ) + ".";
-        handleWhois();
-
-    }
-
-    /**
      * Neexistujici prezdivka / nazev kanalu.
      */
     private void handleCode401 () {
@@ -604,50 +528,6 @@ public class DeprecatedReply {
     private void handleMOTD () {
         connection.authenticate();
         output( mType("motd") + smileAtMe(params), true);
-    }
-
-    /**
-     * Zpracování všech odpovědí týkajících se WHOIS příkazu.
-     * Odpovědi mají stejnou syntaxi a akce pro výpis je jednotná.
-     *
-     * Je-li právě otevřen (a vybrán) soukromý chat s daným uživatelem,
-     * pak se pouze updatují informace v panelu.
-     * V jiném případě se (krom výše uvedeného) do aktualního panelu vypisuje výstup.
-     *
-     * Není-li soukromý chat s uživatelem vůbec otevřený, informace se v něm neupdatují.
-     */
-    private void handleWhois () {
-
-        vyparseTarget();
-        String foo = mType("whois") + HTML.bold(target) + ": " + params;
-
-        // Jsme v nějakém chatu?
-        boolean activeChat = ( MainWindow.getInstance().getActiveTab() instanceof PrivateChatTab );
-
-        // Píšeme si zrovna s uživatelem, jehož WHOIS vypisujeme?
-        boolean chatWithTarget = false;
-        if (activeChat) {
-            String nick = MainWindow.getInstance().getActiveTab().getTabName();
-            if ( nick.equals(target) )
-                chatWithTarget = true;
-        }
-
-        // Výpis na aktuální výstup
-        if (!chatWithTarget)
-            output(foo);
-
-        // Provedeme update informací?
-        // (END of WHOIS se neoznamuje - kod 319)
-        // (kod 311 - zacatek WHOIS - maze stavajici info)
-        PrivateChatTab pc = getPrivateChat(target);
-        if (pc == null || type.equals("CODE_318") )
-            return;
-
-        if ( type.equals("CODE_311") )
-            pc.clearUserInfo();
-
-        pc.updateUserInfo(params);
-
     }
 
     /**

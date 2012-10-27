@@ -114,7 +114,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         tl2.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // getQuery().whois(selectedPopupUser);
+                getServerTab().getConnection().whois(selectedPopupUser);
             }
         } );
 

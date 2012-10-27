@@ -43,6 +43,19 @@ public class Connection extends PircBot implements Runnable {
         }
     }
 
+    public void setAway(String reason) {
+        sendRawLine("AWAY :" + reason);
+    }
+
+    public void setNowAway() {
+        sendRawLine("AWAY");
+    }
+
+    public void whois(String nickname) {
+        sendRawLine("WHOIS " + nickname);
+    }
+
+
 
     /*         SERVER EVENTS           */
 
@@ -58,6 +71,14 @@ public class Connection extends PircBot implements Runnable {
     protected void onServerResponse(int code, String response) {
         if (serverEventsListener != null)
             serverEventsListener.serverMessageReceived(response);
+
+        switch (code) {
+            case RPL_WHOISUSER:
+            case RPL_WHOISSERVER:
+            case RPL_WHOISIDLE:
+            case RPL_WHOISCHANNELS:
+                handleWhoisResponse(code, response);
+        }
     }
 
     /*        CHANNEL EVENTS           */
@@ -205,15 +226,46 @@ public class Connection extends PircBot implements Runnable {
 
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message) {
-        for (PrivateMessagingListener listener : privateMessagingListeners) {
-            if ( listener.getNickname().equals(sender) ) {
-                listener.privateMessageReceived(message);
-                return;
-            }
-        }
+        PrivateMessagingListener listener = getPrivateMessagingListener(sender);
+        if (listener != null)
+            listener.privateMessageReceived(message);
 
         if (serverEventsListener != null)
             serverEventsListener.privateMessageWithoutListenerReceived(sender, message);
+    }
+
+    private void handleWhoisResponse(int code, String response) {
+        String[] parts = response.split(" ", 3);
+        String nickname = parts[1];
+        response = parts[2];
+
+        PrivateMessagingListener listener = getPrivateMessagingListener(nickname);
+        if (listener == null) {
+            if (serverEventsListener == null) {
+                return;
+            } else {
+                serverEventsListener.privateMessageWithoutListenerReceived(
+                                    nickname, "[zaslány údaje o uživateli]");
+                listener = getPrivateMessagingListener(nickname);
+            }
+        }
+
+        if (code == RPL_WHOISCHANNELS) {
+            response = response.substring(1);
+        } else if (code == RPL_WHOISIDLE) {
+            response = response.substring(0, response.indexOf(" ") );
+        }
+
+        switch (code) {
+            case RPL_WHOISUSER:
+                listener.whoisUser(response); break;
+            case RPL_WHOISSERVER:
+                listener.whoisServer(response); break;
+            case RPL_WHOISIDLE:
+                listener.whoisIdle(response); break;
+            case RPL_WHOISCHANNELS:
+                listener.whoisChannels(response); break;
+        }
     }
 
 }

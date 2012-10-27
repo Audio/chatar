@@ -217,13 +217,4 @@ public class DeprecatedCommandQuery {
 
     }
 
-    /**
-     * Získání informací o uživateli s daným nickem.
-     *
-     * @param who
-     */
-    public void whois (String who) {
-        addCommand("WHOIS " + who);
-    }
-
 }

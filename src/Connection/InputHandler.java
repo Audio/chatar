@@ -189,12 +189,12 @@ public class InputHandler {
         if ( reason.isEmpty() )
             reason = "Prostě se flákam.";
 
-        getCurrentServerTab().getConnection().sendRawLine("AWAY :" + reason);
+        getCurrentServerTab().getConnection().setAway(reason);
         clearInput();
     }
 
     public static void handleNotAway() {
-        getCurrentServerTab().getConnection().sendRawLine("AWAY");
+        getCurrentServerTab().getConnection().setNowAway();
         clearInput();
     }
 
@@ -219,18 +219,13 @@ public class InputHandler {
         // getCurrentServer().getQuery().oper(params);
     }
 
-    /**
-     * Informace o uživateli.
-     */
     public static void handleWhois(String nick) {
-        clearInput();
-
         if ( nick.isEmpty() ) {
-            appendError("Špatná syntaxe příkazu. Použijte /whois [server ]uzivatel");
-            return;
+            appendError("Špatná syntaxe příkazu. Použijte /whois uživatel");
+        } else {
+            getCurrentServerTab().getConnection().whois(nick);
+            clearInput();
         }
-
-        // getCurrentServer().getQuery().whois(params);
     }
 
     public static void handleAction(String params) {

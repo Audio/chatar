@@ -113,8 +113,9 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
     public PrivateChatTab createPrivateChatTab(String nickname) {
         PrivateChatTab tab = new PrivateChatTab(nickname, this);
-        connection.addPrivateMessagingListener(tab);
         privateChatTabs.add(tab);
+        connection.addPrivateMessagingListener(tab);
+        connection.whois(nickname);
         MainWindow.getInstance().getTabContainer().insertTab(tab);
         return tab;
     }

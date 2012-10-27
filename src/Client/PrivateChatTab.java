@@ -2,9 +2,7 @@ package Client;
 
 import Connection.*;
 import java.awt.*;
-import java.io.*;
 import javax.swing.*;
-import javax.swing.text.*;
 
 
 public class PrivateChatTab extends AbstractTab implements PrivateMessagingListener {
@@ -16,9 +14,6 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
 
     public PrivateChatTab(String nickname, final ServerTab serverTab) {
         this.serverTab = serverTab;
-
-        // TODO whois
-        // getQuery().whois(tabName);
 
         // Konstrukce panelu
         SpringLayout layout = new SpringLayout();
@@ -79,13 +74,6 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
         unreadMessageColor = new Color(255, 128, 128);
     }
 
-    /**
-     * Nastavuje obsah horni casti - vypis informaci o uzivateli.
-     */
-    public void setOtherUserInfo(String info) {
-        infobox.setText(info);
-    }
-
     public void setTabName(String tabName) {
         this.tabName = tabName;
         MainWindow.getInstance().getTabContainer().removeTab(this);
@@ -96,24 +84,6 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
     public void setFocus() {
         setNotification(false);
         super.setFocus();
-    }
-
-    /**
-     * Výpis informací o uživateli (příkaz WHOIS).
-     */
-    public void updateUserInfo(String str) {
-        EditorKit kit = infobox.getEditorKit();
-        Document doc = infobox.getDocument();
-        try {
-            Reader reader = new StringReader(str);
-            kit.read(reader, doc, doc.getLength());
-            infobox.setCaretPosition( doc.getLength() );
-        }
-        catch (Exception e) { }
-    }
-
-    public void clearUserInfo() {
-        infobox.setText(null);
     }
 
     /**
@@ -148,6 +118,27 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
     @Override
     public void userChangesNick(String newNick) {
         setTabName(newNick);
+    }
+
+    @Override
+    public void whoisUser(String userInfo) {
+        infobox.setText(null);
+        appendText("Uživatel " + HTML.bold(userInfo) , infobox);
+    }
+
+    @Override
+    public void whoisServer(String serverInfo) {
+        appendText("Připojen k " + HTML.bold(serverInfo) , infobox);
+    }
+
+    @Override
+    public void whoisChannels(String channelList) {
+        appendText("Přítomen na " + HTML.bold(channelList) , infobox);
+    }
+
+    @Override
+    public void whoisIdle(String seconds) {
+        appendText("Nečinný " + HTML.bold(seconds + " sekund") , infobox);
     }
 
 }

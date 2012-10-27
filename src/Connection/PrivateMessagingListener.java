@@ -9,4 +9,9 @@ public interface PrivateMessagingListener extends EventListener {
     public void privateMessageReceived(String message);
     public void userChangesNick(String newNick);
 
+    public void whoisUser(String userInfo);
+    public void whoisServer(String serverInfo);
+    public void whoisChannels(String channelList);
+    public void whoisIdle(String seconds);
+
 }
