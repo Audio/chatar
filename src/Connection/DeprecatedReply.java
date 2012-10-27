@@ -363,7 +363,7 @@ public class DeprecatedReply {
                     MainWindow.getInstance().addTab(PanelTypes.PANEL_PRIVATE, prefix.nick);
                     chat = getPrivateChat(prefix.nick);
                     chat.setFocus();
-                } catch (DeprecatedClientException e) { return; }
+                } catch (Exception e) { return; }
             }
             output(out, chat);
             if (MainWindow.getInstance().getActiveTab() != chat)
