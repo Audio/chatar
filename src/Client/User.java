@@ -11,7 +11,8 @@ public class User implements Comparable<User> {
                                 PREFIX_HALF_OPERATOR = "%",
                                 PREFIX_VOICE = "+";
 
-    private static final String MODE_ADMIN = "a",
+    private static final String MODE_OWNER = "q",
+                                MODE_ADMIN = "a",
                                 MODE_OPERATOR = "o",
                                 MODE_HALF_OPERATOR = "h",
                                 MODE_VOICE = "v";
@@ -105,6 +106,8 @@ public class User implements Comparable<User> {
 
     public final String getPrefixForMode(String mode) {
         switch (mode) {
+            case MODE_OWNER:
+                return PREFIX_OWNER;
             case MODE_ADMIN:
                 return PREFIX_ADMIN;
             case MODE_OPERATOR:
