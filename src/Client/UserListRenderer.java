@@ -25,14 +25,13 @@ public class UserListRenderer extends DefaultListCellRenderer {
         return c;
     }
 
-    private Component setCommonUserIcon(Component c) {
-        ((JLabel) c).setIcon( new ImageIcon("img/user.png") );
+    private Component setOwnerIcon(Component c) {
+        ((JLabel) c).setIcon( new ImageIcon("img/owner.png") );
         return c;
     }
 
-    private Component setOwnerIcon(Component c) {
-        // TODO owner icon
-        ((JLabel) c).setIcon( new ImageIcon("img/operator.png") );
+    private Component setAdminIcon(Component c) {
+        ((JLabel) c).setIcon( new ImageIcon("img/admin.png") );
         return c;
     }
 
@@ -51,8 +50,8 @@ public class UserListRenderer extends DefaultListCellRenderer {
         return c;
     }
 
-    private Component setAdminIcon(Component c) {
-        ((JLabel) c).setIcon( new ImageIcon("img/bot.png") );
+    private Component setCommonUserIcon(Component c) {
+        ((JLabel) c).setIcon( new ImageIcon("img/user.png") );
         return c;
     }
 
