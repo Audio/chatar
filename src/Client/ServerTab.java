@@ -2,19 +2,15 @@ package Client;
 
 import Connection.*;
 import java.awt.*;
-import java.io.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
-import javax.swing.text.*;
-import org.jibble.pircbot.IrcException;
 
 
 public class ServerTab extends AbstractTab implements ServerEventsListener {
 
     private JLabel addressLabel;
     private JLabel channelsLabel;
-    private JEditorPane text;
     private Connection connection;
     private ArrayList<ChannelTab> channelTabs;
     private ArrayList<PrivateChatTab> privateChatTabs;
@@ -73,10 +69,10 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         scrollpanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollpanel.setAutoscrolls(true);
 
-        text = GUI.createHTMLPane();
-        text.setBackground( new Color(255, 255, 255) );
+        content = GUI.createHTMLPane();
+        content.setBackground( new Color(255, 255, 255) );
 
-        scrollpanel.setViewportView(text);
+        scrollpanel.setViewportView(content);
         textpanel.add(scrollpanel);
 
         add(top);
@@ -164,21 +160,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         return null;
     }
 
-    /**
-     * Zobrazuje vystupni text - pridava jej na konec.
-     */
-    @Override
-    public void addText(String str) {
-        EditorKit kit = text.getEditorKit();
-        Document doc = text.getDocument();
-        try {
-            Reader reader = new StringReader(str);
-            kit.read(reader, doc, doc.getLength() );
-            text.setCaretPosition( doc.getLength() );
-        }
-        catch (Exception e) { }
-    }
-
     @Override
     public ServerTab getServerTab() {
         return this;
@@ -186,11 +167,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
     public void setChannelsCount(String count) {
         channelsLabel.setText(count);
-    }
-
-    @Override
-    public void clearContent() {
-        text.setText(null);
     }
 
     @Override
@@ -204,19 +180,19 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     public void connectionCantBeEstabilished(String reason) {
         new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba připojení",
             "K vybranému serveru se nelze připojit.");
-        addText("Spojení nelze uskutečnit: " + reason);
+        appendText("Spojení nelze uskutečnit: " + reason);
         ClientLogger.log("Nelze se připojit: " + reason, ClientLogger.ERROR);
     }
 
     @Override
     public void serverMessageReceived(String message) {
-        addText(message);
+        appendText(message);
     }
 
     @Override
     public void privateMessageWithoutListenerReceived(String sender, String message) {
         PrivateChatTab tab = createPrivateChatTab(sender);
-        tab.addText(sender + ": " + message);
+        tab.appendText(sender + ": " + message);
     }
 
 }

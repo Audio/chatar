@@ -183,7 +183,7 @@ public class DeprecatedReply {
      * Tunýlek pro stejnojmennou metodu v Output.HTML - kvůli přehlednosti.
      */
     public static String mType (String str) {
-        return Output.HTML.mType(str);
+        return HTML.mType(str);
     }
 
     /**
@@ -308,8 +308,7 @@ public class DeprecatedReply {
             connection.setClosedByServer();
 
             // Vypíše upozornění (heski šéski)
-            output( Output.HTML.color( mType("error") , Output.HTML.RED)
-                    + " Spojení uzavřeno.", true);
+            output( HTML.red( mType("error") ) + " Spojení uzavřeno.", true);
         }
 
     }
@@ -324,8 +323,7 @@ public class DeprecatedReply {
         params = smileAtMe(params);
 
         if ( target.equals("AUTH") )
-            output( Output.HTML.color( mType("auth") , Output.HTML.RED)
-                    + Output.HTML.bold(params), true);
+            output( HTML.red( mType("auth") ) + HTML.bold(params), true);
         else
             output( mType("info") + params, true);
 
@@ -416,7 +414,7 @@ public class DeprecatedReply {
     private void handleQuit () {
 
         String user = prefix.nick;
-        String temp = mType("info") + "Uživatel " + Output.HTML.bold(user)
+        String temp = mType("info") + "Uživatel " + HTML.bold(user)
                 + " se odpojil (" + smileAtMe(params) + ").";
 
         /*
@@ -445,7 +443,7 @@ public class DeprecatedReply {
      */
     private void handleCode221 () {
         vyparseTarget();
-        String new_mode = Output.HTML.bold( smileAtMe(params) );
+        String new_mode = HTML.bold( smileAtMe(params) );
         output( mType("mode") + "Nastaven mod " + new_mode, true);
         // TODO feature: mode set
     }
@@ -503,7 +501,7 @@ public class DeprecatedReply {
     private void handleCode301 () {
 
         vyparseTarget();
-        String user = Output.HTML.bold(target);
+        String user = HTML.bold(target);
         String reason = smileAtMe(params);
         output( mType("warn") + "Uživatel " + user + " je nepřítomný: " + reason);
 
@@ -515,7 +513,7 @@ public class DeprecatedReply {
      */
     private void handleCode305 () {
 
-        String afk = Output.HTML.bold("AFK");
+        String afk = HTML.bold("AFK");
         String foo = mType("info") + "Stav nepřítomnosti \"" + afk + "\" byl zrušen.";
 
         output(foo, true);
@@ -538,7 +536,7 @@ public class DeprecatedReply {
      */
     private void handleCode306 () {
 
-        String afk = Output.HTML.bold("AFK");
+        String afk = HTML.bold("AFK");
         String foo = mType("info") + "Nastaven stav nepřítomnosti (" + afk + ").";
 
         output(foo, true);
@@ -559,7 +557,7 @@ public class DeprecatedReply {
     private void handleCode311 () {
 
         vyparseTarget();
-        params = target + " Uživatel " + Output.HTML.bold( smileAtMe(target) ) + ": "
+        params = target + " Uživatel " + HTML.bold( smileAtMe(target) ) + ": "
                + smileAtMe(params) + ".";
         handleWhois();
 
@@ -571,7 +569,7 @@ public class DeprecatedReply {
     private void handleCode312 () {
 
         vyparseTarget();
-        params = target + " Připojen k " + Output.HTML.bold( smileAtMe(params) ) + ".";
+        params = target + " Připojen k " + HTML.bold( smileAtMe(params) ) + ".";
         handleWhois();
 
     }
@@ -582,7 +580,7 @@ public class DeprecatedReply {
     private void handleCode313 () {
 
         vyparseTarget();
-        params = target + " Operátorem na " + Output.HTML.bold( smileAtMe(params) ) + ".";
+        params = target + " Operátorem na " + HTML.bold( smileAtMe(params) ) + ".";
         handleWhois();
 
     }
@@ -595,7 +593,7 @@ public class DeprecatedReply {
 
         vyparseTarget();
         String time = params.substring(0, params.indexOf(' ') );
-        params = target + " Nečinný " + Output.HTML.bold(time + " sekund") + ".";
+        params = target + " Nečinný " + HTML.bold(time + " sekund") + ".";
 
         handleWhois();
 
@@ -618,7 +616,7 @@ public class DeprecatedReply {
     private void handleCode319 () {
 
         vyparseTarget();
-        params = target + " Přítomen na " + Output.HTML.bold( smileAtMe(params) ) + ".";
+        params = target + " Přítomen na " + HTML.bold( smileAtMe(params) ) + ".";
         handleWhois();
 
     }
@@ -630,7 +628,7 @@ public class DeprecatedReply {
 
         vyparseTarget();
         String channel = target;
-        String topic = Output.HTML.bold( smileAtMe(params) );
+        String topic = HTML.bold( smileAtMe(params) );
 
         ChannelTab ch = getChannel(channel);
         output( mType("info") + "Aktuální téma je " + topic, ch);
@@ -658,7 +656,7 @@ public class DeprecatedReply {
         if (ch == null)
             return;
 
-        String voice = Output.HTML.italic("voice");
+        String voice = HTML.italic("voice");
         output( mType("error") + "K odesílání zpráv potřebujete " + voice + " (+v).", ch);
 
     }
@@ -741,7 +739,7 @@ public class DeprecatedReply {
     private void handleWhois () {
 
         vyparseTarget();
-        String foo = mType("whois") + Output.HTML.bold(target) + ": " + params;
+        String foo = mType("whois") + HTML.bold(target) + ": " + params;
 
         // Jsme v nějakém chatu?
         boolean activeChat = ( MainWindow.getInstance().getActiveTab() instanceof PrivateChatTab );
@@ -785,7 +783,7 @@ public class DeprecatedReply {
      */
     private String modifyAction () {
         String out = prefix.nick + " " + smileAtMe(params).substring(7);
-        return Output.HTML.italic(out);
+        return HTML.italic(out);
     }
 
     /**
@@ -824,9 +822,9 @@ public class DeprecatedReply {
     public void output (String str, boolean server) {
 
         if (server)
-            connection.getServerTab().addText(str);
+            connection.getServerTab().appendText(str);
         else
-            connection.getTab().addText(str);
+            connection.getTab().appendText(str);
 
     }
 
@@ -834,7 +832,7 @@ public class DeprecatedReply {
      * Tunel pro vypis vystupniho textu do libovolneho panelu.
      */
     public void output (String str, AbstractTab tab) {
-        tab.addText(str);
+        tab.appendText(str);
     }
 
     /**

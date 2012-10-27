@@ -17,8 +17,8 @@ public class InputHandler {
         return getActiveTab() instanceof ChannelTab;
     }
 
-    private static void outputToCurrentTab(String str) {
-        getActiveTab().addText(str);
+    private static void appendError(String str) {
+        getActiveTab().appendError(str);
     }
 
     private static void clearInput() {
@@ -40,8 +40,7 @@ public class InputHandler {
             new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Neznámý příkaz",
                     "Neznámý příkaz " + unknownCommand.toUpperCase() + ".");
         } else {
-            String err = Output.HTML.color( mType("error"), Output.HTML.RED);
-            outputToCurrentTab(err + " Neznámý přijatý příkaz: " + unknownCommand);
+            appendError(" Neznámý přijatý příkaz: " + unknownCommand);
         }
     }
 
@@ -57,7 +56,7 @@ public class InputHandler {
     public static void handlePrivMessage(String params) {
         int upto;
         if ((upto = params.indexOf(" ")) == -1) {
-            outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /privmsg prijemce zprava");
+            appendError("Špatná syntaxe příkazu. Použijte /privmsg prijemce zprava");
             return;
         }
 
@@ -79,13 +78,13 @@ public class InputHandler {
 
         if (tab != null) {
             String myNick = serverTab.getConnection().getNick();
-            tab.addText(myNick + ": " + message);
+            tab.appendText(myNick + ": " + message);
         }
     }
 
     public static void handleJoin(String channel) {
         if ( channel.isEmpty() ) {
-            outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /join nazev_kanalu");
+            appendError("Špatná syntaxe příkazu. Použijte /join nazev_kanalu");
             return;
         }
 
@@ -120,7 +119,7 @@ public class InputHandler {
 
     public static void handleNick(String nick) {
         if ( nick.isEmpty() ) {
-            outputToCurrentTab( mType("error") + "Nebyla zadána nová přezdívka.");
+            appendError("Nebyla zadána nová přezdívka.");
             return;
         }
 
@@ -130,7 +129,7 @@ public class InputHandler {
 
     public static void handleTopic(String topic) {
         if (getActiveTab() instanceof ChannelTab == false) {
-            outputToCurrentTab( mType("error") + "Téma lze změnit pouze ve vybraném kanále.");
+            appendError("Téma lze změnit pouze ve vybraném kanále.");
             return;
         }
 
@@ -143,10 +142,10 @@ public class InputHandler {
     }
 
     public static void handleMode(String params) {
-        String errorMessage = mType("error") + "Příkaz MODE: nesprávná syntaxe příkazu. Použijte /mode #KANAL MOD";
+        String errorMessage = "Příkaz MODE: nesprávná syntaxe příkazu. Použijte /mode #KANAL MOD";
         String match = "#[a-zA-Z_0-9]+ .+";
         if ( !params.matches(match) ) {
-            outputToCurrentTab(errorMessage);
+            appendError(errorMessage);
             return;
         }
 
@@ -169,10 +168,10 @@ public class InputHandler {
      * Syntaxe: KICK #kanal uzivatel [:duvod]
      */
     public static void handleKick(String params) {
-        String syntax = mType("error") + "Nesprávná syntaxe příkazu: KICK #kanal uzivatel [:duvod]";
+        String syntax = "Nesprávná syntaxe příkazu: KICK #kanal uzivatel [:duvod]";
         String match = "#[a-zA-Z_0-9]+ [a-zA-Z_0-9]+( :.+)?";
         if ( !params.matches(match) ) {
-            outputToCurrentTab(syntax);
+            appendError(syntax);
             return;
         }
 
@@ -208,7 +207,7 @@ public class InputHandler {
         clearInput();
 
         if (params.isEmpty() || params.indexOf(" ") == -1) {
-            outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /oper uzivatel heslo");
+            appendError("Špatná syntaxe příkazu. Použijte /oper uzivatel heslo");
             return;
         }
 
@@ -222,7 +221,7 @@ public class InputHandler {
         clearInput();
 
         if ( nick.isEmpty() ) {
-            outputToCurrentTab( mType("error") + "Špatná syntaxe příkazu. Použijte /whois [server ]uzivatel");
+            appendError("Špatná syntaxe příkazu. Použijte /whois [server ]uzivatel");
             return;
         }
 
@@ -242,15 +241,8 @@ public class InputHandler {
         getCurrentServerTab().getConnection().sendAction(channel, params);
 
         String nick = getCurrentServerTab().getConnection().getNick();
-        getActiveTab().addText( Output.HTML.italic(nick + " " + params) );
+        getActiveTab().appendText( HTML.italic(nick + " " + params) );
         clearInput();
-    }
-
-    /**
-     * Tunýlek pro stejnojmennou metodu v Output.HTML - kvůli přehlednosti.
-     */
-    public static String mType(String str) {
-        return Output.HTML.mType(str);
     }
 
 }

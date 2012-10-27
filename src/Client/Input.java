@@ -206,8 +206,7 @@ public class Input extends JPanel {
 
         AbstractTab tab = MainWindow.getInstance().getActiveTab();
         if (tab instanceof ServerTab) {
-            String err = Output.HTML.mType("error");
-            tab.addText(err+ "Nelze odeslat zprávu. Toto není chatovací místnost!");
+            tab.appendError("Nelze odeslat zprávu. Toto není chatovací místnost!");
             return;
         }
 

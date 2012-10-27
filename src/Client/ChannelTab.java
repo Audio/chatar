@@ -3,11 +3,9 @@ package Client;
 import Connection.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.text.*;
 
 
 public class ChannelTab extends AbstractTab implements ChannelEventsListener {
@@ -16,7 +14,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     private UserListRenderer userListRenderer;
     private SortedListModel usersModel;
     private JEditorPane infobox;
-    private JEditorPane chat;
     private JPopupMenu popup;
     private MouseListener popupListener;
     private String selectedPopupUser;
@@ -91,9 +88,9 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         chatscroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         chatscroll.setAutoscrolls(true);
 
-        chat = GUI.createHTMLPane();
+        content = GUI.createHTMLPane();
 
-        chatscroll.setViewportView(chat);
+        chatscroll.setViewportView(content);
         bottompanel.add(chatscroll);
 
         // Slepeni horniho a spodniho praveho panelu
@@ -262,19 +259,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         pc.setFocus();
     }
 
-    @Override
-    public void addText(String str) {
-        EditorKit kit = chat.getEditorKit();
-        Document doc = chat.getDocument();
-        try {
-            Reader reader = new StringReader(str);
-            kit.read(reader, doc, doc.getLength());
-            chat.setCaretPosition( doc.getLength() );
-        } catch (IOException | BadLocationException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void setUsers(User[] users) {
         usersModel.clear();
 
@@ -312,14 +296,9 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         if (topic == null || topic.trim().length() == 0)
             topic = "Diskusní téma není nastaveno.";
         else
-            topic = Output.HTML.bold(topic);
+            topic = HTML.bold(topic);
 
         infobox.setText(topic);
-    }
-
-    @Override
-    public void clearContent() {
-        chat.setText(null);
     }
 
     @Override
@@ -334,7 +313,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     @Override
     public void messageReceived(String sender, String message) {
-        addText(sender + ": " + message);
+        appendText(sender + ": " + message);
     }
 
     @Override
@@ -344,14 +323,14 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     @Override
     public void userModeGranted(String initiator, String recipient, String mode) {
-        addText( Output.HTML.italic(recipient + " +" + mode + " (" + initiator + ")") );
+        appendText( HTML.italic(recipient + " +" + mode + " (" + initiator + ")") );
         usersModel.getUser(recipient).addPrefixBasedOnMode(mode);
         usersModel.contentChanged();
     }
 
     @Override
     public void userModeRevoked(String initiator, String recipient, String mode) {
-        addText( Output.HTML.italic(recipient + " -" + mode + " (" + initiator + ")") );
+        appendText( HTML.italic(recipient + " -" + mode + " (" + initiator + ")") );
         usersModel.getUser(recipient).removePrefixBasedOnMode(mode);
         usersModel.contentChanged();
     }
@@ -361,38 +340,38 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         boolean isMe = getServerTab().getConnection().getNick().equals(oldNick);
         String message;
         if (isMe) {
-            message = Output.HTML.mType("info") + "Nyní vystupujete pod přezdívkou "
-                    + Output.HTML.bold(newNick) + ".";
+            message = "Nyní vystupujete pod přezdívkou "
+                    + HTML.bold(newNick) + ".";
         } else {
-            message = Output.HTML.mType("info") + oldNick + " si změnil přezdívku na "
-                    + Output.HTML.bold(newNick) + ".";
+            message = oldNick + " si změnil přezdívku na "
+                    + HTML.bold(newNick) + ".";
         }
-        addText(message);
+        appendInfo(message);
         usersModel.getUser(oldNick).setNickname(newNick);
         usersModel.contentChanged();
     }
 
     @Override
     public void userJoined(String nickname) {
-        addText( Output.HTML.mType("info") + nickname + " přišel se připojil na " + getTabName() );
+        appendInfo(nickname + " přišel se připojil na " + getTabName() );
         addUser(nickname);
     }
 
     @Override
     public void userLeft(String nickname) {
-        addText( Output.HTML.mType("info") + nickname + " odešel z místnosti." );
+        appendInfo(nickname + " odešel z místnosti." );
         removeUser(nickname);
     }
 
     @Override
     public void userQuit(String nickname, String reason) {
-        addText( Output.HTML.mType(nickname + " odešel (důvod: " + reason + ")") );
+        appendInfo(nickname + " odešel (důvod: " + reason + ")");
         removeUser(nickname);
     }
 
     @Override
     public void userKicked(String initiator, String recipient, String reason) {
-        addText( Output.HTML.mType(initiator + " vykopnul " + recipient + " (" + reason + ")") );
+        appendInfo(initiator + " vykopnul " + recipient + " (" + reason + ")");
         removeUser(recipient);
     }
 
@@ -408,9 +387,8 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     @Override
     public void topicChanged(String initiator, String topic) {
-        String message = Output.HTML.mType("info") + initiator
-                       + " nastavil téma na " + Output.HTML.bold(topic);
-        addText(message);
+        String message = initiator + " nastavil téma na " + HTML.bold(topic);
+        appendInfo(message);
         setTopic(topic);
     }
 

@@ -10,7 +10,6 @@ import javax.swing.text.*;
 public class PrivateChatTab extends AbstractTab implements PrivateMessagingListener {
 
     private JEditorPane infobox;
-    private JEditorPane chat;
     private Color originalColor;
     private Color unreadMessageColor;
 
@@ -58,9 +57,9 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
         chatscroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         chatscroll.setAutoscrolls(true);
 
-        chat = GUI.createHTMLPane();
+        content = GUI.createHTMLPane();
 
-        chatscroll.setViewportView(chat);
+        chatscroll.setViewportView(content);
         bottompanel.add(chatscroll);
 
         // Uskladneni objektu to hlavniho panelu
@@ -82,18 +81,6 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
         unreadMessageColor = new Color(255, 128, 128);
     }
 
-    @Override
-    public void addText(String str) {
-        EditorKit kit = chat.getEditorKit();
-        Document doc = chat.getDocument();
-        try {
-            Reader reader = new StringReader(str);
-            kit.read(reader, doc, doc.getLength());
-            chat.setCaretPosition( doc.getLength() );
-        }
-        catch (Exception e) { }
-    }
-
     /**
      * Nastavuje obsah horni casti - vypis informaci o uzivateli.
      */
@@ -111,11 +98,6 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
     public void setFocus() {
         setNotification(false);
         super.setFocus();
-    }
-
-    @Override
-    public void clearContent() {
-        chat.setText(null);
     }
 
     /**
@@ -162,7 +144,7 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
 
     @Override
     public void privateMessageReceived(String message) {
-        addText( getNickname() + ": " + message);
+        appendText( getNickname() + ": " + message);
     }
 
     @Override
