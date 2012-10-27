@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import org.jibble.pircbot.*;
 
 
-// TODO threading
 public class Connection extends PircBot implements Runnable {
 
     private String server;
@@ -97,34 +96,28 @@ public class Connection extends PircBot implements Runnable {
     }
 
     @Override
-    protected void onOp(String channel, String sourceNick, String sourceLogin,
-                        String sourceHostname, String recipient) {
-        ChannelEventsListener listener = getChannelEventsListener(channel);
-        if (listener != null)
-            listener.userGetsOp(sourceNick, recipient);
-    }
+    protected void onMode(String channel, String sourceNick, String sourceLogin,
+                          String sourceHostname, String mode) {
 
-    @Override
-    protected void onDeop(String channel, String sourceNick, String sourceLogin,
-                          String sourceHostname, String recipient) {
-        ChannelEventsListener listener = getChannelEventsListener(channel);
-        if (listener != null)
-            listener.userLoseOp(sourceNick, recipient);
-    }
+        // User mode:  +o nickname
+        // Channel mode: +m
+        String change = mode.substring(0, 1);
+        boolean granted = change.equals("+");
 
-    @Override
-    protected void onVoice(String channel, String sourceNick, String sourceLogin,
-                           String sourceHostname, String recipient) {
-        ChannelEventsListener listener = getChannelEventsListener(channel);
-        if (listener != null)
-            listener.userGetsVoice(sourceNick, recipient);
-    }
+        mode = mode.trim().substring(1);
+        if ( mode.indexOf(" ") > -1 ) {
+            String[] parts = mode.split(" ");
+            String type = parts[0];
+            String nickname = parts[1];
 
-    @Override
-    protected void onDeVoice(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient) {
-        ChannelEventsListener listener = getChannelEventsListener(channel);
-        if (listener != null)
-            listener.userLoseVoice(sourceNick, recipient);
+            ChannelEventsListener listener = getChannelEventsListener(channel);
+            if (listener != null) {
+                if (granted)
+                    listener.userModeGranted(sourceNick, nickname, type);
+                else
+                    listener.userModeRevoked(sourceNick, nickname, type);
+            }
+        }
     }
 
     @Override

@@ -12,11 +12,8 @@ public interface ChannelEventsListener extends EventListener {
     public void messageReceived(String sender, String message);
     public void userListReceived(User[] users);
 
-    // TODO Half OP, owner a bot?
-    public void userGetsOp(String initiator, String recipient);
-    public void userLoseOp(String initiator, String recipient);
-    public void userGetsVoice(String initiator, String recipient);
-    public void userLoseVoice(String initiator, String recipient);
+    public void userModeGranted(String initiator, String recipient, String mode);
+    public void userModeRevoked(String initiator, String recipient, String mode);
 
     public void userChangesNick(String oldNick, String newNick);
 

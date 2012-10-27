@@ -343,30 +343,16 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     }
 
     @Override
-    public void userGetsOp(String initiator, String recipient) {
-        addText( Output.HTML.italic(recipient + " +o (" + initiator + ")") );
-        usersModel.getUser(recipient).setOperator();
+    public void userModeGranted(String initiator, String recipient, String mode) {
+        addText( Output.HTML.italic(recipient + " +" + mode + " (" + initiator + ")") );
+        usersModel.getUser(recipient).setType(mode);
         usersModel.contentChanged();
     }
 
     @Override
-    public void userLoseOp(String initiator, String recipient) {
-        addText( Output.HTML.italic(recipient + " -o (" + initiator + ")") );
-        usersModel.getUser(recipient).setCommon();
-        usersModel.contentChanged();
-    }
-
-    @Override
-    public void userGetsVoice(String initiator, String recipient) {
-        addText( Output.HTML.italic(recipient + " +v (" + initiator + ")") );
-        usersModel.getUser(recipient).setVoice();
-        usersModel.contentChanged();
-    }
-
-    @Override
-    public void userLoseVoice(String initiator, String recipient) {
-        addText( Output.HTML.italic(recipient + " -v (" + initiator + ")") );
-        usersModel.getUser(recipient).setCommon();
+    public void userModeRevoked(String initiator, String recipient, String mode) {
+        addText( Output.HTML.italic(recipient + " -" + mode + " (" + initiator + ")") );
+        usersModel.getUser(recipient).setType(""); // TODO odebrat mode, ne zrusit
         usersModel.contentChanged();
     }
 

@@ -63,28 +63,17 @@ public class User implements Comparable<User> {
         return prefix.equals(PREFIX_VOICE);
     }
 
-    public void setOwner() {
-        prefix = PREFIX_OWNER;
-    }
-
-    public void setAdmin() {
-        prefix = PREFIX_ADMIN;
-    }
-
-    public void setOperator() {
-        prefix = PREFIX_OPERATOR;
-    }
-
-    public void setHalfOperator() {
-        prefix = PREFIX_HALF_OPERATOR;
-    }
-
-    public void setVoice() {
-        prefix = PREFIX_VOICE;
-    }
-
-    public void setCommon() {
-        prefix = "";
+    public void setType(String prefix) {
+        switch (prefix) {
+            case PREFIX_OWNER:
+            case PREFIX_ADMIN:
+            case PREFIX_OPERATOR:
+            case PREFIX_HALF_OPERATOR:
+            case PREFIX_VOICE:
+                this.prefix = prefix;
+            default:
+                this.prefix = "";
+        }
     }
 
     public static User[] toUsers(org.jibble.pircbot.User[] botUsers) {
