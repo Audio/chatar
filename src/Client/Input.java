@@ -6,11 +6,7 @@ import java.awt.Dimension;
 import java.awt.event.*;
 import javax.swing.*;
 
-/**
- * Základní panel, viditelný neustále. Načítá textový vstup od uživatele.
- * Vstup má podobu příkazů nebo obyčejného textu (zpráva na odeslání
- * při komunikaci s ostatními uživateli).
- */
+
 public class Input extends JPanel {
 
     private JButton button;
@@ -25,36 +21,33 @@ public class Input extends JPanel {
         public static Commands fromString(String Str) {
             try {
                 return valueOf(Str);
+            } catch (Exception e){
+                return Commands.UNKNOWN;
             }
-            catch (Exception e){ return Commands.UNKNOWN; }
         }
     };
 
 
-    /**
-     * Zkonstruuje spodni panel. Na nem se bude nachazet tlacitko
-     * a textove pole pro vstup. Po stisku tlacitka se objevi popup menu
-     * slouzici pro rychly vyber prikazu (napr. zmena prezdivky, odpojeni
-     * od serveru atd.). Textove pole slouzi pro odesilani textovych
-     * zprav do kanalu (je-li uzivatel pripojen) a odesilani prikazu
-     * vybranemu serveru.
-     */
     public Input(int width, int height) {
         GUI.setPreferredSize(this, width, height);
         setLayout( new BoxLayout(this, BoxLayout.PAGE_AXIS) );
 
-        JPanel inner_panel = new JPanel();
-        inner_panel.setLayout( new BoxLayout(inner_panel, BoxLayout.LINE_AXIS) );
-        inner_panel.setBorder( BorderFactory.createEmptyBorder(5, 10, 5, 10) );
+        JPanel innerPanel = new JPanel();
+        innerPanel.setLayout( new BoxLayout(innerPanel, BoxLayout.LINE_AXIS) );
+        innerPanel.setBorder( BorderFactory.createEmptyBorder(5, 10, 5, 10) );
 
         button = new JButton("Chatař");
         button.setToolTipText("Kliknutím nastavíte přezdívku (vyžaduje aktivní připojení na server)");
         button.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                if ( MainWindow.getInstance().getActiveTab() == null )
+                AbstractTab tab = MainWindow.getInstance().getActiveTab();
+                if (tab == null)
                     return;
 
-                GUI.showSetNicknameDialog();
+                String nickname = GUI.showSetNicknameDialog();
+                if (nickname != null)
+                    InputHandler.handleNick(nickname);
             }
         });
 
@@ -63,6 +56,7 @@ public class Input extends JPanel {
 
         // Zpracování události po odentrování
         textField.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 handleInputText();
             }
@@ -76,13 +70,13 @@ public class Input extends JPanel {
             }
         });
 
-        inner_panel.add(button);
-        inner_panel.add( Box.createHorizontalGlue() );
-        inner_panel.add( Box.createRigidArea( new Dimension(10,0) ) );
-        inner_panel.add( Box.createHorizontalGlue() );
-        inner_panel.add(textField);
+        innerPanel.add(button);
+        innerPanel.add( Box.createHorizontalGlue() );
+        innerPanel.add( Box.createRigidArea( new Dimension(10,0) ) );
+        innerPanel.add( Box.createHorizontalGlue() );
+        innerPanel.add(textField);
 
-        add(inner_panel);
+        add(innerPanel);
     }
 
     public JButton getButton() {
@@ -134,17 +128,6 @@ public class Input extends JPanel {
         field.selectAll();
     }
 
-    /**
-     * Zjisti, o jaky prikaz se jedna.
-     * Je-li prikaz neznamy / nepovoleny, oznami to uzivateli
-     * textovou hlaskou do aktualniho panelu.
-     *
-     * Neexistuje-li zadny panel, vytvori dialogove okno s oznamenim.
-     *
-     * Standardni prikaz preda jeho obsluzne metode.
-     *
-     * Feature: příkazy přidávány do historie příkazů.
-     */
     private void handleCommand() {
         String inputText = textField.getText();
         String rawCommand;
@@ -154,8 +137,7 @@ public class Input extends JPanel {
         if ( (upto = inputText.indexOf(" ") ) > -1 ) {
             rawCommand = inputText.substring(1, upto);
             params = inputText.substring(upto + 1).trim();
-        }
-        else {
+        } else {
             rawCommand = inputText.substring(1);
         }
 
@@ -193,6 +175,7 @@ public class Input extends JPanel {
                 case ACTION:  { InputHandler.handleAction(params); break; }
 
                 case SERVER:  { InputHandler.handleServer(params); break; }
+
             }
 
         }

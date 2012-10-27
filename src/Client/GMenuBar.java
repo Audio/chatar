@@ -106,7 +106,9 @@ public class GMenuBar extends JMenuBar {
         changeNickname.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GUI.showSetNicknameDialog();
+                String nickname = GUI.showSetNicknameDialog();
+                if (nickname != null)
+                    InputHandler.handleNick(nickname);
             }
         });
 

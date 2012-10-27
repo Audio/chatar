@@ -55,23 +55,9 @@ public class GUI {
         return question.strConfirm;
     }
 
-    /**
-     * Okno pro nastaveni nové přezdívky.
-     */
-    public static void showSetNicknameDialog() {
-
+    public static String showSetNicknameDialog() {
         MessageDialog question = new MessageDialog(MessageDialog.GROUP_INPUT, MessageDialog.TYPE_QUESTION, "Nastavení přezdívky", "Zvolte novou přezdívku");
-        String ans = question.strConfirm;
-
-        if (ans == null) // cancel
-            return;
-
-        ans = ans.trim();
-        if (ans.length() == 0) // nevyplneno
-            return;
-
-        // Input.getCurrentServer().getQuery().nick(ans);
-
+        return question.strConfirm;
     }
 
     public static MainWindow getWindow() {
