@@ -81,6 +81,13 @@ public class Connection extends PircBot implements Runnable {
         }
     }
 
+    @Override
+    protected void onNotice(String sourceNick, String sourceLogin,
+                            String sourceHostname, String target, String notice) {
+        if (serverEventsListener != null)
+            serverEventsListener.noticeMessageReceived(sourceNick, notice);
+    }
+
     /*        CHANNEL EVENTS           */
 
     public void addChannelEventsListener(ChannelEventsListener listener) {

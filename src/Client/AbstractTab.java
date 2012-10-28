@@ -59,9 +59,14 @@ public abstract class AbstractTab extends JPanel {
     }
 
     public void appendError(String str) {
-        String prefix = HTML.red( HTML.small("error") );
+        String prefix = HTML.red( HTML.small("chyba") );
         str = HTML.italic(str);
         appendText(prefix + str);
+    }
+
+    public void appendNotice(String str) {
+        str = HTML.blue( HTML.italic(str) );
+        appendText(str);
     }
 
     public void clearContent() {

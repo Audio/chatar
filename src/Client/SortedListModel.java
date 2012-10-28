@@ -18,7 +18,6 @@ public class SortedListModel extends AbstractListModel {
         return model.size();
     }
 
-    // TODO obcas to hazi java.lang.ArrayIndexOutOfBoundsException: 0
     @Override
     public User getElementAt(int index) {
         return (User) model.toArray()[index];

@@ -17,6 +17,10 @@ public class HTML {
         return color(str, new Color(255, 0, 0) );
     }
 
+    public static String blue(String str) {
+        return color(str, new Color(51, 102, 204) );
+    }
+
     private static String color(String str, Color color) {
         return "<span style=\"color: rgb(" + color.getRed() + ","
                 + color.getGreen() + "," + color.getBlue()+ ")\">" + str + "</span>";

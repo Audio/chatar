@@ -255,7 +255,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     public void setUsers(User[] users) {
         usersModel.clear();
 
-        // TODO potrebuju v novym vlakne?
         Runnable adder = new Runnable () {
             @Override
             public void run () {
