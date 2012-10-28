@@ -99,7 +99,7 @@ public class DeprecatedConnection extends Thread {
 
             loadReply();
             query.login();
-            output( HTML.mType("info") +  "Přihlašuji se s přezdívkou " + config.nickname + ".");
+            output( HTML.small("info") +  "Přihlašuji se s přezdívkou " + config.nickname + ".");
             GUI.getInput().setNickname(config.nickname);
 
         }

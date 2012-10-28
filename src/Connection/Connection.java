@@ -70,7 +70,7 @@ public class Connection extends PircBot implements Runnable {
     @Override
     protected void onServerResponse(int code, String response) {
         if (serverEventsListener != null)
-            serverEventsListener.serverMessageReceived(response);
+            serverEventsListener.serverMessageReceived(code, response);
 
         switch (code) {
             case RPL_WHOISUSER:

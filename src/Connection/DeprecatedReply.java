@@ -42,9 +42,6 @@ public class DeprecatedReply {
         
         CODE_301, CODE_305, CODE_306, 
         CODE_366, CODE_372, CODE_375, CODE_376,
-
-        CODE_401, CODE_404, CODE_422, CODE_432,
-        CODE_433, CODE_451, CODE_482,
         ;
 
         public static Allowed fromString(String Str) {
@@ -183,7 +180,7 @@ public class DeprecatedReply {
      * Tunýlek pro stejnojmennou metodu v Output.HTML - kvůli přehlednosti.
      */
     public static String mType (String str) {
-        return HTML.mType(str);
+        return HTML.small(str);
     }
 
     /**
@@ -244,18 +241,11 @@ public class DeprecatedReply {
             case CODE_301: { handleCode301(); break; }
             case CODE_305: { handleCode305(); break; }
             case CODE_306: { handleCode306(); break; }
-            case CODE_401: { handleCode401(); break; }
-            case CODE_404: { handleCode404(); break; }
-            case CODE_432: { handleCode432(); break; }
-            case CODE_433: { handleCode433(); break; }
-            case CODE_451: { handleCode451(); break; }
-            case CODE_482: { handleCode482(); break; }
 
             // Message of the day.
             case CODE_372: { handleMOTD(); break; }
             case CODE_375: { handleMOTD(); break; }
             case CODE_376: { handleMOTD(); break; }
-            case CODE_422: { handleMOTD(); break; }
 
             // Zpravy, ktere nemaji pro uzivatele informacni hodnotu.
             case CODE_366: { break; }
@@ -437,88 +427,6 @@ public class DeprecatedReply {
             output(foo, ch);
         }
         */
-
-    }
-
-    /**
-     * Neexistujici prezdivka / nazev kanalu.
-     */
-    private void handleCode401 () {
-        vyparseTarget();
-        output( mType("error") + "Neexistující přezdívka/kanál: " + target);
-    }
-
-    /**
-     * Klient nema dostatecna prava odesilat zpravy
-     * na moderovany kanal.
-     */
-    private void handleCode404 () {
-
-        vyparseTarget();
-        String channel = target;
-        ChannelTab ch = getChannel(channel);
-        if (ch == null)
-            return;
-
-        String voice = HTML.italic("voice");
-        output( mType("error") + "K odesílání zpráv potřebujete " + voice + " (+v).", ch);
-
-    }
-
-    /**
-     * Spatna syntaxe nove zvolene prezdivky.
-     */
-    private void handleCode432 () {
-        output( mType("error") + "Nesprávně zvolená přezdívka.");
-    }
-
-    /**
-     * Nove zvolena prezdivka je jiz pouzita jinym uzivatelem.
-     * Pokud neni uzivatel k serveru prihlasen (pripad, kdy byla odeslana
-     * data na server automaticky, nikoli rucni zmena prezdivky uzivatelem),
-     * klient se automaticky pokusi modifikovat prezdivku pridanim dvou
-     * cifer na jeji konec. Tim by mela byt zarucena unikatnost nove prezdivky.
-     */
-    private void handleCode433 () {
-        output( mType("error") + "Přezdívka je již použita.");
-        if ( !connection.isAuthenticated() )
-            handleCode451();
-    }
-
-    /**
-     * Oznameni "you have not registered". Server tak odpovida
-     * pri zpracovani klientskych prikazu z toho duvodu,
-     * ze klient (uzivatel) doposud nebyl zaregistrovan
-     * (uspesne prihlasen k serveru).
-     *
-     * Hlaska vznika predevsim pri pokusu o pripojeni s prezdivkou,
-     * ktera je jiz na serveru pouzita. V takovem pripade modifikujeme
-     * uzivatelovu prezdivku (prirazenim dvou cifer jako postfix)
-     * a odesleme zadost o jeji zmenu.
-     */
-    private void handleCode451 () {
-        String nick = connection.config.nickname
-                    + connection.config.random();
-        getQuery().nick(nick);
-        connection.config.nickname = nick;
-        GUI.getInput().setNickname(nick);
-    }
-
-    /**
-     * Oznameni "You're not channel operator"
-     */
-    private void handleCode482 () {
-
-        vyparseTarget();
-        String channel = target;
-        String foo     = mType("error") + "Pro tento úkon potřebujete práva operátora.";
-
-        ChannelTab ch = getChannel(channel);
-
-        if (ch == null)
-            return;
-
-        output(foo, ch);
 
     }
 

@@ -5,7 +5,7 @@ import Client.*;
 
 public class InputHandler {
     
-    private static AbstractTab getActiveTab() {
+    public static AbstractTab getActiveTab() {
         return MainWindow.getInstance().getActiveTab();
     }
 

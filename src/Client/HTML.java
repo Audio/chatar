@@ -22,7 +22,7 @@ public class HTML {
                 + color.getGreen() + "," + color.getBlue()+ ")\">" + str + "</span>";
     }
 
-    public static String mType(String type) {
+    public static String small(String type) {
         return "[<small>" + type.toUpperCase() + "</small>] ";
     }
 

@@ -183,8 +183,19 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     }
 
     @Override
-    public void serverMessageReceived(String message) {
-        appendText(message);
+    public void serverMessageReceived(int code, String message) {
+        if (code > 400 && code < 500) {
+            message = message.split(" ", 2)[1];
+            appendError(message);
+
+            final int ERR_NOMOTD = 422;
+            AbstractTab tab = InputHandler.getActiveTab();
+            if ( code != ERR_NOMOTD && tab.getServerTab().equals(this) && !tab.equals(this) )
+                tab.appendError(message);
+
+        } else {
+            appendText(message);
+        }
     }
 
     @Override
