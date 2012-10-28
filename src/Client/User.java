@@ -24,17 +24,9 @@ public class User implements Comparable<User> {
                                 TEXT_VOICE = "Voice",
                                 TEXT_USER = "User";
 
-    private static HashMap<String, Integer> prefixImportances;
-
-    static {
-        prefixImportances = new HashMap<>(6);
-        prefixImportances.put(PREFIX_OWNER, 0);
-        prefixImportances.put(PREFIX_ADMIN, 1);
-        prefixImportances.put(PREFIX_OPERATOR, 2);
-        prefixImportances.put(PREFIX_HALF_OPERATOR, 3);
-        prefixImportances.put(PREFIX_VOICE, 4);
-        prefixImportances.put("", 5);
-    }
+    private static final List<String> PRIORITIES = java.util.Arrays.asList(
+                                        PREFIX_OWNER, PREFIX_ADMIN, PREFIX_OPERATOR,
+                                        PREFIX_HALF_OPERATOR, PREFIX_VOICE, "");
 
     private HashSet<String> prefixes;
     private String nickname;
@@ -180,8 +172,8 @@ public class User implements Comparable<User> {
     }
 
     private int comparePrefixes(String prefix1, String prefix2) {
-        int p1 = prefixImportances.get(prefix1);
-        int p2 = prefixImportances.get(prefix2);
+        int p1 = PRIORITIES.indexOf(prefix1);
+        int p2 = PRIORITIES.indexOf(prefix2);
         return Integer.compare(p1, p2);
     }
 
