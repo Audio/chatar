@@ -35,13 +35,9 @@ public class InputHandler {
                 "Aktivním oknem není kanál (channel).");
     }
 
-    public static void showUnknownCommandError(String unknownCommand) {
-        if (getActiveTab() == null) {
-            new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Neznámý příkaz",
-                    "Neznámý příkaz " + unknownCommand.toUpperCase() + ".");
-        } else {
-            appendError(" Neznámý přijatý příkaz: " + unknownCommand);
-        }
+    public static void handle(String command, String params) {
+        getCurrentServerTab().getConnection().sendRawLine(command + " " + params);
+        clearInput();
     }
 
     public static void handleQuit(String reason) {
