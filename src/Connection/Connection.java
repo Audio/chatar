@@ -129,7 +129,7 @@ public class Connection extends PircBot implements Runnable {
 
     private ChannelEventsListener getChannelEventsListener(String name) {
         for (ChannelEventsListener listener : channelEventsListeners) {
-            if ( listener.getChannelName().equals(name) )
+            if ( listener.getChannelName().equalsIgnoreCase(name) )
                 return listener;
         }
 
