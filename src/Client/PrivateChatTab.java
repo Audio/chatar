@@ -8,8 +8,6 @@ import javax.swing.*;
 public class PrivateChatTab extends AbstractTab implements PrivateMessagingListener {
 
     private JEditorPane infobox;
-    private Color originalColor;
-    private Color unreadMessageColor;
 
 
     public PrivateChatTab(String nickname, final ServerTab serverTab) {
@@ -67,42 +65,13 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
         layout.putConstraint(SpringLayout.EAST, bottompanel, 0, SpringLayout.EAST, toppanel);
         layout.putConstraint(SpringLayout.SOUTH, this, 0, SpringLayout.SOUTH, bottompanel);
 
-        // Priradi nazev zalozky
         tabName = nickname;
-
-        // Nastavení barev pro singalizaci příchodu nové zprávy
-        unreadMessageColor = new Color(255, 128, 128);
     }
 
     public void setTabName(String tabName) {
         this.tabName = tabName;
         MainWindow.getInstance().getTabContainer().removeTab(this);
         MainWindow.getInstance().getTabContainer().insertTab(this);
-    }
-
-    @Override
-    public void setFocus() {
-        setNotification(false);
-        super.setFocus();
-    }
-
-    /**
-     * Získá původní barvu pozadí záložky v tabbed panelu.
-     */
-    private void setupOriginalColor() {
-        if (originalColor != null)
-            return;
-
-        int index = GUI.getTabContainer().indexOfComponent(this);
-        originalColor = GUI.getTabContainer().getBackgroundAt(index);
-    }
-
-    public void setNotification(boolean useNofiticationColor) {
-        setupOriginalColor();
-
-        int index = GUI.getTabContainer().indexOfComponent(this);
-        Color color = useNofiticationColor ? unreadMessageColor : originalColor;
-        GUI.getTabContainer().setBackgroundAt(index, color);
     }
 
     @Override

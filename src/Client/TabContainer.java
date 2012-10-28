@@ -1,6 +1,5 @@
 package Client;
 
-import java.awt.Color;
 import javax.swing.JTabbedPane;
 import javax.swing.event.*;
 
@@ -52,9 +51,6 @@ public class TabContainer extends JTabbedPane {
         }
 
         insertTab(title, null, tab, tip, index);
-
-        if (tab instanceof ServerTab)
-            setBackgroundAt(index, new Color(238, 232, 170) );
     }
 
 }
