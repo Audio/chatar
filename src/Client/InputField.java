@@ -1,21 +1,19 @@
 package Client;
 
 import Config.CommandHistory;
-import Connection.*;
+import Connection.InputHandler;
 import java.awt.Dimension;
 import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.JTextField;
 
 
-public class Input extends JPanel {
-
-    private JButton button;
-    private JTextField textField;
+public class InputField extends JTextField {
 
     private enum Commands {
 
         UNKNOWN, ACTION, AFK, AWAY, BACK, CLEAR, JOIN, KICK, LEAVE, ME, MODE,
-        NICK, PART, PRIVMSG, QUIT, SERVER, TOPIC, WHOIS
+        NICK, PART, PRIVMSG, QUIT, SERVER, TOPIC, WHOIS,
+        C, J
         ;
 
         public static Commands fromString(String Str) {
@@ -28,71 +26,27 @@ public class Input extends JPanel {
     };
 
 
-    public Input(int width, int height) {
-        GUI.setPreferredSize(this, width, height);
-        setLayout( new BoxLayout(this, BoxLayout.PAGE_AXIS) );
+    public InputField() {
+        super(510);
+        setMaximumSize( new Dimension(0, 28) );
 
-        JPanel innerPanel = new JPanel();
-        innerPanel.setLayout( new BoxLayout(innerPanel, BoxLayout.LINE_AXIS) );
-        innerPanel.setBorder( BorderFactory.createEmptyBorder(5, 10, 5, 10) );
-
-        button = new JButton("Chatař");
-        button.setToolTipText("Kliknutím nastavíte přezdívku (vyžaduje aktivní připojení na server)");
-        button.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AbstractTab tab = MainWindow.getInstance().getActiveTab();
-                if (tab == null)
-                    return;
-
-                String nickname = MessageDialog.showSetNicknameDialog();
-                if (nickname != null)
-                    InputHandler.handleNick(nickname);
-            }
-        });
-
-        textField = new JTextField(510);
-        textField.setMaximumSize( new Dimension(0, 28) );
-
-        // Zpracování události po odentrování
-        textField.addActionListener( new ActionListener() {
+        addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 handleInputText();
             }
         });
 
-        // Zpracování stisku šipek (kvůli historii příkazů)
-        textField.addKeyListener( new KeyAdapter() {
+        addKeyListener( new KeyAdapter() {
             @Override
             public void keyPressed (KeyEvent e) {
                 browseHistory(e);
             }
         });
-
-        innerPanel.add(button);
-        innerPanel.add( Box.createHorizontalGlue() );
-        innerPanel.add( Box.createRigidArea( new Dimension(10,0) ) );
-        innerPanel.add( Box.createHorizontalGlue() );
-        innerPanel.add(textField);
-
-        add(innerPanel);
-    }
-
-    public JButton getButton() {
-        return button;
-    }
-
-    public JTextField getTextField() {
-        return textField;
-    }
-
-    public void setNickname(String nick) {
-        button.setText(nick);
     }
 
     private void handleInputText() {
-        String inputText = textField.getText();
+        String inputText = getText();
         if ( inputText.trim().isEmpty() )
             return;
 
@@ -120,13 +74,12 @@ public class Input extends JPanel {
         e.consume();
 
         // Vypíše příkaz z historie.
-        JTextField field = MainWindow.getInstance().getGInput().getTextField();
-        field.setText(command);
-        field.selectAll();
+        setText(command);
+        selectAll();
     }
 
     private void handleCommand() {
-        String inputText = textField.getText();
+        String inputText = getText();
         String rawCommand;
         String params = "";
         int upto;
@@ -172,6 +125,9 @@ public class Input extends JPanel {
 
                 case SERVER:  { InputHandler.handleServer(params); break; }
 
+                // TODO pryc
+                case C:       { InputHandler.handleServer("irc.mmoirc.com"); break; }
+                case J:       { InputHandler.handleJoin("#abraka"); break; }
             }
 
         }
@@ -187,7 +143,7 @@ public class Input extends JPanel {
             return;
         }
 
-        String message = textField.getText();
+        String message = getText();
         String target = tab.getTabName();
         InputHandler.handlePrivMessage(target + " " + message);
     }

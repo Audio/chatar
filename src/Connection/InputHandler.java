@@ -22,7 +22,7 @@ public class InputHandler {
     }
 
     private static void clearInput() {
-        MainWindow.getInstance().getGInput().getTextField().setText(null);
+        MainWindow.getInstance().getInputField().setText(null);
     }
 
     public static void showNotConnectedError() {
