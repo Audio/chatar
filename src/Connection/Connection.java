@@ -1,6 +1,5 @@
 package Connection;
 
-import Config.Config;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.jibble.pircbot.*;
@@ -10,20 +9,15 @@ public class Connection extends PircBot implements Runnable {
 
     private String server;
     private int port;
-    // TODO public config jo? bere se z nej nickname asi
-    // TODO config tu nema co delat bych rek
-    public Config config;
 
     private ServerEventsListener serverEventsListener;
     private ArrayList<ChannelEventsListener> channelEventsListeners;
     private ArrayList<PrivateMessagingListener> privateMessagingListeners;
 
 
-    // TODO vyresit config
     public Connection(String server, int port) {
         this.server = server;
         this.port = port;
-        this.config = new Config();
         this.channelEventsListeners = new ArrayList<>();
         this.privateMessagingListeners = new ArrayList<>();
 

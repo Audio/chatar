@@ -111,9 +111,9 @@ public class Input extends JPanel {
 
         // Odchytí stisknutí šipky nahoru/dolu.
         if (c == KeyEvent.VK_UP)
-            command = CommandHistory.getOlder();
+            command = CommandHistory.getPrevious();
         else if (c == KeyEvent.VK_DOWN)
-            command = CommandHistory.getNewer();
+            command = CommandHistory.getNext();
 
         // Žádný vrácený příkaz, nebo se nejedná o šipku.
         if ( command.length() == 0)

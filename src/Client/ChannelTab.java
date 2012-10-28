@@ -152,13 +152,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         setTopic(null);
     }
 
-    /**
-     * Třída rozbrazující PopupMenu - pouze pokud je kliknuto nad nějakou
-     * přezdívkou v seznamu uživatelů.
-     *
-     * Z důvodu rozdílné implementace v různých operačních systémech
-     * se kontroluje událost stisknutí i uvolnění tlačítka myši.
-     */
     class PopupListener extends MouseAdapter {
 
         @Override
@@ -176,7 +169,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
             if ( !e.isPopupTrigger() )
                 return;
 
-            String nickname = getCellIndexFromListWhereClicked(e);
+            String nickname = getNicknameWhereClicked(e);
             if (nickname == null)
                 return;
 
@@ -184,11 +177,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
             popup.show( e.getComponent() , e.getX() , e.getY() );
         }
 
-        /**
-         * Při dvojkliku na přezdívku nějakého uživatele otevírá novou záložku
-         * v tabbed panelu - soukromý chat. Pokud je již otevřený, pouze
-         * na něj hodí focus.
-         */
         private void openPrivateChat(MouseEvent e) {
             if ( e.getClickCount() < 2 )
                 return;
@@ -198,12 +186,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     }
 
-    /**
-     * Získá index prvku, na který bylo kliknuto. Dle indexu vrací přezdívku
-     * uživatele ze seznamu. Pokud nebylo kliknuto na konkrétní položku
-     * JListu, vrací null.
-     */
-    public String getCellIndexFromListWhereClicked(MouseEvent e) {
+    public String getNicknameWhereClicked(MouseEvent e) {
         // Nejblizsi prvek u mista, kde bylo kliknuto
         int cell = userList.locationToIndex( e.getPoint() );
         if (cell == -1)
@@ -223,33 +206,20 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         return nickname;
     }
 
-    /**
-     * Otevírá okno se soukromým chatem a nastavuje mu focus.
-     * Přezdívku získá z místa v seznamu uživatelů, kam bylo kliknuto.
-     */
     public void openChatByClick(MouseEvent e) {
-        String nickname = getCellIndexFromListWhereClicked(e);
+        String nickname = getNicknameWhereClicked(e);
         openChatByClick(nickname);
     }
 
-    /**
-     * Otevírá okno se soukromým chatem a nastavuje mu focus.
-     * Přezdívka je udána parametrem.
-     */
     public void openChatByClick(String nickname) {
         if (nickname == null)
             return;
 
-        // Neklikl uživatel na svou přezdívku?
-        // TODO check nick
-        // if ( getConnection().isMe(nickname) )
-            // return;
+        PrivateChatTab tab = getServerTab().getPrivateChatByName(nickname);
+        if (tab == null)
+            tab = getServerTab().createPrivateChatTab(nickname);
 
-        PrivateChatTab pc = getServerTab().getPrivateChatByName(nickname);
-        if (pc == null)
-            pc = getServerTab().createPrivateChatTab(nickname);
-
-        pc.setFocus();
+        tab.setFocus();
     }
 
     public void setUsers(User[] users) {
