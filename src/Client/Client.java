@@ -20,7 +20,6 @@ public class Client {
     }
 
     public static void run() {
-        ClientLogger.enable();
         MainWindow.getInstance().validate();
     }
 
@@ -30,8 +29,7 @@ public class Client {
             ClientLogger.log("Program byl násilně ukončen.", ClientLogger.ERROR);
             ClientLogger.quit();
             System.exit(returnCode);
-        }
-        else {
+        } else {
             MessageDialog window = new MessageDialog(MessageDialog.GROUP_CONFIRM, MessageDialog.TYPE_QUESTION,
                     "Ukončit aplikaci", "Opravdu chcete ukončit aplikaci?");
             if (window.confirm == 0) {
