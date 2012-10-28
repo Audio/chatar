@@ -1,6 +1,6 @@
 package Client;
 
-import java.util.HashSet;
+import java.util.*;
 
 
 public class User implements Comparable<User> {
@@ -23,6 +23,18 @@ public class User implements Comparable<User> {
                                 TEXT_HALF_OPERATOR = "Half operator",
                                 TEXT_VOICE = "Voice",
                                 TEXT_USER = "User";
+
+    private static HashMap<String, Integer> prefixImportances;
+
+    static {
+        prefixImportances = new HashMap<>(6);
+        prefixImportances.put(PREFIX_OWNER, 0);
+        prefixImportances.put(PREFIX_ADMIN, 1);
+        prefixImportances.put(PREFIX_OPERATOR, 2);
+        prefixImportances.put(PREFIX_HALF_OPERATOR, 3);
+        prefixImportances.put(PREFIX_VOICE, 4);
+        prefixImportances.put("", 5);
+    }
 
     private HashSet<String> prefixes;
     private String nickname;
@@ -128,7 +140,7 @@ public class User implements Comparable<User> {
         removePrefix( getPrefixForMode(mode) );
     }
 
-    public final String getPrefixForMode(String mode) {
+    private String getPrefixForMode(String mode) {
         switch (mode) {
             case MODE_OWNER:
                 return PREFIX_OWNER;
@@ -160,7 +172,17 @@ public class User implements Comparable<User> {
 
     @Override
     public int compareTo(User other) {
-        return getNickname().compareToIgnoreCase( other.getNickname() );
+        int prefixComparation = comparePrefixes( getPrefix() , other.getPrefix() );
+        if (prefixComparation == 0)
+            return getNickname().compareToIgnoreCase( other.getNickname() );
+        else
+            return prefixComparation;
+    }
+
+    private int comparePrefixes(String prefix1, String prefix2) {
+        int p1 = prefixImportances.get(prefix1);
+        int p2 = prefixImportances.get(prefix2);
+        return Integer.compare(p1, p2);
     }
 
 }
