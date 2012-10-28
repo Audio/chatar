@@ -14,7 +14,6 @@ import Client.*;
 public class DeprecatedReply {
 
     private String message;
-    private DeprecatedConnection connection;
     private boolean numeric;
 
     // casti zpravy
@@ -45,10 +44,9 @@ public class DeprecatedReply {
      * @param str
      * @param connection
      */
-    private DeprecatedReply(String str, DeprecatedConnection connection) {
+    private DeprecatedReply(String str) {
 
         this.message = str;
-        this.connection = connection;
         this.numeric = false;
         this.handle();
 
@@ -60,8 +58,8 @@ public class DeprecatedReply {
      * @param str
      * @param connection
      */
-    public static void create (String str, DeprecatedConnection connection) {
-        new DeprecatedReply(str, connection);
+    public static void create (String str) {
+        new DeprecatedReply(str);
     }
 
     /**
@@ -195,7 +193,7 @@ public class DeprecatedReply {
     private void handleCode254 () {
         output( mType("fact") + smileAtMe(params), true);
         vyparseTarget();
-        connection.getServerTab().setChannelsCount(target);
+        // connection.getServerTab().setChannelsCount(target);
     }
 
 
@@ -282,12 +280,6 @@ public class DeprecatedReply {
      * Tunel pro vypis vystupniho textu do panelu serveru.
      */
     public void output (String str, boolean server) {
-
-        if (server)
-            connection.getServerTab().appendText(str);
-        else
-            connection.getTab().appendText(str);
-
     }
 
     /**
