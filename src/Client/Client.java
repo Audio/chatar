@@ -1,5 +1,7 @@
 package Client;
 
+import MainWindow.MainWindow;
+import Dialog.MessageDialog;
 import javax.swing.UIManager;
 
 

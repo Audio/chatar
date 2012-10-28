@@ -1,5 +1,10 @@
 package Connection;
 
+import MainWindow.ServerTab;
+import MainWindow.MainWindow;
+import MainWindow.ChannelTab;
+import MainWindow.AbstractTab;
+import Dialog.MessageDialog;
 import Client.*;
 
 

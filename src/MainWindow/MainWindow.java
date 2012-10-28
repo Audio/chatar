@@ -1,5 +1,6 @@
-package Client;
+package MainWindow;
 
+import Client.GUI;
 import java.awt.Dimension;
 import javax.swing.*;
 

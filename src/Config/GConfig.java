@@ -1,5 +1,8 @@
-package Client;
+package Config;
 
+import Client.GUI;
+import MainWindow.MainWindow;
+import MainWindow.AbstractTab;
 import Config.Config;
 import java.awt.Component;
 import java.awt.Dimension;

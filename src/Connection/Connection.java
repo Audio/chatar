@@ -141,7 +141,7 @@ public class Connection extends PircBot implements Runnable {
     protected void onUserList(String channel, User[] users) {
         ChannelEventsListener listener = getChannelEventsListener(channel);
         if (listener != null) {
-            Client.User[] u = Client.User.toUsers(users);
+            MainWindow.User[] u = MainWindow.User.toUsers(users);
             listener.userListReceived(u);
         }
     }

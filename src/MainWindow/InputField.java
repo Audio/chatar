@@ -1,4 +1,4 @@
-package Client;
+package MainWindow;
 
 import Config.CommandHistory;
 import Connection.InputHandler;

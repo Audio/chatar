@@ -1,4 +1,4 @@
-package Client;
+package MainWindow;
 
 import javax.swing.*;
 import java.util.*;

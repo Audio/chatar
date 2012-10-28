@@ -1,4 +1,4 @@
-package Client;
+package Dialog;
 
 import javax.swing.JOptionPane;
 

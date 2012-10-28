@@ -1,5 +1,7 @@
-package Client;
+package MainWindow;
 
+import Client.GUI;
+import Client.HTML;
 import Connection.*;
 import java.awt.*;
 import javax.swing.*;

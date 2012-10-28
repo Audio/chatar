@@ -1,5 +1,6 @@
-package Client;
+package MainWindow;
 
+import Client.GUI;
 import javax.swing.JTabbedPane;
 import javax.swing.event.*;
 

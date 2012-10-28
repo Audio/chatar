@@ -1,5 +1,8 @@
-package Client;
+package MainWindow;
 
+import Client.ClientLogger;
+import Client.GUI;
+import Client.HTML;
 import Connection.*;
 import java.awt.*;
 import java.awt.event.*;

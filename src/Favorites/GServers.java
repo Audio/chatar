@@ -1,6 +1,9 @@
-package Client;
+package Favorites;
 
-import Config.Servers;
+import Client.GUI;
+import MainWindow.MainWindow;
+import Dialog.MessageDialog;
+import Favorites.Servers;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

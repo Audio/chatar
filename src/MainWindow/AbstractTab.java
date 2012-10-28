@@ -1,5 +1,6 @@
-package Client;
+package MainWindow;
 
+import Client.HTML;
 import Connection.GlobalEventsListener;
 import java.awt.Font;
 import java.io.*;

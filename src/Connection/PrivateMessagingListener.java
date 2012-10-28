@@ -1,7 +1,5 @@
 package Connection;
 
-import java.util.EventListener;
-
 
 public interface PrivateMessagingListener extends GlobalEventsListener {
 

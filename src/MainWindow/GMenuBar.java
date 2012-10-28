@@ -1,5 +1,9 @@
-package Client;
+package MainWindow;
 
+import Client.Client;
+import Config.GConfig;
+import Favorites.GServers;
+import Dialog.MessageDialog;
 import Connection.InputHandler;
 import java.awt.Component;
 import java.awt.event.*;

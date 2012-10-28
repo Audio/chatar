@@ -1,6 +1,6 @@
 package Connection;
 
-import Client.User;
+import MainWindow.User;
 
 
 public interface ChannelEventsListener extends GlobalEventsListener {

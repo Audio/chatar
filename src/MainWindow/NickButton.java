@@ -1,5 +1,6 @@
-package Client;
+package MainWindow;
 
+import Dialog.MessageDialog;
 import Connection.InputHandler;
 import java.awt.event.*;
 import javax.swing.JButton;

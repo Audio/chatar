@@ -1,7 +1,7 @@
-package Config;
+package Favorites;
 
 import Client.ClientLogger;
-import Client.MessageDialog;
+import Dialog.MessageDialog;
 import java.io.*;
 import java.util.Properties;
 
