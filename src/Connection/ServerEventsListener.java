@@ -1,9 +1,7 @@
 package Connection;
 
-import java.util.EventListener;
 
-
-public interface ServerEventsListener extends EventListener {
+public interface ServerEventsListener extends GlobalEventsListener {
 
     public void connected();
     public void connectionCantBeEstabilished(String reason);

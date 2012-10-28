@@ -1,5 +1,6 @@
 package Client;
 
+import Connection.GlobalEventsListener;
 import java.awt.Font;
 import java.io.*;
 import javax.swing.*;
@@ -7,7 +8,7 @@ import javax.swing.text.*;
 import javax.swing.text.html.HTMLDocument;
 
 
-public abstract class AbstractTab extends JPanel {
+public abstract class AbstractTab extends JPanel implements GlobalEventsListener {
 
     protected ServerTab serverTab;
     protected String tabName;
@@ -83,6 +84,14 @@ public abstract class AbstractTab extends JPanel {
     public void refreshNickname() {
         String nick = getServerTab().getConnection().getNick();
         MainWindow.getInstance().getGInput().setNickname(nick);
+    }
+
+    @Override
+    public void awayStatusChanged(boolean isAway) {
+        if (isAway)
+            appendInfo("Nastaven stav nepřítomnosti");
+        else
+            appendInfo("Zrušen stav nepřítomnosti");
     }
 
 }

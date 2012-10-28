@@ -56,6 +56,21 @@ public class Connection extends PircBot implements Runnable {
     }
 
 
+    /*         GLOBAL EVENTS           */
+
+    private void handleAwayStatusResponse(int code) {
+        boolean isAway = (code == RPL_NOWAWAY);
+
+        if (serverEventsListener != null)
+            serverEventsListener.awayStatusChanged(isAway);
+
+        for (ChannelEventsListener listener : channelEventsListeners)
+            listener.awayStatusChanged(isAway);
+
+        for (PrivateMessagingListener listener : privateMessagingListeners)
+            listener.awayStatusChanged(isAway);
+    }
+
 
     /*         SERVER EVENTS           */
 
@@ -82,6 +97,9 @@ public class Connection extends PircBot implements Runnable {
                 handleUserIsAwayResponse(response); break;
             case RPL_LUSERCHANNELS:
                 handleChannelCountResponse(response); break;
+            case RPL_UNAWAY:
+            case RPL_NOWAWAY:
+                handleAwayStatusResponse(code); break;
         }
     }
 
@@ -97,6 +115,7 @@ public class Connection extends PircBot implements Runnable {
         if (serverEventsListener != null)
             serverEventsListener.noticeMessageReceived(sourceNick, notice);
     }
+
 
     /*        CHANNEL EVENTS           */
 
@@ -221,6 +240,7 @@ public class Connection extends PircBot implements Runnable {
             }
         }
     }
+
 
     /*    PRIVATE MESSAGING EVENTS     */
 

@@ -3,7 +3,7 @@ package Connection;
 import java.util.EventListener;
 
 
-public interface PrivateMessagingListener extends EventListener {
+public interface PrivateMessagingListener extends GlobalEventsListener {
 
     public String getNickname();
     public void privateMessageReceived(String message);

@@ -4,7 +4,7 @@ import Client.User;
 import java.util.EventListener;
 
 
-public interface ChannelEventsListener extends EventListener {
+public interface ChannelEventsListener extends GlobalEventsListener {
 
     public String getChannelName();
     public boolean contains(String nickname);
