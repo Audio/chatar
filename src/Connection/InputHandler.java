@@ -205,20 +205,6 @@ public class InputHandler {
         clearInput();
     }
 
-    /**
-     * Žádost uživatele o přidělení práv operátora (mode +o).
-     */
-    public static void handleOper(String params) {
-        clearInput();
-
-        if (params.isEmpty() || params.indexOf(" ") == -1) {
-            appendError("Špatná syntaxe příkazu. Použijte /oper uzivatel heslo");
-            return;
-        }
-
-        // getCurrentServer().getQuery().oper(params);
-    }
-
     public static void handleWhois(String nick) {
         if ( nick.isEmpty() ) {
             appendError("Špatná syntaxe příkazu. Použijte /whois uživatel");

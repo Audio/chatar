@@ -15,7 +15,7 @@ public class Input extends JPanel {
     private enum Commands {
 
         UNKNOWN, ACTION, AFK, AWAY, BACK, CLEAR, JOIN, KICK, LEAVE, ME, MODE,
-        NICK, OPER, PART, PRIVMSG, QUIT, SERVER, TOPIC, WHOIS
+        NICK, PART, PRIVMSG, QUIT, SERVER, TOPIC, WHOIS
         ;
 
         public static Commands fromString(String Str) {
@@ -169,7 +169,6 @@ public class Input extends JPanel {
                 case AFK:     { InputHandler.handleAway(params); break; }
                 case BACK:    { InputHandler.handleNotAway(); break; }
                 case CLEAR:   { InputHandler.handleClear(); break; }
-                case OPER:    { InputHandler.handleOper(params); break; }
                 case WHOIS:   { InputHandler.handleWhois(params); break; }
                 case ME:      { InputHandler.handleAction(params); break; }
                 case ACTION:  { InputHandler.handleAction(params); break; }
