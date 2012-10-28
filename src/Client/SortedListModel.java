@@ -24,10 +24,13 @@ public class SortedListModel extends AbstractListModel {
         return (User) model.toArray()[index];
     }
 
-    public User getUser(String nickname) {
+    public User detachUser(String nickname) {
         for (User user : model) {
-            if ( user.getNickname().equals(nickname) )
+            if ( user.getNickname().equals(nickname) ) {
+                model.remove(user);
+                contentChanged();
                 return user;
+            }
         }
 
         return null;
@@ -44,22 +47,15 @@ public class SortedListModel extends AbstractListModel {
     }
 
     public boolean contains(String nickname) {
-        return getUser(nickname) != null;
+        for (User user : model) {
+            if ( user.getNickname().equals(nickname) )
+                return true;
+        }
+
+        return false;
     }
 
-    public boolean remove(int index) {
-        return remove( getElementAt(index) );
-    }
-
-    public boolean remove(User element) {
-        boolean removed = model.remove(element);
-        if (removed)
-            contentChanged();
-
-        return removed;
-    }
-
-    public void contentChanged() {
+    private void contentChanged() {
         fireContentsChanged(this, 0, getSize() );
     }
 

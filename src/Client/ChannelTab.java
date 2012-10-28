@@ -277,14 +277,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         }
     }
 
-    public void addUser(String nickname) {
-        usersModel.add( new User(nickname) );
-    }
-
-    public void removeUser(String nickname) {
-        usersModel.remove( usersModel.getUser(nickname) );
-    }
-
     private void setTopic(String topic) {
         if (topic == null || topic.trim().length() == 0)
             topic = "Diskusní téma není nastaveno.";
@@ -318,16 +310,20 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     public void userModeGranted(String initiator, String recipient, String mode) {
         String modeName = User.getTextualRepresentation(mode);
         appendInfo(initiator + " udělil " + recipient + " právo " + modeName);
-        usersModel.getUser(recipient).addPrefixBasedOnMode(mode);
-        usersModel.contentChanged();
+
+        User user = usersModel.detachUser(recipient);
+        user.addPrefixBasedOnMode(mode);
+        usersModel.add(user);
     }
 
     @Override
     public void userModeRevoked(String initiator, String recipient, String mode) {
         String modeName = User.getTextualRepresentation(mode);
         appendInfo(initiator + " odebral " + recipient + " právo " + modeName);
-        usersModel.getUser(recipient).removePrefixBasedOnMode(mode);
-        usersModel.contentChanged();
+
+        User user = usersModel.detachUser(recipient);
+        user.removePrefixBasedOnMode(mode);
+        usersModel.add(user);
     }
 
     @Override
@@ -342,26 +338,28 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
                     + HTML.bold(newNick) + ".";
         }
         appendInfo(message);
-        usersModel.getUser(oldNick).setNickname(newNick);
-        usersModel.contentChanged();
+
+        User user = usersModel.detachUser(oldNick);
+        user.setNickname(newNick);
+        usersModel.add(user);
     }
 
     @Override
     public void userJoined(String nickname) {
         appendInfo(nickname + " přišel se připojil na " + getTabName() );
-        addUser(nickname);
+        usersModel.add( new User(nickname) );
     }
 
     @Override
     public void userLeft(String nickname) {
         appendInfo(nickname + " odešel z místnosti." );
-        removeUser(nickname);
+        usersModel.detachUser(nickname);
     }
 
     @Override
     public void userQuit(String nickname, String reason) {
         appendInfo(nickname + " odešel (důvod: " + reason + ")");
-        removeUser(nickname);
+        usersModel.detachUser(nickname);
     }
 
     @Override
@@ -371,7 +369,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
             getServerTab().removeChannelTab(this);
         } else {
             appendInfo(initiator + " vykopnul " + recipient + " (důvod: " + reason + ")");
-            removeUser(recipient);
+            usersModel.detachUser(initiator);
         }
     }
 
