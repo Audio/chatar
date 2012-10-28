@@ -77,7 +77,9 @@ public class Connection extends PircBot implements Runnable {
             case RPL_WHOISSERVER:
             case RPL_WHOISIDLE:
             case RPL_WHOISCHANNELS:
-                handleWhoisResponse(code, response);
+                handleWhoisResponse(code, response); break;
+            case RPL_AWAY:
+                handleUserIsAwayResponse(response); break;
         }
     }
 
@@ -236,8 +238,7 @@ public class Connection extends PircBot implements Runnable {
         PrivateMessagingListener listener = getPrivateMessagingListener(sender);
         if (listener != null)
             listener.privateMessageReceived(message);
-
-        if (serverEventsListener != null)
+        else if (serverEventsListener != null)
             serverEventsListener.privateMessageWithoutListenerReceived(sender, message);
     }
 
@@ -273,6 +274,15 @@ public class Connection extends PircBot implements Runnable {
             case RPL_WHOISCHANNELS:
                 listener.whoisChannels(response); break;
         }
+    }
+
+    private void handleUserIsAwayResponse(String response) {
+        String[] parts = response.split(" ", 3);
+        String reason = parts[2].substring(1);
+
+        PrivateMessagingListener listener = getPrivateMessagingListener(parts[1]);
+        if (listener != null)
+            listener.userIsAway(reason);
     }
 
 }

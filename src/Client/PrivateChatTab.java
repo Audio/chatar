@@ -121,6 +121,11 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
     }
 
     @Override
+    public void userIsAway(String reason) {
+        appendInfo("Uživatel je nepřítomen z důvodu: " + reason);
+    }
+
+    @Override
     public void whoisUser(String userInfo) {
         infobox.setText(null);
         appendText("Uživatel " + HTML.bold(userInfo) , infobox);
