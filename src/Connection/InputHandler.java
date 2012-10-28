@@ -52,7 +52,7 @@ public class InputHandler {
     public static void handlePrivMessage(String params) {
         int upto;
         if ((upto = params.indexOf(" ")) == -1) {
-            appendError("Špatná syntaxe příkazu. Použijte /privmsg prijemce zprava");
+            appendError("Nesprávná syntaxe příkazu: /privmsg příjemce zpráva");
             return;
         }
 
@@ -79,8 +79,8 @@ public class InputHandler {
     }
 
     public static void handleJoin(String channel) {
-        if ( channel.isEmpty() ) {
-            appendError("Špatná syntaxe příkazu. Použijte /join nazev_kanalu");
+        if ( !channel.startsWith("#") ) {
+            appendError("Nesprávná syntaxe příkazu: /join #kanál");
             return;
         }
 
@@ -138,7 +138,7 @@ public class InputHandler {
     }
 
     public static void handleMode(String params) {
-        String errorMessage = "Příkaz MODE: nesprávná syntaxe příkazu. Použijte /mode #kanal mod";
+        String errorMessage = "Nesprávná syntaxe příkazu: /mode #kanál mód";
         String match = "#\\w+ .+";
         if ( !params.matches(match) ) {
             appendError(errorMessage);
@@ -160,7 +160,7 @@ public class InputHandler {
     }
 
     public static void handleKick(String params) {
-        String syntax = "Nesprávná syntaxe příkazu: KICK #kanal uživatel [důvod]";
+        String syntax = "Nesprávná syntaxe příkazu: /kick #kanál uživatel [důvod]";
         String match = "#\\w+ \\S+( .+)?";
         if ( !params.matches(match) ) {
             appendError(syntax);
@@ -203,7 +203,7 @@ public class InputHandler {
 
     public static void handleWhois(String nick) {
         if ( nick.isEmpty() ) {
-            appendError("Špatná syntaxe příkazu. Použijte /whois uživatel");
+            appendError("Nesprávná syntaxe příkazu: /whois uživatel");
         } else {
             getCurrentServerTab().getConnection().whois(nick);
             clearInput();
@@ -217,7 +217,7 @@ public class InputHandler {
         }
 
         if ( params.isEmpty() )
-            params = "neumi pouzivat IRC klienta."; // :)
+            params = "neumí používat IRC klienta."; // :)
 
         String channel = getActiveTab().getTabName();
         getCurrentServerTab().getConnection().sendAction(channel, params);
