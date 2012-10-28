@@ -178,13 +178,11 @@ public class Input extends JPanel {
     }
 
     private void handleMessage () {
-        if (InputHandler.getCurrentServerTab() == null) {
+        AbstractTab tab = InputHandler.getActiveTab();
+        if (tab == null) {
             InputHandler.showNotConnectedError();
             return;
-        }
-
-        AbstractTab tab = MainWindow.getInstance().getActiveTab();
-        if (tab instanceof ServerTab) {
+        } else if (tab instanceof ServerTab) {
             tab.appendError("Nelze odeslat zprávu. Toto není chatovací místnost!");
             return;
         }

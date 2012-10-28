@@ -20,7 +20,7 @@ public class MainWindow extends JFrame {
     }
 
     private MainWindow() {
-        setTitle("Chatař - IRC klient");
+        resetTitle();
         setSize(700, 500);
         GUI.setPreferredSize(this, 700, 500);
         setResizable(true);
@@ -31,6 +31,10 @@ public class MainWindow extends JFrame {
 
         createMenuBar();
         createContentArea();
+    }
+
+    public final void resetTitle() {
+        setTitle("Chatař - IRC klient");
     }
 
     private void createMenuBar() {

@@ -32,6 +32,9 @@ public class TabContainer extends JTabbedPane {
 
     public void removeTab(AbstractTab tab) {
         remove(tab);
+
+        if ( getComponentCount() == 0 )
+            MainWindow.getInstance().resetTitle();
     }
 
     public void insertTab(AbstractTab tab) {
