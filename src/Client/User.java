@@ -38,8 +38,12 @@ public class User implements Comparable<User> {
     }
 
     public User(org.jibble.pircbot.User botUser) {
-        this( botUser.getNick() );
-        this.addPrefix( botUser.getPrefix() );
+        this.prefixes = new HashSet<>();
+        String prefixedNick = botUser.getPrefix() + botUser.getNick();
+        String prefix = getPrefix(prefixedNick);
+
+        this.nickname = prefix.isEmpty() ? prefixedNick : prefixedNick.substring(1);
+        this.addPrefix(prefix);
     }
 
     public String getPrefix() {
@@ -59,6 +63,11 @@ public class User implements Comparable<User> {
             return PREFIX_VOICE;
 
         return "";
+    }
+
+    final public String getPrefix(String nickname) {
+        String prefix = nickname.substring(0, 1);
+        return PRIORITIES.contains(prefix) ? prefix : "";
     }
 
     public String getNickname() {
