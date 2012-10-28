@@ -45,7 +45,7 @@ public class Input extends JPanel {
                 if (tab == null)
                     return;
 
-                String nickname = GUI.showSetNicknameDialog();
+                String nickname = MessageDialog.showSetNicknameDialog();
                 if (nickname != null)
                     InputHandler.handleNick(nickname);
             }

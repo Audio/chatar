@@ -2,14 +2,7 @@ package Client;
 
 import javax.swing.JOptionPane;
 
-/**
- * Použití třídy z důvodu snažšího přístupu k vytvoření jednoduchých dialogových
- * oken (nejčastěji pouze informačních). Třída umožnuje vytvářet jak informační
- * dialogová okna, tak i dialogová okna, která od uživatele očekávají vstup.
- * Vstup je následně uložen v atributech třídy a je tak přístupný zvenčí.
- *
- * @author Martin Fouček
- */
+
 public class MessageDialog {
 
     final public static int GROUP_MESSAGE = 1;
@@ -37,7 +30,7 @@ public class MessageDialog {
      * Group oznacuje typ okna (informace, potvrzeni...).
      * Type oznacuje typ zpravy (varovani, chyba...).
      */
-    public MessageDialog (int group, String message) {
+    public MessageDialog(int group, String message) {
         this(group, MessageDialog.TYPE_INFORM, "Informace", message);
     }
 
@@ -45,7 +38,7 @@ public class MessageDialog {
      * Group oznacuje typ okna (informace, potvrzeni...).
      * Type oznacuje typ zpravy (varovani, chyba...).
      */
-    public MessageDialog (int group, String title, String message) {
+    public MessageDialog(int group, String title, String message) {
         this(group, MessageDialog.TYPE_INFORM, title, message);
     }
 
@@ -53,7 +46,7 @@ public class MessageDialog {
      * Group oznacuje typ okna (informace, potvrzeni...).
      * Type oznacuje typ zpravy (varovani, chyba...).
      */
-    public MessageDialog (int group, int type, String title, String message) {
+    public MessageDialog(int group, int type, String title, String message) {
 
         int swing_type = JOptionPane.INFORMATION_MESSAGE;
 
@@ -89,6 +82,16 @@ public class MessageDialog {
             strConfirm = JOptionPane.showInputDialog(null, message, title, swing_type);
         }
 
+    }
+
+    public static String showSetAwayDialog() {
+        MessageDialog question = new MessageDialog(MessageDialog.GROUP_INPUT, MessageDialog.TYPE_QUESTION, "Nastavení vlastní zprávy", "Nastavte důvod své nepřítomnosti, nebo nechte pole prázdné.");
+        return question.strConfirm;
+    }
+
+    public static String showSetNicknameDialog() {
+        MessageDialog question = new MessageDialog(MessageDialog.GROUP_INPUT, MessageDialog.TYPE_QUESTION, "Nastavení přezdívky", "Zvolte novou přezdívku");
+        return question.strConfirm;
     }
 
 }

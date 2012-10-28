@@ -29,7 +29,7 @@ public class GMenuBar extends JMenuBar {
         settings.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GUI.showOptionsDialog(true);
+                GConfig.getInstance().setVisible(true);
             }
         });
 
@@ -67,7 +67,7 @@ public class GMenuBar extends JMenuBar {
         connect.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GUI.showServersDialog(true);
+                GServers.getInstance().setVisible(true);
             }
         });
 
@@ -106,7 +106,7 @@ public class GMenuBar extends JMenuBar {
         changeNickname.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nickname = GUI.showSetNicknameDialog();
+                String nickname = MessageDialog.showSetNicknameDialog();
                 if (nickname != null)
                     InputHandler.handleNick(nickname);
             }
@@ -116,7 +116,7 @@ public class GMenuBar extends JMenuBar {
         afk.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String reason = GUI.showSetAwayDialog();
+                String reason = MessageDialog.showSetAwayDialog();
                 if (reason != null)
                     InputHandler.handleAway( reason.trim() );
             }
@@ -159,7 +159,7 @@ public class GMenuBar extends JMenuBar {
     }
 
     private void actionDisconnectFromAll() {
-        Component[] array = GUI.getTabContainer().getComponents();
+        Component[] array = MainWindow.getInstance().getTabContainer().getComponents();
         for (int i = 0; i < array.length; i++) {
             Component component = array[i];
             if (component instanceof ServerTab) {

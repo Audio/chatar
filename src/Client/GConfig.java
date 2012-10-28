@@ -7,12 +7,9 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-/**
- * Okno pro nastavení osobních údajů.
- *
- * @author Martin Fouček
- */
 public class GConfig extends JFrame implements WindowListener {
+
+    private static GConfig instance;
 
     private JTextField nickname;
     private JTextField username;
@@ -21,10 +18,15 @@ public class GConfig extends JFrame implements WindowListener {
     private JTextField realname;
     private JPasswordField password;
 
-    /**
-     * Konstruktor. Vytváří GUI.
-     */
-    public GConfig() {
+
+    public static GConfig getInstance() {
+        if (instance == null)
+            instance = new GConfig();
+
+        return instance;
+    }
+
+    private GConfig() {
 
         // Nastaveni okna
         setDefaultCloseOperation(HIDE_ON_CLOSE);
@@ -104,14 +106,16 @@ public class GConfig extends JFrame implements WindowListener {
 
         JButton save = new JButton("Uložit");
         save.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 saveOptions();
-                close();
+                setVisible(false);
             }
         });
 
         JButton cancel = new JButton("Storno");
         cancel.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 actionCancel();
             }
@@ -151,33 +155,19 @@ public class GConfig extends JFrame implements WindowListener {
 
     /**
      * Nastavi defaultni velikost pro vsechna tlacitka.
-     *
-     * @param button
      */
-    public static void setButtonSize (Component button) {
+    public static void setButtonSize(Component button) {
         GUI.setExactSize(button, 100, 30);
     }
 
     /**
      * Nastavi defaultni velikost pro vsechna vstupni pole a labely.
-     *
-     * @param textField
      */
-    public static void setTextFieldSize (Component textField) {
+    public static void setTextFieldSize(Component textField) {
         GUI.setExactSize(textField, 175, 30);
     }
 
-    /**
-     * Skryje okno.
-     */
     private void actionCancel () {
-        setVisible(false);
-    }
-
-    /**
-     * Skryva okno.
-     */
-    private void close () {
         setVisible(false);
     }
 
@@ -210,17 +200,12 @@ public class GConfig extends JFrame implements WindowListener {
         c.password   = password.getPassword().toString();
         c.saveToFile();
 
-        if ( GUI.getTabContainer().getTabCount() == 0) {
-            GUI.getInput().setNickname(c.nickname);
+        if ( MainWindow.getInstance().getTabContainer().getTabCount() == 0) {
+            MainWindow.getInstance().getGInput().setNickname(c.nickname);
         }
 
     }
 
-    /**
-     * Vraci referenci na aktualne pouzivany konfiguracni soubor.
-     *
-     * @return
-     */
     public static Config getConfig () {
         AbstractTab tab = MainWindow.getInstance().getActiveTab();
         if (tab == null) {
@@ -232,51 +217,20 @@ public class GConfig extends JFrame implements WindowListener {
         return null; // tab.getConnection().config;
     }
 
-    /**
-     * Pred uzavrenim (skrytim) ulozi konfiguracni soubor (je-li treba).
-     *
-     * @param e
-     */
+    @Override
     public void windowClosing(WindowEvent e) {
-        close();
+        setVisible(false);
     }
 
-    // nevyuzite metody rozhrani WindowListener
-    /**
-     * Nevyužito.
-     *
-     * @param e
-     */
-    public void windowOpened      (WindowEvent e) { }
-    /**
-     * Nevyužito.
-     *
-     * @param e
-     */
-    public void windowClosed      (WindowEvent e) { }
-    /**
-     * Nevyužito.
-     *
-     * @param e
-     */
-    public void windowIconified   (WindowEvent e) { }
-    /**
-     * Nevyužito.
-     *
-     * @param e
-     */
+    @Override
+    public void windowOpened(WindowEvent e) {
+        setLocationRelativeTo( MainWindow.getInstance() );
+    }
+
+    public void windowClosed(WindowEvent e) { }
+    public void windowIconified(WindowEvent e) { }
     public void windowDeiconified(WindowEvent e) { }
-    /**
-     * Nevyužito.
-     *
-     * @param e
-     */
-    public void windowActivated   (WindowEvent e) { }
-    /**
-     * Nevyužito.
-     *
-     * @param e
-     */
+    public void windowActivated(WindowEvent e) { }
     public void windowDeactivated(WindowEvent e) { }
 
 }

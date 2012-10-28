@@ -5,12 +5,10 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-/**
- * Okno pro nastaveni seznamu oblibenych serveru.
- *
- * @author Martin Fouček
- */
+
 public class GServers extends JFrame implements WindowListener {
+
+    private static GServers instance;
 
     private JList list;
     private DefaultListModel servers;
@@ -18,10 +16,15 @@ public class GServers extends JFrame implements WindowListener {
     private JButton delete;
     private boolean changed;
 
-    /**
-     * Konstruktor. Vytváří GUI.
-     */
-    public GServers() {
+
+    public static GServers getInstance() {
+        if (instance == null)
+            instance = new GServers();
+
+        return instance;
+    }
+
+    private GServers() {
 
         // Nastaveni okna
         setDefaultCloseOperation(HIDE_ON_CLOSE);
@@ -99,7 +102,7 @@ public class GServers extends JFrame implements WindowListener {
         main_panel.add(box);
         getContentPane().add(main_panel);
 
-        setLocationRelativeTo( GUI.getWindow() );
+        setLocationRelativeTo( MainWindow.getInstance() );
         setVisible(true);
         changed = false;
 
@@ -110,32 +113,26 @@ public class GServers extends JFrame implements WindowListener {
 
     /**
      * Nastavi defaultni velikost pro vsechna tlacitka.
-     *
-     * @param c
      */
-    public static void setButtonSize (Component c) {
+    public static void setButtonSize(Component c) {
         GUI.setExactSize(c, 100, 30);
     }
 
     /**
      * Pri adresu serveru do seznamu.
-     *
-     * @param address
      */
-    private void addServer (String address) {
+    private void addServer(String address) {
         servers.addElement(address);
     }
 
     /**
      * Nacte seznam serveru ze souboru.
      */
-    private void loadServerList () {
-
+    private void loadServerList() {
         String[] srv = Servers.loadFile();
         for (int i = 0; i < srv.length; i++) {
             addServer(srv[i]);
         }
-
     }
 
     /**
@@ -155,7 +152,7 @@ public class GServers extends JFrame implements WindowListener {
     /**
      * Skryje okno. Zrusi pripadne zmeny.
      */
-    private void actionCancel () {
+    private void actionCancel() {
         changed = false;
         setVisible(false);
     }
@@ -163,8 +160,7 @@ public class GServers extends JFrame implements WindowListener {
     /**
      * Odstrani aktualne vybrany prvek seznamu.
      */
-    private void actionDelete () {
-
+    private void actionDelete() {
         int index = list.getSelectedIndex();
         servers.remove(index);
 
@@ -188,14 +184,12 @@ public class GServers extends JFrame implements WindowListener {
         }
 
         changed = true;
-
     }
 
     /**
      * Prida novy prvek seznamu.
      */
     private void actionAppend () {
-
         DefaultListModel model = (DefaultListModel) list.getModel();
         int pos = model.getSize();
 
@@ -212,7 +206,6 @@ public class GServers extends JFrame implements WindowListener {
         }
 
         changed = true;
-
     }
 
     /**
@@ -229,7 +222,6 @@ public class GServers extends JFrame implements WindowListener {
      * (jen pokud doslo ke zmene).
      */
     private void saveList () {
-
         if (!changed)
             return;
 
@@ -241,54 +233,22 @@ public class GServers extends JFrame implements WindowListener {
         Servers.saveFile();
 
         changed = false;
-
     }
 
-    /**
-     * Pred uzavrenim (skrytim) ulozi konfiguracni soubor (je-li treba).
-     *
-     * @param e
-     */
+    @Override
     public void windowClosing(WindowEvent e) {
         close();
     }
 
-    // nevyuzite metody rozhrani WindowListener
-    /**
-     * Nevyužito.
-     *
-     * @param e
-     */
-    public void windowOpened      (WindowEvent e) { }
-    /**
-     * Nevyužito.
-     *
-     * @param e
-     */
-    public void windowClosed      (WindowEvent e) { }
-    /**
-     * Nevyužito.
-     *
-     * @param e
-     */
-    public void windowIconified   (WindowEvent e) { }
-    /**
-     * Nevyužito.
-     *
-     * @param e
-     */
+    @Override
+    public void windowOpened(WindowEvent e) {
+        setLocationRelativeTo( MainWindow.getInstance() );
+    }
+
+    public void windowClosed(WindowEvent e) { }
+    public void windowIconified(WindowEvent e) { }
     public void windowDeiconified(WindowEvent e) { }
-    /**
-     * Nevyužito.
-     *
-     * @param e
-     */
-    public void windowActivated   (WindowEvent e) { }
-    /**
-     * Nevyužito.
-     *
-     * @param e
-     */
+    public void windowActivated(WindowEvent e) { }
     public void windowDeactivated(WindowEvent e) { }
 
 }

@@ -165,9 +165,9 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
     @Override
     public void connected() {
-        GUI.getMenuBar().toggleDisconectFromAll(true);
-        GUI.getMenuBar().toggleUserMenuBar(true);
-        GUI.getInput().setNickname( connection.getNick() );
+        MainWindow.getInstance().getGMenuBar().toggleDisconectFromAll(true);
+        MainWindow.getInstance().getGMenuBar().toggleUserMenuBar(true);
+        MainWindow.getInstance().getGInput().setNickname( connection.getNick() );
     }
 
     @Override
