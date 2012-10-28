@@ -102,9 +102,6 @@ public class Input extends JPanel {
             handleMessage();
     }
 
-    /**
-     * Práce s historií příkazů.
-     */
     private void browseHistory(KeyEvent e) {
         int c = e.getKeyCode();
         String command = "";

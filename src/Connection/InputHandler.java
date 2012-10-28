@@ -26,13 +26,11 @@ public class InputHandler {
     }
 
     public static void showNotConnectedError() {
-        new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Připojení nedostupné",
-                "Nejste připojen/a k žádnému serveru.");
+        MessageDialog.error("Připojení nedostupné", "Nejste připojen/a k žádnému serveru.");
     }
 
-    public static void showNotActiveChannelError() {
-        new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_WARN, "Přepni si na kanál",
-                "Aktivním oknem není kanál (channel).");
+    public static void showNotActiveChannelWarning() {
+        MessageDialog.warning("Přepni si na kanál", "Aktivním oknem není kanál (channel).");
     }
 
     public static void handle(String command, String params) {
@@ -96,7 +94,7 @@ public class InputHandler {
         if ( channel.isEmpty() ) {
             channel = getActiveTab().getTabName();
             if ( !isChannelTabActive() ) {
-                showNotActiveChannelError();
+                showNotActiveChannelWarning();
                 return;
             }
         }
@@ -155,7 +153,7 @@ public class InputHandler {
             MainWindow.getInstance().createServerTab(address);
             clearInput();
         } catch (Exception e) {
-            new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba aplikace", "Připojení nelze uskutečnit.");
+            MessageDialog.error("Chyba aplikace", "Připojení nelze uskutečnit.");
         }
     }
 
@@ -212,7 +210,7 @@ public class InputHandler {
 
     public static void handleAction(String params) {
         if ( !isChannelTabActive() ) {
-            showNotActiveChannelError();
+            showNotActiveChannelWarning();
             return;
         }
 

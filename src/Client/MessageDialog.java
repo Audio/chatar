@@ -5,93 +5,56 @@ import javax.swing.JOptionPane;
 
 public class MessageDialog {
 
-    final public static int GROUP_MESSAGE = 1;
-    final public static int GROUP_CONFIRM = 2;
-    final public static int GROUP_CONFIRM_CANCEL = 3;
-    final public static int GROUP_INPUT = 4;
+    public static enum WindowType {MESSAGE, CONFIRM, INPUT}
+    public static enum MessageType {WARN, ERROR, QUESTION}
 
-    final public static int TYPE_PLAIN  = 10;
-    final public static int TYPE_INFORM = 11;
-    final public static int TYPE_WARN   = 12;
-    final public static int TYPE_ERROR  = 13;
-    final public static int TYPE_QUESTION  = 14;
 
-    /**
-     * Vrací typ odpovědi. Pouze u GROUP_CONFIRM.
-     */
-    public int confirm;
-
-    /**
-     * Vrací odpověd (pouze u GROUP_INPUT).
-     */
-    public String strConfirm;
-
-    /**
-     * Group oznacuje typ okna (informace, potvrzeni...).
-     * Type oznacuje typ zpravy (varovani, chyba...).
-     */
-    public MessageDialog(int group, String message) {
-        this(group, MessageDialog.TYPE_INFORM, "Informace", message);
-    }
-
-    /**
-     * Group oznacuje typ okna (informace, potvrzeni...).
-     * Type oznacuje typ zpravy (varovani, chyba...).
-     */
-    public MessageDialog(int group, String title, String message) {
-        this(group, MessageDialog.TYPE_INFORM, title, message);
-    }
-
-    /**
-     * Group oznacuje typ okna (informace, potvrzeni...).
-     * Type oznacuje typ zpravy (varovani, chyba...).
-     */
-    public MessageDialog(int group, int type, String title, String message) {
-
-        int swing_type = JOptionPane.INFORMATION_MESSAGE;
-
-        switch (type) {
-            case MessageDialog.TYPE_PLAIN: { swing_type = JOptionPane.PLAIN_MESSAGE; break; }
-            case MessageDialog.TYPE_INFORM: { swing_type = JOptionPane.INFORMATION_MESSAGE; break; }
-            case MessageDialog.TYPE_WARN: { swing_type = JOptionPane.WARNING_MESSAGE; break; }
-            case MessageDialog.TYPE_ERROR: { swing_type = JOptionPane.ERROR_MESSAGE; break; }
-            case MessageDialog.TYPE_QUESTION: { swing_type = JOptionPane.QUESTION_MESSAGE; break; }
+    private static Object dialog(WindowType window, MessageType messageType,
+                                                String title, String message) {
+        int swingType;
+        switch (messageType) {
+            case WARN:
+                swingType = JOptionPane.WARNING_MESSAGE; break;
+            case QUESTION:
+                swingType = JOptionPane.QUESTION_MESSAGE; break;
+            default:
+                swingType = JOptionPane.ERROR_MESSAGE;
         }
 
-        // oznamovaci okno
-        if (group == MessageDialog.GROUP_MESSAGE) {
-            JOptionPane.showMessageDialog(null, message, title, swing_type);
-        }
-        // dotazovaci okno
-        else if (group == MessageDialog.GROUP_CONFIRM || group == MessageDialog.GROUP_CONFIRM_CANCEL) {
+        if ( window.equals(WindowType.MESSAGE) ) {
+            JOptionPane.showMessageDialog(null, message, title, swingType);
+        } else if ( window.equals(WindowType.CONFIRM) ) {
 
             Object[] options = {"Ano", "Ne"};
-            Object[] options_c = {"Ano", "Ne", "Storno"};
-            int option_type = JOptionPane.YES_NO_OPTION;
+            int button = JOptionPane.showOptionDialog(null, message, title,
+                        JOptionPane.YES_NO_OPTION, swingType, null, options, options[0]);
+            return button == 0;
 
-            // prida tlacitko Storno
-            if (group == MessageDialog.GROUP_CONFIRM_CANCEL) {
-                options = options_c;
-                option_type = JOptionPane.YES_NO_CANCEL_OPTION;
-            }
-
-            confirm = JOptionPane.showOptionDialog(null, message, title, option_type, swing_type, null, options, options[0]);
-
-        }
-        else if (group == MessageDialog.GROUP_INPUT) {
-            strConfirm = JOptionPane.showInputDialog(null, message, title, swing_type);
+        } else if ( window.equals(WindowType.INPUT) ) {
+            return JOptionPane.showInputDialog(null, message, title, swingType);
         }
 
+        return null;
     }
 
-    public static String showSetAwayDialog() {
-        MessageDialog question = new MessageDialog(MessageDialog.GROUP_INPUT, MessageDialog.TYPE_QUESTION, "Nastavení vlastní zprávy", "Nastavte důvod své nepřítomnosti, nebo nechte pole prázdné.");
-        return question.strConfirm;
+    public static void error(String title, String message) {
+        dialog(WindowType.MESSAGE, MessageType.ERROR, title, message);
+    }
+
+    public static void warning(String title, String message) {
+        dialog(WindowType.MESSAGE, MessageType.WARN, title, message);
+    }
+
+    public static String inputQuestion(String title, String message) {
+        return (String) dialog(WindowType.INPUT, MessageType.QUESTION, title, message);
+    }
+
+    public static boolean confirmQuestion(String title, String message) {
+        return (boolean) dialog(WindowType.CONFIRM, MessageType.QUESTION, title, message);
     }
 
     public static String showSetNicknameDialog() {
-        MessageDialog question = new MessageDialog(MessageDialog.GROUP_INPUT, MessageDialog.TYPE_QUESTION, "Nastavení přezdívky", "Zvolte novou přezdívku");
-        return question.strConfirm;
+        return inputQuestion("Nastavení přezdívky", "Zvolte novou přezdívku");
     }
 
 }

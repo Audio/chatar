@@ -56,6 +56,7 @@ public class GServers extends JFrame implements WindowListener {
         // Box s tlacitky
         connect = new JButton("Připojit");
         connect.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 actionConnect();
             }
@@ -63,6 +64,7 @@ public class GServers extends JFrame implements WindowListener {
 
         JButton create = new JButton("Přidat");
         create.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 actionAppend();
             }
@@ -70,6 +72,7 @@ public class GServers extends JFrame implements WindowListener {
 
         delete = new JButton("Smazat");
         delete.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 actionDelete();
             }
@@ -77,6 +80,7 @@ public class GServers extends JFrame implements WindowListener {
 
         JButton cancel = new JButton("Storno");
         cancel.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 actionCancel();
             }
@@ -145,7 +149,7 @@ public class GServers extends JFrame implements WindowListener {
             close();
         } catch (Exception e) {
             e.printStackTrace();
-            new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba aplikace", "Připojení nelze uskutečnit.");
+            MessageDialog.error("Chyba aplikace", "Připojení nelze uskutečnit.");
         }
     }
 
@@ -197,10 +201,10 @@ public class GServers extends JFrame implements WindowListener {
                    + "\n\nUpozornění: výchozí port je 6667.\nPro určení jiného portu zadejte adresu ve tvaru 'irc.adresa.cz:port'."
                    + "\n\nNapř.: irc.mmoirc.com nebo irc.mmoirc.com:6667"
                    + "\n\n";
-        MessageDialog win = new MessageDialog(MessageDialog.GROUP_INPUT, MessageDialog.TYPE_QUESTION, "Přidání adresy serveru", msg);
+        String address = MessageDialog.inputQuestion("Přidání adresy serveru", msg);
 
-        if (win.strConfirm != null && win.strConfirm.length() > 0) {
-            model.add(pos, win.strConfirm);
+        if (address != null && address.trim().length() > 0) {
+            model.add(pos, address);
             connect.setEnabled(true);
             delete.setEnabled(true);
         }

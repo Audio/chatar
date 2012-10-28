@@ -116,7 +116,8 @@ public class GMenuBar extends JMenuBar {
         afk.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String reason = MessageDialog.showSetAwayDialog();
+                String reason = MessageDialog.inputQuestion("Nastavení vlastní zprávy",
+                        "Nastavte důvod své nepřítomnosti, nebo nechte pole prázdné.");
                 if (reason != null)
                     InputHandler.handleAway( reason.trim() );
             }

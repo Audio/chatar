@@ -32,9 +32,9 @@ public class Client {
             ClientLogger.quit();
             System.exit(returnCode);
         } else {
-            MessageDialog window = new MessageDialog(MessageDialog.GROUP_CONFIRM, MessageDialog.TYPE_QUESTION,
-                    "Ukončit aplikaci", "Opravdu chcete ukončit aplikaci?");
-            if (window.confirm == 0) {
+            boolean close = MessageDialog.confirmQuestion("Ukončit aplikaci",
+                                                "Opravdu chcete ukončit aplikaci?");
+            if (close) {
                 ClientLogger.quit();
                 System.exit(0);
             }
