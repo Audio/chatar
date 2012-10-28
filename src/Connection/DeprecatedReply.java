@@ -5,8 +5,6 @@ import Client.*;
 
 public class DeprecatedReply {
 
-    // casti zpravy
-    private String target;
     private String params;
 
     /**
@@ -43,53 +41,6 @@ public class DeprecatedReply {
         String new_mode = HTML.bold( smileAtMe(params) );
         output( mType("mode") + "Nastaven mod " + new_mode, true);
         // TODO feature: mode set
-    }
-
-
-    /**
-     * RPL_LUSERCLIENT
-     * ":There are <integer> users and <integer> invisible on <integer> servers"
-     */
-    private void handleCode251 () {
-        output( mType("fact") + smileAtMe(params), true);
-    }
-
-
-    /**
-     * RPL_LUSEROP
-     * "<integer> :operator(s) online"
-     */
-    private void handleCode252 () {
-        output( mType("fact") + smileAtMe(params), true);
-    }
-
-
-    /**
-     * RPL_LUSERUNKNOWN
-     * "<integer> :unknown connection(s)"
-     */
-    private void handleCode253 () {
-        output( mType("fact") + smileAtMe(params), true);
-    }
-
-
-    /**
-     * RPL_LUSERCHANNELS
-     * "<integer> :channels formed"
-     */
-    private void handleCode254 () {
-        output( mType("fact") + smileAtMe(params), true);
-        // vyparseTarget();
-        // connection.getServerTab().setChannelsCount(target);
-    }
-
-
-    /**
-     * RPL_LUSERME
-     * ":I have <integer> clients and <integer> servers"
-     */
-    private void handleCode255 () {
-        output( mType("fact") + smileAtMe(params), true);
     }
 
     /**

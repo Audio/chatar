@@ -80,7 +80,15 @@ public class Connection extends PircBot implements Runnable {
                 handleWhoisResponse(code, response); break;
             case RPL_AWAY:
                 handleUserIsAwayResponse(response); break;
+            case RPL_LUSERCHANNELS:
+                handleChannelCountResponse(response); break;
         }
+    }
+
+    private void handleChannelCountResponse(String response) {
+        String count = response.split(" ", 3)[1];
+        if (serverEventsListener != null)
+            serverEventsListener.channelCountReceived(count);
     }
 
     @Override

@@ -163,10 +163,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         return this;
     }
 
-    public void setChannelsCount(String count) {
-        channelsLabel.setText(count);
-    }
-
     @Override
     public void connected() {
         GUI.getMenuBar().toggleDisconectFromAll(true);
@@ -212,6 +208,11 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     public void privateMessageWithoutListenerReceived(String sender, String message) {
         PrivateChatTab tab = createPrivateChatTab(sender);
         tab.appendText(sender + ": " + message);
+    }
+
+    @Override
+    public void channelCountReceived(String count) {
+        channelsLabel.setText(count);
     }
 
 }
