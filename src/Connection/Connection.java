@@ -187,6 +187,10 @@ public class Connection extends PircBot implements Runnable {
         PrivateMessagingListener listener = getPrivateMessagingListener(oldNick);
         if (listener != null)
             listener.userChangesNick(newNick);
+
+        boolean isMe = newNick.equals( getNick() );
+        if (serverEventsListener != null && isMe)
+            serverEventsListener.myNickHasChanged(newNick);
     }
 
     @Override

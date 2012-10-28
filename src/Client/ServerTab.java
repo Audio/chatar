@@ -82,7 +82,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         layout.putConstraint(SpringLayout.EAST, textpanel, 0, SpringLayout.EAST, top);
         layout.putConstraint(SpringLayout.SOUTH, this, 0, SpringLayout.SOUTH, textpanel);
 
-        // Pripojeni na server
+        appendInfo("Probíhá připojování na server...");
         tabName = server;
         channelTabs = new ArrayList<>();
         privateChatTabs = new ArrayList<>();
@@ -174,7 +174,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     public void connectionCantBeEstabilished(String reason) {
         new MessageDialog(MessageDialog.GROUP_MESSAGE, MessageDialog.TYPE_ERROR, "Chyba připojení",
             "K vybranému serveru se nelze připojit.");
-        appendText("Spojení nelze uskutečnit: " + reason);
+        appendError("Spojení nelze uskutečnit: " + reason);
         ClientLogger.log("Nelze se připojit: " + reason, ClientLogger.ERROR);
     }
 
@@ -213,6 +213,11 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     @Override
     public void channelCountReceived(String count) {
         channelsLabel.setText(count);
+    }
+
+    @Override
+    public void myNickHasChanged(String newNickname) {
+        MainWindow.getInstance().getGInput().setNickname(newNickname);
     }
 
 }

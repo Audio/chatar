@@ -1,7 +1,6 @@
 package Connection;
 
 import Client.User;
-import java.util.EventListener;
 
 
 public interface ChannelEventsListener extends GlobalEventsListener {

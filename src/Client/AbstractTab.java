@@ -75,15 +75,9 @@ public abstract class AbstractTab extends JPanel implements GlobalEventsListener
     }
 
     public void setFocus() {
-        refreshNickname();
         GUI.getTabContainer().setSelectedComponent(this);
         GUI.getMenuBar().toggleDisconectFromServer(true);
         GUI.focusInput();
-    }
-
-    public void refreshNickname() {
-        String nick = getServerTab().getConnection().getNick();
-        MainWindow.getInstance().getGInput().setNickname(nick);
     }
 
     @Override
