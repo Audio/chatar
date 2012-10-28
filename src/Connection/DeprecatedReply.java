@@ -18,30 +18,16 @@ public class DeprecatedReply {
     private boolean numeric;
 
     // casti zpravy
-    private DeprecatedPrefix prefix;
     private String type;
     private String target;
     private String params;
 
-    /**
-     * Znak Start of Heading. Nevykreslitelný.
-     */
-    private final char SOH = '';
-    /**
-     * Znak Start of Text. Nevykreslitelný.
-     */
-    private final char STX = '';
-
     // vyctovy typ obsahujici povolene prikazy ke zpracovani
     private enum Allowed {
 
-        fake, ERROR, NOTICE,
-
-        CODE_WELCOME, CODE_221, CODE_251, CODE_252, CODE_253, CODE_254, CODE_255,
-        CODE_265, CODE_266,
-        
+        fake, NOTICE,
+        CODE_221, CODE_251, CODE_252, CODE_253, CODE_254, CODE_255,
         CODE_301, CODE_305, CODE_306, 
-        CODE_366, CODE_372, CODE_375, CODE_376,
         ;
 
         public static Allowed fromString(String Str) {
@@ -64,20 +50,9 @@ public class DeprecatedReply {
         this.message = str;
         this.connection = connection;
         this.numeric = false;
-        this.parse();
         this.handle();
 
     }
-
-    /**
-     * Vraci referenci na prirazeny objekt CommandQuery.
-     *
-     * @return
-     */
-    private DeprecatedCommandQuery getQuery () {
-        return connection.getQuery();
-    }
-
 
     /**
      * Vytvori objekt typu Reply, ktery nasledne zpracuje.
@@ -87,61 +62,6 @@ public class DeprecatedReply {
      */
     public static void create (String str, DeprecatedConnection connection) {
         new DeprecatedReply(str, connection);
-    }
-
-    /**
-     * Rozlozeni zpravy dle vzoru
-     * http://www.irchelp.org/irchelp/rfc/chapter2.html#c2_3_1
-     */
-    private void parse () {
-
-        if (message == null || message.length() == 0) {
-            //System.err.println("NEZNAMA ZPRAVA: " + message); // Pouze ladění
-            return;
-        }
-
-        int upto;
-
-        String temp_message = message;
-
-        // ma zprava odesilatele?
-        if (temp_message.startsWith(":")) {
-            upto = temp_message.indexOf(" ");
-            prefix = new DeprecatedPrefix(temp_message.substring(1, upto));
-            temp_message = temp_message.substring(upto + 1);
-        }
-
-        // ziska typ zpravy
-        upto = temp_message.indexOf(" ");
-        if (upto == -1) {
-            type = temp_message;
-            return;
-        }
-        else {
-            type = temp_message.substring(0, upto);
-            temp_message = temp_message.substring(upto + 1);
-            if (temp_message.length() < 1) {
-                return;
-            }
-        }
-
-        // ziska parametry
-        params = temp_message;
-        // nahraní všechny výskyty znaků SOH a STX
-        params = removeChar(params, SOH);
-        params = removeChar(params, STX);
-
-        /**
-         * Je-li typem cislo (3 cislice) pak parametry obsahuji nick adresata.
-         * U textovych odpovedi to tak byt nemusi - vyresi konkretni
-         * obsluha odpovedi.
-         * http://www.irchelp.org/irchelp/rfc/chapter2.html#c2_4
-         */
-        if (type.matches( "\\d{3}" )) {
-            numeric = true;
-            vyparseTarget();
-        }
-
     }
 
     /**
@@ -162,6 +82,7 @@ public class DeprecatedReply {
      * Modifikuje vystupni informaci.
      * Nici prvni dvojtecku, kterou nalezne.
      */
+    // TODO tohle by se mozna este mohlo hodit, ne?
     public String smileAtMe (String str) {
 
         int upto;
@@ -184,52 +105,14 @@ public class DeprecatedReply {
     }
 
     /**
-     * Vrati refenci na prislusny kanal.
-     * Implementovano kvuli prehlednosti.
-     */
-    private ChannelTab getChannel (String name) {
-        return connection.getServerTab().getChannelTabByName(name);
-    }
-
-    /**
-     * Vrati refenci na prislusne okno se soukromymi zpravami.
-     * Implementovano kvuli prehlednosti.
-     *
-     * @param name
-     * @return
-     */
-    private PrivateChatTab getPrivateChat (String name) {
-        return connection.getServerTab().getPrivateChatByName(name);
-    }
-
-    /**
      * Preda zpravu obsluze, ktera ji dale zpracuje.
      * Zpracovava TEXTOVE i CISELNE odpovedi.
      */
     private void handle () {
 
-        if (numeric) {
-            if (Integer.parseInt(type) <= 99)
-                type = "CODE_WELCOME";
-            else
-                type = "CODE_" + type;
-
-            // vypis pouze tech zprav, ktere nemaji obsluhu
-            try {
-                Allowed.valueOf(type);
-            }
-            catch (IllegalArgumentException e) { }
-        }
-
         switch ( Allowed.fromString(type) ) {
             case fake:    { /*if ( !isNumeric() ) System.err.println("Nezapomen implementovat obsluhu prikazu " + type + ".");*/ break; }
             case NOTICE:  { handleNotice(); break; }
-            case ERROR:   { handleError(); break; }
-
-            // Uvitaci zpravy.
-            case CODE_WELCOME: { handleCodeWelcome(); break; }
-            case CODE_265: { handleCodeWelcome(); break; }
-            case CODE_266: { handleCodeWelcome(); break; }
 
             // Unikatni zpravy.
             case CODE_221: { handleCode221(); break; }
@@ -242,54 +125,12 @@ public class DeprecatedReply {
             case CODE_305: { handleCode305(); break; }
             case CODE_306: { handleCode306(); break; }
 
-            // Message of the day.
-            case CODE_372: { handleMOTD(); break; }
-            case CODE_375: { handleMOTD(); break; }
-            case CODE_376: { handleMOTD(); break; }
-
             // Zpravy, ktere nemaji pro uzivatele informacni hodnotu.
-            case CODE_366: { break; }
         }
 
         // Pouze pro účely ladění
         //if ( Allowed.fromString(type).equals(Allowed.fake) )
             //System.out.println("Neznámá přijatá zpráva: " + this);
-
-    }
-
-    /**
-     * Zpracování příkazu ERROR.
-     * Obsahuje-li text ve tvaru "Closing Link: *duvod*", pak je spojení ukončeno.
-     */
-    private void handleError () {
-
-        params = smileAtMe(params);
-        output( mType("error") + params);
-
-        if ( params.startsWith("Closing Link:") ) {
-            // uzavře vsechny místnosti a soukromé chaty
-            ServerTab s = connection.getServerTab();
-
-            /*
-            Iterator it = s.channels.iterator();
-            while ( it.hasNext() ) {
-                ChannelTab ch = (ChannelTab) it.next();
-                ch.destroy();
-            }
-
-            it = s.privateChats.iterator();
-            while ( it.hasNext() ) {
-                PrivateChatTab ch = (PrivateChatTab) it.next();
-                ch.destroy();
-            }
-            */
-
-            // Znemožní další operace související s připojováním
-            connection.setClosedByServer();
-
-            // Vypíše upozornění (heski šéski)
-            output( HTML.red( mType("error") ) + " Spojení uzavřeno.", true);
-        }
 
     }
 
@@ -308,14 +149,6 @@ public class DeprecatedReply {
             output( mType("info") + params, true);
 
     }
-
-    /**
-     * Uvítací zprávy. Označeny čísly 001 - 099. Využívání až od RFC 2812.
-     */
-    private void handleCodeWelcome () {
-        output( mType("info") + smileAtMe(params), true);
-    }
-
 
     /**
      * Aktualne nastavene mody uzivatele.
@@ -427,27 +260,6 @@ public class DeprecatedReply {
             output(foo, ch);
         }
         */
-
-    }
-
-    /**
-     * Priznak, ze probehla zprava MOTD (uvitaci zprava Message of the day).
-     */
-    private void handleMOTD () {
-        connection.authenticate();
-        output( mType("motd") + smileAtMe(params), true);
-    }
-
-    /**
-     * Vymaže znak z řetězce - nenahradí, ale vymaže.
-     */
-    private String removeChar (String str, char ch) {
-
-        int pos;
-        while ( (pos = str.indexOf(ch)) > -1 )
-            str = str.substring(0, pos) + str.substring(pos + 1);
-
-        return str;
 
     }
 
