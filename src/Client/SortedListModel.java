@@ -19,11 +19,11 @@ public class SortedListModel extends AbstractListModel {
     }
 
     @Override
-    public User getElementAt(int index) {
+    public synchronized User getElementAt(int index) {
         return (User) model.toArray()[index];
     }
 
-    public User detachUser(String nickname) {
+    public synchronized User detachUser(String nickname) {
         for (User user : model) {
             if ( user.getNickname().equals(nickname) ) {
                 model.remove(user);
@@ -35,12 +35,12 @@ public class SortedListModel extends AbstractListModel {
         return null;
     }
 
-    public void add(User element) {
+    public synchronized void add(User element) {
         if ( model.add(element) )
             contentChanged();
     }
 
-    public void clear() {
+    public synchronized void clear() {
         model.clear();
         contentChanged();
     }
