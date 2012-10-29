@@ -1,6 +1,7 @@
 package MainWindow;
 
 import Client.GUI;
+import Favorites.ServerAddress;
 import java.awt.Dimension;
 import javax.swing.*;
 
@@ -95,7 +96,7 @@ public class MainWindow extends JFrame {
         return area;
     }
 
-    public ServerTab createServerTab(String address) {
+    public ServerTab createServerTab(ServerAddress address) {
         return tabContainer.createServerTab(address);
     }
 

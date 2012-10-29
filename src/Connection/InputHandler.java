@@ -6,6 +6,7 @@ import MainWindow.ChannelTab;
 import MainWindow.AbstractTab;
 import Dialog.MessageDialog;
 import Client.*;
+import Favorites.ServerAddress;
 
 
 public class InputHandler {
@@ -155,7 +156,7 @@ public class InputHandler {
 
     public static void handleServer(String address) {
         try {
-            MainWindow.getInstance().createServerTab(address);
+            MainWindow.getInstance().createServerTab( new ServerAddress(address) );
             clearInput();
         } catch (Exception e) {
             MessageDialog.error("Chyba aplikace", "Připojení nelze uskutečnit.");

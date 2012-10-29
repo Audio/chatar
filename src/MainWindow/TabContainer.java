@@ -1,6 +1,7 @@
 package MainWindow;
 
 import Client.GUI;
+import Favorites.ServerAddress;
 import javax.swing.JTabbedPane;
 import javax.swing.event.*;
 
@@ -26,7 +27,7 @@ public class TabContainer extends JTabbedPane {
 
     }
 
-    public ServerTab createServerTab(String address) {
+    public ServerTab createServerTab(ServerAddress address) {
         ServerTab tab = new ServerTab(address);
         insertTab(tab);
         tab.setFocus();

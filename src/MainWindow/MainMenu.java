@@ -5,6 +5,7 @@ import Config.GConfig;
 import Connection.InputHandler;
 import Dialog.MessageDialog;
 import Favorites.GServers;
+import Favorites.ServerAddress;
 import java.awt.Component;
 import java.awt.event.*;
 import javax.swing.*;
@@ -23,6 +24,7 @@ public class MainMenu extends JMenuBar {
 
     public MainMenu() {
         createFileMenu();
+        createFavoritesMenu();
         createServerMenu();
         createUserMenu();
     }
@@ -31,7 +33,7 @@ public class MainMenu extends JMenuBar {
         JMenu menu = new JMenu("Chatař");
 
         JMenuItem settings = new JMenuItem("Nastavení");
-        settings.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK) );
+        settings.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK) );
         settings.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -65,15 +67,39 @@ public class MainMenu extends JMenuBar {
         add(menu);
     }
 
+    private void createFavoritesMenu() {
+        JMenu menu = new JMenu("Oblíbené");
+
+        // TODO seznam serverů
+        // TODO po kliknutí se připojí
+
+        JMenuItem edit = new JMenuItem("Editovat seznam");
+        edit.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK) );
+        edit.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GServers.getInstance().setVisible(true);
+            }
+        });
+
+        menu.add(edit);
+
+        add(menu);
+    }
+
     private void createServerMenu() {
         JMenu menu = new JMenu("Server");
 
         JMenuItem connect = new JMenuItem("Připojit...");
-        connect.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK) );
+        connect.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK) );
         connect.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GServers.getInstance().setVisible(true);
+                String addr = MessageDialog.inputQuestion("Rychlé připojení k serveru",
+                                                             "Adresa serveru (:port)");
+                ServerAddress sa = new ServerAddress(addr);
+                if ( sa.isValid() )
+                    MainWindow.getInstance().createServerTab(sa);
             }
         });
 

@@ -3,6 +3,7 @@ package MainWindow;
 import Client.*;
 import Connection.*;
 import Dialog.MessageDialog;
+import Favorites.ServerAddress;
 import java.awt.*;
 import java.util.*;
 import javax.swing.*;
@@ -20,18 +21,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     private ArrayList<PrivateChatTab> privateChatTabs;
 
 
-    public ServerTab(String address) {
-        // TODO sem musi rovnout prijit adresa a port
-        // Pripojeni na server - analyza
-        int upto;
-        String server = address;
-        int port = 6667;
-        if ( address.matches(".+:\\d{3,}$") ) {
-            upto = address.lastIndexOf(":");
-            server = address.substring(0, upto);
-            port = Integer.parseInt( address.substring(upto + 1) );
-        }
-
+    public ServerTab(ServerAddress sa) {
         SpringLayout layout = new SpringLayout();
         setLayout(layout);
 
@@ -41,7 +31,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         GUI.setPreferredSize(top, 700, 50);
 
         JLabel text_address = new JLabel("Server:");
-        addressLabel = new JLabel("irc://" + server + "/");
+        addressLabel = new JLabel("irc://" + sa.address + "/");
 
         Box r1 = Box.createHorizontalBox();
         r1.setBorder( BorderFactory.createEmptyBorder(10, 0, 0, 0) );
@@ -87,11 +77,11 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         layout.putConstraint(SpringLayout.SOUTH, this, 0, SpringLayout.SOUTH, textpanel);
 
         appendInfo("Probíhá připojování na server...");
-        tabName = server;
+        tabName = sa.address;
         channelTabs = new ArrayList<>();
         privateChatTabs = new ArrayList<>();
 
-        connection = new Connection(server, port);
+        connection = new Connection(sa.address, sa.port);
         connection.setServerEventsListener(this);
         (new Thread(connection)).start();
     }
