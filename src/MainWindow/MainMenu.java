@@ -17,6 +17,7 @@ public class MainMenu extends JMenuBar {
 
     private JMenu userMenu;
 
+    private JMenuItem joinToChannel;
     private JMenuItem disconnectFromAll;
     private JMenuItem disconnectFromServer;
     private JMenuItem closePanel;
@@ -103,6 +104,23 @@ public class MainMenu extends JMenuBar {
             }
         });
 
+        joinToChannel = new JMenuItem("Připojit na kanál");
+        joinToChannel.setVisible(false);
+        joinToChannel.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_MASK) );
+        joinToChannel.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String channel = MessageDialog.inputQuestion("Připojení ke kanálu",
+                                                             "Název kanálu");
+                if (channel != null) {
+                    if ( !channel.startsWith("#") )
+                        channel = "#" + channel;
+
+                    InputHandler.handleJoin(channel);
+                }
+            }
+        });
+
         disconnectFromAll = new JMenuItem("Odpojit od všech serverů");
         disconnectFromAll.setVisible(false);
         disconnectFromAll.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK) );
@@ -123,6 +141,7 @@ public class MainMenu extends JMenuBar {
         });
 
         menu.add(connect);
+        menu.add(joinToChannel);
         menu.add(disconnectFromServer);
         menu.add(disconnectFromAll);
 
@@ -170,16 +189,14 @@ public class MainMenu extends JMenuBar {
         add(userMenu);
     }
 
-    public void toggleDisconectFromAll(boolean setVisible) {
-        disconnectFromAll.setVisible(setVisible);
-    }
-
-    public void toggleDisconectFromServer(boolean setVisible) {
+    public void toggleConnectionOptions(boolean setVisible) {
         if (setVisible) {
-            String name = MainWindow.getInstance().getActiveTab().getServerTab().getTabName();
+            String name = InputHandler.getCurrentServerTab().getTabName();
             disconnectFromServer.setText("Odpojit od " + name);
         }
 
+        joinToChannel.setVisible(setVisible);
+        disconnectFromAll.setVisible(setVisible);
         disconnectFromServer.setVisible(setVisible);
     }
 

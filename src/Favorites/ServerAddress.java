@@ -10,7 +10,10 @@ public class ServerAddress {
 
 
     public ServerAddress(String fullAddress) {
-        if ( fullAddress.matches(".+:\\d{3,}$") ) {
+        if (fullAddress == null) {
+            this.address = "";
+            this.port = DEFAULT_PORT;
+        } else if ( fullAddress.matches(".+:\\d{3,}$") ) {
             int upto = fullAddress.lastIndexOf(":");
             this.address = fullAddress.substring(0, upto);
             this.port = Integer.parseInt( fullAddress.substring(upto + 1) );
