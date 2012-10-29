@@ -79,6 +79,7 @@ public abstract class AbstractTab extends JPanel implements GlobalEventsListener
         MainWindow.getInstance().getTabContainer().setSelectedComponent(this);
         MainWindow.getInstance().getGMenuBar().toggleDisconectFromServer(true);
         MainWindow.getInstance().setTitle( getTabName() + " - Chatař" );
+        MainWindow.getInstance().getNickButton().refreshNickname();
         MainWindow.getInstance().getInputField().requestFocus();
     }
 

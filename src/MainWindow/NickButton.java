@@ -28,4 +28,12 @@ public class NickButton extends JButton {
         });
     }
 
+    public void refreshNickname() {
+        AbstractTab tab = InputHandler.getActiveTab();
+        if (tab != null) {
+            String nick = tab.getServerTab().getConnection().getNick();
+            setText(nick);
+        }
+    }
+
 }
