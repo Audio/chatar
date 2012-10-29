@@ -104,9 +104,9 @@ public class MainWindow extends JFrame {
         tabContainer.removeTab(tab);
 
         if ( tabContainer.getTabCount() == 0 ) {
-            menuBar.toggleConnectionOptions(false);
+            menuBar.toggleConnectionActions(false);
             menuBar.toggleUserMenuBar(false);
-            menuBar.toggleClosePanel(false);
+            menuBar.togglePanelActions(false);
         }
     }
 

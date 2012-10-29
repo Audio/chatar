@@ -20,6 +20,7 @@ public class MainMenu extends JMenuBar {
     private JMenuItem joinToChannel;
     private JMenuItem disconnectFromAll;
     private JMenuItem disconnectFromServer;
+    private JMenuItem clearChat;
     private JMenuItem closePanel;
 
 
@@ -39,6 +40,16 @@ public class MainMenu extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GConfig.getInstance().setVisible(true);
+            }
+        });
+
+        clearChat = new JMenuItem("Vymazat chat");
+        clearChat.setVisible(false);
+        clearChat.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK) );
+        clearChat.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                InputHandler.handleClear();
             }
         });
 
@@ -62,6 +73,7 @@ public class MainMenu extends JMenuBar {
         });
 
         menu.add(settings);
+        menu.add(clearChat);
         menu.add(closePanel);
         menu.add(close);
 
@@ -189,7 +201,7 @@ public class MainMenu extends JMenuBar {
         add(userMenu);
     }
 
-    public void toggleConnectionOptions(boolean setVisible) {
+    public void toggleConnectionActions(boolean setVisible) {
         if (setVisible) {
             String name = InputHandler.getCurrentServerTab().getTabName();
             disconnectFromServer.setText("Odpojit od " + name);
@@ -204,7 +216,8 @@ public class MainMenu extends JMenuBar {
         userMenu.setVisible(setVisible);
     }
 
-    public void toggleClosePanel(boolean setVisible) {
+    public void togglePanelActions(boolean setVisible) {
+        clearChat.setVisible(setVisible);
         closePanel.setVisible(setVisible);
     }
 
