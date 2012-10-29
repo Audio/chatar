@@ -10,7 +10,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-public class GMenuBar extends JMenuBar {
+public class MainMenu extends JMenuBar {
 
     static final long serialVersionUID = 1L;
 
@@ -21,7 +21,7 @@ public class GMenuBar extends JMenuBar {
     private JMenuItem closePanel;
 
 
-    public GMenuBar() {
+    public MainMenu() {
         createFileMenu();
         createServerMenu();
         createUserMenu();

@@ -30,7 +30,7 @@ public class TabContainer extends JTabbedPane {
         ServerTab tab = new ServerTab(address);
         insertTab(tab);
         tab.setFocus();
-        MainWindow.getInstance().getGMenuBar().toggleClosePanel(true);
+        MainWindow.getInstance().getMainMenu().toggleClosePanel(true);
         return tab;
     }
 

@@ -11,7 +11,7 @@ public class MainWindow extends JFrame {
     static final long serialVersionUID = 1L;
 
     private TabContainer tabContainer;
-    private GMenuBar menuBar;
+    private MainMenu menuBar;
     private NickButton nickButton;
     private InputField inputField;
 
@@ -42,7 +42,7 @@ public class MainWindow extends JFrame {
     }
 
     private void createMenuBar() {
-        menuBar = new GMenuBar();
+        menuBar = new MainMenu();
         setJMenuBar(menuBar);
         menuBar.setVisible(true);
     }
@@ -114,7 +114,7 @@ public class MainWindow extends JFrame {
         return tabContainer;
     }
 
-    public GMenuBar getGMenuBar() {
+    public MainMenu getMainMenu() {
         return menuBar;
     }
 
