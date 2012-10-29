@@ -4,13 +4,15 @@ import javax.swing.*;
 import java.util.*;
 
 
-public class SortedListModel extends AbstractListModel {
+public class SortedListModel<E> extends AbstractListModel<E> {
+
+    static final long serialVersionUID = 1L;
 
     private SortedSet<User> model;
 
 
     public SortedListModel() {
-        model = new TreeSet();
+        model = new TreeSet<>();
     }
 
     @Override
@@ -19,8 +21,8 @@ public class SortedListModel extends AbstractListModel {
     }
 
     @Override
-    public synchronized User getElementAt(int index) {
-        return (User) model.toArray()[index];
+    public synchronized E getElementAt(int index) {
+        return (E) model.toArray()[index];
     }
 
     public synchronized User detachUser(String nickname) {

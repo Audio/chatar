@@ -3,7 +3,6 @@ package Favorites;
 import Client.GUI;
 import MainWindow.MainWindow;
 import Dialog.MessageDialog;
-import Favorites.Servers;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -12,9 +11,10 @@ import javax.swing.*;
 public class GServers extends JFrame implements WindowListener {
 
     private static GServers instance;
+    static final long serialVersionUID = 1L;
 
-    private JList list;
-    private DefaultListModel servers;
+    private JList<String> list;
+    private DefaultListModel<String> servers;
     private JButton connect;
     private JButton delete;
     private boolean changed;
@@ -43,10 +43,10 @@ public class GServers extends JFrame implements WindowListener {
         main_panel.setBorder( BorderFactory.createEmptyBorder(10, 10, 0, 10) );
 
         // Scrollpanel
-        servers = new DefaultListModel();
+        servers = new DefaultListModel<>();
         loadServerList();
 
-        list = new JList(servers);
+        list = new JList<>(servers);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setSelectedIndex(0);
         list.setLayoutOrientation(JList.VERTICAL);
@@ -146,7 +146,7 @@ public class GServers extends JFrame implements WindowListener {
      * Pripoji se k vybranemu serveru.
      */
     private void actionConnect() {
-        String server = (String) list.getSelectedValue();
+        String server = list.getSelectedValue();
         try {
             MainWindow.getInstance().createServerTab(server);
             close();
@@ -197,7 +197,7 @@ public class GServers extends JFrame implements WindowListener {
      * Prida novy prvek seznamu.
      */
     private void actionAppend () {
-        DefaultListModel model = (DefaultListModel) list.getModel();
+        DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
         int pos = model.getSize();
 
         String msg = "Vložte adresu serveru ve tvaru 'irc.adresa.cz'."
@@ -232,10 +232,10 @@ public class GServers extends JFrame implements WindowListener {
         if (!changed)
             return;
 
-        DefaultListModel model = (DefaultListModel) list.getModel();
+        DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
         Servers.reset();
         for (int i = 0; i < model.getSize(); i++) {
-            Servers.addServer( (String) model.get(i));
+            Servers.addServer( model.get(i) );
         }
         Servers.saveFile();
 

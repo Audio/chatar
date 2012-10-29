@@ -1,13 +1,14 @@
 package MainWindow;
 
-import Client.GUI;
-import Client.HTML;
+import Client.*;
 import Connection.*;
 import java.awt.*;
 import javax.swing.*;
 
 
 public class PrivateChatTab extends AbstractTab implements PrivateMessagingListener {
+
+    static final long serialVersionUID = 1L;
 
     private JEditorPane infobox;
 

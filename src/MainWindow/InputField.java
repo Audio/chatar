@@ -9,6 +9,8 @@ import javax.swing.JTextField;
 
 public class InputField extends JTextField {
 
+    static final long serialVersionUID = 1L;
+
     private enum Commands {
 
         UNKNOWN, ACTION, AFK, AWAY, BACK, CLEAR, JOIN, KICK, LEAVE, ME, MODE,

@@ -1,16 +1,15 @@
 package Config;
 
 import Client.GUI;
-import MainWindow.MainWindow;
-import MainWindow.AbstractTab;
-import Config.Config;
-import java.awt.Component;
-import java.awt.Dimension;
+import MainWindow.*;
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 
 public class GConfig extends JFrame implements WindowListener {
+
+    static final long serialVersionUID = 1L;
 
     private static GConfig instance;
 

@@ -41,20 +41,16 @@ public class Servers {
      */
     public static String[] loadFile () {
 
-        try {
-            FileInputStream in = new FileInputStream(filename);
+        try (FileInputStream in = new FileInputStream(filename)) {
             props.load(in);
-            in.close();
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             // Soubor jeste nebyl vytvoren.
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             ClientLogger.log(e.getMessage(), ClientLogger.ERROR);
             MessageDialog.error("Chyba aplikace", "Konfigurační soubor není možné načíst.");
         }
 
-        String[] array = (String[]) props.values().toArray( new String[ props.size() ] );
+        String[] array = props.values().toArray( new String[ props.size() ] );
         return array;
 
     }

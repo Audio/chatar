@@ -1,12 +1,15 @@
 package MainWindow;
 
-import Dialog.MessageDialog;
 import Connection.InputHandler;
+import Dialog.MessageDialog;
 import java.awt.event.*;
 import javax.swing.JButton;
 
 
 public class NickButton extends JButton {
+
+    static final long serialVersionUID = 1L;
+
 
     public NickButton() {
         super("Chatař");

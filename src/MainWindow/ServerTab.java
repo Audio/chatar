@@ -1,9 +1,8 @@
 package MainWindow;
 
-import Client.ClientLogger;
-import Client.GUI;
-import Dialog.MessageDialog;
+import Client.*;
 import Connection.*;
+import Dialog.MessageDialog;
 import java.awt.*;
 import java.util.*;
 import javax.swing.*;
@@ -11,6 +10,8 @@ import javax.swing.border.EtchedBorder;
 
 
 public class ServerTab extends AbstractTab implements ServerEventsListener {
+
+    static final long serialVersionUID = 1L;
 
     private JLabel addressLabel;
     private JLabel channelsLabel;

@@ -4,7 +4,10 @@ import java.awt.Component;
 import javax.swing.*;
 
 
-public class UserListRenderer extends DefaultListCellRenderer {
+public class UserListRenderer<E> extends DefaultListCellRenderer {
+
+    static final long serialVersionUID = 1L;
+
 
     private Component addPrefixBasedIcon(Component c, User user) {
         String filename = user.getTextualRepresentation().toLowerCase().replaceAll(" ", "");
@@ -14,11 +17,10 @@ public class UserListRenderer extends DefaultListCellRenderer {
     }
 
     @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index,
-                                                  boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList<?> list, Object value,
+                            int index, boolean isSelected, boolean cellHasFocus) {
 
         Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
         return addPrefixBasedIcon(c, (User) value);
     }
 

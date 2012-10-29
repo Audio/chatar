@@ -2,15 +2,17 @@ package MainWindow;
 
 import Client.Client;
 import Config.GConfig;
-import Favorites.GServers;
-import Dialog.MessageDialog;
 import Connection.InputHandler;
+import Dialog.MessageDialog;
+import Favorites.GServers;
 import java.awt.Component;
 import java.awt.event.*;
 import javax.swing.*;
 
 
 public class GMenuBar extends JMenuBar {
+
+    static final long serialVersionUID = 1L;
 
     private JMenu userMenu;
 

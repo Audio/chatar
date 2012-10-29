@@ -1,8 +1,6 @@
 package MainWindow;
 
-import Client.ClientLogger;
-import Client.GUI;
-import Client.HTML;
+import Client.*;
 import Connection.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -13,9 +11,11 @@ import javax.swing.*;
 
 public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
-    private JList userList;
-    private UserListRenderer userListRenderer;
-    private SortedListModel usersModel;
+    static final long serialVersionUID = 1L;
+
+    private JList<User> userList;
+    private UserListRenderer<User> userListRenderer;
+    private SortedListModel<User> usersModel;
     private JEditorPane infobox;
     private JPopupMenu popup;
     private MouseListener popupListener;
@@ -44,10 +44,10 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         scrollpanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollpanel.setAutoscrolls(true);
 
-        userListRenderer = new UserListRenderer();
-        usersModel = new SortedListModel();
+        userListRenderer = new UserListRenderer<>();
+        usersModel = new SortedListModel<>();
 
-        userList = new JList(usersModel);
+        userList = new JList<>(usersModel);
         userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         userList.setSelectedIndex(0);
         userList.setLayoutOrientation(JList.VERTICAL);

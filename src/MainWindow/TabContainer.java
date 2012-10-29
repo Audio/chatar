@@ -7,6 +7,9 @@ import javax.swing.event.*;
 
 public class TabContainer extends JTabbedPane {
 
+    static final long serialVersionUID = 1L;
+
+
     public TabContainer(int width, int height) {
 
         GUI.setPreferredSize(this, width, height);

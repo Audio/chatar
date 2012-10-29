@@ -8,6 +8,7 @@ import javax.swing.*;
 public class MainWindow extends JFrame {
 
     private static MainWindow instance;
+    static final long serialVersionUID = 1L;
 
     private TabContainer tabContainer;
     private GMenuBar menuBar;
