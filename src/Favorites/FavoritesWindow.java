@@ -8,14 +8,22 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
+// TODO ikonku pro todle vokno
 public class FavoritesWindow extends JFrame implements WindowListener {
 
     private static FavoritesWindow instance;
     static final long serialVersionUID = 1L;
 
-    private JList<String> list;
-    private DefaultListModel<String> servers;
-    private JButton connect;
+    private final int WINDOW_WIDTH = 500;
+    private JTabbedPane tabPanel;
+
+    private JTextField title;
+    private JTextField address;
+    private JTextField port;
+    private JTextField nickname;
+    private JTextArea channels;
+    // TODO JPasswordField password (auth)
+
     private JButton delete;
     private boolean changed;
 
@@ -28,56 +36,122 @@ public class FavoritesWindow extends JFrame implements WindowListener {
     }
 
     private FavoritesWindow() {
-
-        // Nastaveni okna
         setDefaultCloseOperation(HIDE_ON_CLOSE);
-        setTitle("Připojit k serveru");
+        setTitle("Seznam oblíbených serverů");
         setResizable(false);
-        setSize(385, 400);
+        setSize(WINDOW_WIDTH, 300);
 
-        getContentPane().setLayout( new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS) );
-
-        // Hlavni panel - obsahuje scrollpanel a tlacitka
-        JPanel main_panel = new JPanel();
-        main_panel.setLayout( new BoxLayout(main_panel, BoxLayout.LINE_AXIS) );
-        main_panel.setBorder( BorderFactory.createEmptyBorder(10, 10, 0, 10) );
-
-        // Scrollpanel
-        servers = new DefaultListModel<>();
+        createMainPanel();
         loadServerList();
 
-        list = new JList<>(servers);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setSelectedIndex(0);
-        list.setLayoutOrientation(JList.VERTICAL);
-        list.setVisibleRowCount( servers.size() );
-        list.setBackground( new Color(255, 255, 255) );
+        addWindowListener(this);
+    }
 
-        JScrollPane panel = new JScrollPane(list);
-        GUI.setExactSize(panel, 250, 355);
+    private void createMainPanel() {
+        JPanel contentPanel = (JPanel) getContentPane();
+        SpringLayout layout = new SpringLayout();
+        contentPanel.setLayout(layout);
 
-        // Box s tlacitky
-        connect = new JButton("Připojit");
-        connect.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionConnect();
-            }
-        });
+        tabPanel = new JTabbedPane(JTabbedPane.LEFT);
+        GUI.setExactSize(tabPanel, WINDOW_WIDTH, 200);
 
-        JButton create = new JButton("Přidat");
-        create.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionAppend();
-            }
-        });
+        JPanel buttonPanel = createButtonPanel();
+        GUI.setExactSize(buttonPanel, WINDOW_WIDTH, 100);
 
-        delete = new JButton("Smazat");
+        layout.putConstraint(SpringLayout.WEST, buttonPanel, 0, SpringLayout.WEST, tabPanel);
+        layout.putConstraint(SpringLayout.NORTH, buttonPanel, 0, SpringLayout.SOUTH, tabPanel);
+
+        contentPanel.add(tabPanel);
+        contentPanel.add( Box.createVerticalGlue() );
+        contentPanel.add(buttonPanel);
+    }
+
+    private JPanel createTabContent() {
+        JPanel panel = new JPanel();
+        panel.setBackground(Color.WHITE);
+
+        final int SPACER = 15;
+        final int LABEL_SPACER = 22;
+
+        JLabel titleLabel = new JLabel("Název v Oblíbených:");
+        JLabel addressLabel = new JLabel("Adresa serveru:");
+        JLabel portLabel = new JLabel("Port:");
+        JLabel nicknameLabel = new JLabel("Přezdívka:");
+        JLabel channelsLabel = new JLabel("<html>Automaticky připojit<br>do těchto kanálů:"
+                                        + "<br><br>(oddělujte čárkou)</html>");
+
+        Box labels = Box.createVerticalBox();
+        labels.add( Box.createRigidArea( new Dimension(0, 5)) );
+        labels.add(titleLabel);
+        labels.add( Box.createRigidArea( new Dimension(0, LABEL_SPACER)) );
+        labels.add(addressLabel);
+        labels.add( Box.createRigidArea( new Dimension(0, LABEL_SPACER)) );
+        labels.add(nicknameLabel);
+        labels.add( Box.createRigidArea( new Dimension(0, LABEL_SPACER)) );
+        labels.add(channelsLabel);
+        panel.add(labels);
+
+        title = new JTextField(15);
+        address = new JTextField();
+        port = new JTextField(5);
+        nickname = new JTextField();
+        channels = new JTextArea(3, 35);
+        channels.setFont( title.getFont() );
+        channels.setBorder( title.getBorder() );
+
+        Box inputsLeft = Box.createVerticalBox();
+        inputsLeft.add(title);
+        inputsLeft.add( Box.createRigidArea( new Dimension(0, SPACER)) );
+        inputsLeft.add(address);
+        inputsLeft.add( Box.createRigidArea( new Dimension(0, SPACER)) );
+        inputsLeft.add(nickname);
+
+        delete = new JButton("Odebrat");
         delete.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                actionDelete();
+                actionDeleteCurrent();
+            }
+        });
+
+        Box portBox = Box.createHorizontalBox();
+        portBox.add(portLabel);
+        portBox.add( Box.createRigidArea( new Dimension(SPACER, 0)) );
+        portBox.add(port);
+
+        Box inputsRight = Box.createVerticalBox();
+        inputsRight.setAlignmentY(BOTTOM_ALIGNMENT);
+        inputsRight.setAlignmentX(RIGHT_ALIGNMENT);
+        inputsRight.add(delete);
+        inputsRight.add( Box.createRigidArea( new Dimension(0, SPACER)) );
+        inputsRight.add(portBox);
+
+        Box inputs = Box.createHorizontalBox();
+        inputs.add(inputsLeft);
+        inputs.add( Box.createRigidArea( new Dimension(SPACER, 0)) );
+        inputs.add(inputsRight);
+
+        Box rightSide = Box.createVerticalBox();
+        rightSide.add(inputs);
+        rightSide.add( Box.createRigidArea( new Dimension(0, SPACER)) );
+        rightSide.add(channels);
+
+        Box all = Box.createHorizontalBox();
+        all.add(labels);
+        all.add( Box.createRigidArea( new Dimension(SPACER, 0)) );
+        all.add(rightSide);
+
+        panel.add(all);
+
+        return panel;
+    }
+
+    private JPanel createButtonPanel() {
+        JButton create = new JButton("Přidat server...");
+        create.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionAddServer();
             }
         });
 
@@ -89,53 +163,37 @@ public class FavoritesWindow extends JFrame implements WindowListener {
             }
         });
 
-        setButtonSize(connect);
-        setButtonSize(create);
-        setButtonSize(delete);
-        setButtonSize(cancel);
+        JButton save = new JButton("Uložit změny");
+        save.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.err.println("neumim!!");
+                // actionSave();
+            }
+        });
 
-        Box box = Box.createVerticalBox();
-        box.add( connect );
-        box.add( Box.createRigidArea( new Dimension(0, 6)) );
-        box.add( create );
-        box.add( Box.createRigidArea( new Dimension(0, 6)) );
-        box.add( delete );
-        box.add( Box.createRigidArea( new Dimension(0, 6)) );
-        box.add( cancel );
+        Box buttons = Box.createHorizontalBox();
+        buttons.add( Box.createRigidArea( new Dimension(60, 0)) );
+        buttons.add(create);
+        buttons.add( Box.createRigidArea( new Dimension(WINDOW_WIDTH - 350, 0)) );
+        buttons.add(cancel);
+        buttons.add( Box.createRigidArea( new Dimension(10, 0)) );
+        buttons.add(save);
 
-        // Pridani komponent do panelu
-        main_panel.add(panel);
-        main_panel.add( Box.createHorizontalGlue() );
-        main_panel.add(box);
-        getContentPane().add(main_panel);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout( new BoxLayout(buttonPanel, BoxLayout.X_AXIS) );
+        buttonPanel.add(buttons);
 
-        setLocationRelativeTo( MainWindow.getInstance() );
-        setVisible(true);
-        changed = false;
-
-        addWindowListener(this);
-        //setAlwaysOnTop(true);
-
+        return buttonPanel;
     }
 
-    /**
-     * Nastavi defaultni velikost pro vsechna tlacitka.
-     */
-    public static void setButtonSize(Component c) {
-        GUI.setExactSize(c, 100, 30);
-    }
-
-    /**
-     * Pri adresu serveru do seznamu.
-     */
     private void addServer(String address) {
-        servers.addElement(address);
+        // servers.addElement(address);
     }
 
-    /**
-     * Nacte seznam serveru ze souboru.
-     */
     private void loadServerList() {
+        JPanel panel = createTabContent();
+        tabPanel.add("Brambora", panel);
         /*
         String[] srv = Storage.loadFile();
         for (int i = 0; i < srv.length; i++) {
@@ -144,32 +202,13 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         */
     }
 
-    /**
-     * Pripoji se k vybranemu serveru.
-     */
-    private void actionConnect() {
-        String server = list.getSelectedValue();
-        try {
-            MainWindow.getInstance().createServerTab( new ServerAddress(server) );
-            close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            MessageDialog.error("Chyba aplikace", "Připojení nelze uskutečnit.");
-        }
-    }
-
-    /**
-     * Skryje okno. Zrusi pripadne zmeny.
-     */
     private void actionCancel() {
         changed = false;
         setVisible(false);
     }
 
-    /**
-     * Odstrani aktualne vybrany prvek seznamu.
-     */
-    private void actionDelete() {
+    private void actionDeleteCurrent() {
+        /*
         int index = list.getSelectedIndex();
         servers.remove(index);
 
@@ -193,12 +232,11 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         }
 
         changed = true;
+        */
     }
 
-    /**
-     * Prida novy prvek seznamu.
-     */
-    private void actionAppend () {
+    private void actionAddServer() {
+        /*
         DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
         int pos = model.getSize();
 
@@ -215,6 +253,7 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         }
 
         changed = true;
+        */
     }
 
     /**
