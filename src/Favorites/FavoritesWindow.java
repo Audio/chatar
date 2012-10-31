@@ -10,7 +10,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 
-// TODO ikonku pro todle vokno
 public class FavoritesWindow extends JFrame implements WindowListener {
 
     private static FavoritesWindow instance;
@@ -36,6 +35,7 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         setTitle("Seznam oblíbených serverů");
         setResizable(false);
         setSize(WINDOW_WIDTH, 290);
+        setIconImage( new ImageIcon("img/favorites-icon.png").getImage() );
 
         createMainPanel();
         reloadServerList();
