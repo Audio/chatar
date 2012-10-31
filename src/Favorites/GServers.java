@@ -136,10 +136,12 @@ public class GServers extends JFrame implements WindowListener {
      * Nacte seznam serveru ze souboru.
      */
     private void loadServerList() {
-        String[] srv = Servers.loadFile();
+        /*
+        String[] srv = Storage.loadFile();
         for (int i = 0; i < srv.length; i++) {
             addServer(srv[i]);
         }
+        */
     }
 
     /**
@@ -232,12 +234,14 @@ public class GServers extends JFrame implements WindowListener {
         if (!changed)
             return;
 
+        /*
         DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
-        Servers.reset();
+        Storage.reset();
         for (int i = 0; i < model.getSize(); i++) {
-            Servers.addServer( model.get(i) );
+            Storage.addServer( model.get(i) );
         }
-        Servers.saveFile();
+        Storage.saveFile();
+        */
 
         changed = false;
     }
