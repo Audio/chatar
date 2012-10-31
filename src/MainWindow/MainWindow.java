@@ -52,7 +52,6 @@ public class MainWindow extends JFrame {
         tabContainer = new TabContainer(650, 400);
         JPanel inputArea = createInputArea();
 
-        // umisteni panelu ve formulari
         JPanel contentPanel = (JPanel) getContentPane();
         SpringLayout layout = new SpringLayout();
         contentPanel.setLayout(layout);
@@ -65,7 +64,7 @@ public class MainWindow extends JFrame {
         // Roztahovani vertikalni - tab
         layout.putConstraint(SpringLayout.EAST, contentPanel, 0, SpringLayout.EAST, tabContainer);
         layout.putConstraint(SpringLayout.SOUTH, contentPanel, 40, SpringLayout.SOUTH, tabContainer);
-        // Roztahovani hirizontalni - tab, input
+        // Roztahovani horizontalni - tab, input
         layout.putConstraint(SpringLayout.EAST, contentPanel, 0, SpringLayout.EAST, inputArea);
         layout.putConstraint(SpringLayout.EAST, inputArea, 0, SpringLayout.EAST, tabContainer);
 

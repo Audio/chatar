@@ -55,7 +55,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         textpanel.setLayout( new BoxLayout(textpanel, BoxLayout.LINE_AXIS) );
         GUI.setPreferredSize(textpanel, 650, 320);
         textpanel.setBorder( BorderFactory.createEmptyBorder(10, 10, 10, 10) );
-        textpanel.setBackground( new Color(255, 255, 255) );
+        textpanel.setBackground(Color.WHITE);
 
         JScrollPane scrollpanel = new JScrollPane();
         scrollpanel.setBorder( BorderFactory.createEmptyBorder() );

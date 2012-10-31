@@ -51,7 +51,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         userList.setSelectedIndex(0);
         userList.setLayoutOrientation(JList.VERTICAL);
-        userList.setSelectionBackground( new Color(230, 230, 255) );
+        userList.setSelectionBackground( new Color(102, 153, 255) );
         userList.setCellRenderer(userListRenderer);
 
         JScrollPane panel = new JScrollPane(userList);

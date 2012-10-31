@@ -87,7 +87,7 @@ public class MainMenu extends JMenuBar {
         // TODO po kliknutí se připojí
 
         JMenuItem edit = new JMenuItem("Editovat seznam");
-        edit.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK) );
+        edit.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK) );
         edit.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

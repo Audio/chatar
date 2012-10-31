@@ -27,6 +27,7 @@ public class Client {
         MainWindow.getInstance().validate();
     }
 
+    // TODO otazku dat do MainWindow
     public static void terminate(int returnCode) {
 
         if (returnCode > 0) {

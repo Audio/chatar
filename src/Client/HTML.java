@@ -14,7 +14,7 @@ public class HTML {
     }
 
     public static String red(String str) {
-        return color(str, new Color(255, 0, 0) );
+        return color(str, Color.RED);
     }
 
     public static String blue(String str) {

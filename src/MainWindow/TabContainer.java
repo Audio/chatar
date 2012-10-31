@@ -12,7 +12,6 @@ public class TabContainer extends JTabbedPane {
 
 
     public TabContainer(int width, int height) {
-
         GUI.setPreferredSize(this, width, height);
         setTabPlacement(JTabbedPane.BOTTOM);
 
@@ -24,7 +23,6 @@ public class TabContainer extends JTabbedPane {
                     tab.setFocus();
             }
         });
-
     }
 
     public ServerTab createServerTab(ServerAddress address) {
