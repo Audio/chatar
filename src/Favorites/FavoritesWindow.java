@@ -5,6 +5,7 @@ import MainWindow.MainWindow;
 import Dialog.MessageDialog;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -16,10 +17,9 @@ public class FavoritesWindow extends JFrame implements WindowListener {
     static final long serialVersionUID = 1L;
 
     private final int WINDOW_WIDTH = 500;
+    private Storage storage;
+    private List<Server> servers;
     private JTabbedPane tabPanel;
-
-    // TODO nepotřeba
-    private boolean changed;
 
 
     public static FavoritesWindow getInstance() {
@@ -30,13 +30,15 @@ public class FavoritesWindow extends JFrame implements WindowListener {
     }
 
     private FavoritesWindow() {
+        this.storage = new Storage();
+
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setTitle("Seznam oblíbených serverů");
         setResizable(false);
         setSize(WINDOW_WIDTH, 290);
 
         createMainPanel();
-        loadServerList();
+        reloadServerList();
 
         addWindowListener(this);
     }
@@ -82,8 +84,8 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         save.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.err.println("neumim!!");
-                // actionSave();
+                saveList();
+                close();
             }
         });
 
@@ -102,102 +104,71 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         return buttonPanel;
     }
 
-    private void addServer(String address) {
-        // servers.addElement(address);
-    }
-
-    private void loadServerList() {
-        tabPanel.add("Rizon", new Form() );
-        tabPanel.add("Quakenet", new Form() );
-        /*
-        String[] srv = Storage.loadFile();
-        for (int i = 0; i < srv.length; i++) {
-            addServer(srv[i]);
-        }
-        */
-    }
-
-    private void actionCancel() {
-        changed = false;
-        setVisible(false);
-    }
-
-    private void actionDeleteCurrent() {
-        /*
-        int index = list.getSelectedIndex();
-        servers.remove(index);
-
-        int size = servers.getSize();
-
-        if (size == 0) {
-            // znemozni pripojeni / vyber
-            connect.setEnabled(false);
-            delete.setEnabled(false);
-        }
-        else {
-            if (index == servers.getSize()) {
-                // odstraneni posledni pozice
-                index--;
-            }
-
-            list.setSelectedIndex(index);
-            list.ensureIndexIsVisible(index);
-            connect.setEnabled(true);
-            delete.setEnabled(true);
+    private void reloadServerList() {
+        tabPanel.removeAll();
+        servers = storage.load();
+        for (Server s : servers) {
+            Form form = new Form(this) ;
+            form.setTitle( s.get("title") );
+            form.setAddress( s.get("address") );
+            form.setPort( s.get("port") );
+            form.setNickname( s.get("nickname") );
+            form.setChannels( s.get("channels") );
+            tabPanel.add(s.get("title"), form);
         }
 
-        changed = true;
-        */
     }
 
     private void actionAddServer() {
-        /*
-        DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
-        int pos = model.getSize();
-
-        String msg = "Vložte adresu serveru ve tvaru 'irc.adresa.cz'."
-                   + "\n\nUpozornění: výchozí port je 6667.\nPro určení jiného portu zadejte adresu ve tvaru 'irc.adresa.cz:port'."
-                   + "\n\nNapř.: irc.mmoirc.com nebo irc.mmoirc.com:6667"
-                   + "\n\n";
-        String address = MessageDialog.inputQuestion("Přidání adresy serveru", msg);
-
-        if (address != null && address.trim().length() > 0) {
-            model.add(pos, address);
-            connect.setEnabled(true);
-            delete.setEnabled(true);
-        }
-
-        changed = true;
-        */
+        Form form = new Form(this);
+        servers.add( new Server() );
+        tabPanel.add("Nový server", form);
+        tabPanel.setSelectedIndex( tabPanel.getComponentCount() - 1 );
+        form.focusTitle();
     }
 
-    /**
-     * Skryva okno. Dava prikaz k ulozeni hodnot do souboru.
-     */
-    private void close () {
+    void serverTitleHasChanged(String newTitle) {
+        int serverId = tabPanel.getSelectedIndex();
+        tabPanel.setTitleAt(serverId, newTitle);
+    }
+
+    void actionDeleteCurrent() {
+        Form form = (Form) tabPanel.getSelectedComponent();
+        boolean delete = MessageDialog.confirmQuestion("Odstranění serveru",
+                        "Potvrďte odstranění serveru " + form.getTitle() + "." );
+
+        if (delete) {
+            int serverId = tabPanel.getSelectedIndex();
+            servers.remove(serverId);
+            tabPanel.remove(serverId);
+        }
+    }
+
+    private void saveList() {
+        int serverCount = servers.size();
+        for (int i = 0; i < serverCount; ++i)
+            storeDetails(i);
+
+        storage.store(servers);
+    }
+
+    private void storeDetails(int serverId) {
+        Server s = servers.get(serverId);
+        Form form = (Form) tabPanel.getComponentAt(serverId);
+        s.set("title", form.getTitle() );
+        s.set("address", form.getAddress() );
+        s.set("port", form.getPort() );
+        s.set("nickname", form.getNickname() );
+        s.set("channels", form.getChannels() );
+    }
+
+    private void actionCancel() {
+        reloadServerList();
+        close();
+    }
+
+    private void close() {
         setVisible(false);
-        if (changed)
-            saveList();
-    }
-
-    /**
-     * Pri zavirani okna (skryti) uklada obsah serveru do souboru
-     * (jen pokud doslo ke zmene).
-     */
-    private void saveList () {
-        if (!changed)
-            return;
-
-        /*
-        DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
-        Storage.reset();
-        for (int i = 0; i < model.getSize(); i++) {
-            Storage.addServer( model.get(i) );
-        }
-        Storage.saveFile();
-        */
-
-        changed = false;
     }
 
     @Override

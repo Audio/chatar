@@ -5,7 +5,11 @@ import java.awt.Color;
 
 class Form extends javax.swing.JPanel {
 
-    public Form() {
+    private FavoritesWindow window;
+
+
+    Form(FavoritesWindow window) {
+        this.window = window;
         initComponents();
         setBackground(Color.WHITE);
         channels.setFont( title.getFont() );
@@ -46,6 +50,12 @@ class Form extends javax.swing.JPanel {
         delete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteActionPerformed(evt);
+            }
+        });
+
+        title.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                titleHasChanged(evt);
             }
         });
 
@@ -113,9 +123,14 @@ class Form extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
-        System.err.println("neumim!!");
-        // actionDeleteCurrent();
+        window.actionDeleteCurrent();
     }//GEN-LAST:event_deleteActionPerformed
+
+    private void titleHasChanged(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_titleHasChanged
+        String newTitle = getTitle();
+        if ( !newTitle.isEmpty() )
+            window.serverTitleHasChanged(newTitle);
+    }//GEN-LAST:event_titleHasChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField address;
@@ -132,41 +147,46 @@ class Form extends javax.swing.JPanel {
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
 
-    public String getTitle() {
+    void focusTitle() {
+        title.requestFocus();
+    }
+
+    String getTitle() {
         return title.getText();
     }
 
-    public void setTitle(String value) {
+    void setTitle(String value) {
         title.setText(value);
     }
 
-    public String getAddress() {
+    String getAddress() {
         return address.getText();
     }
 
-    public void setAddress(String value) {
+    void setAddress(String value) {
         address.setText(value);
     }
 
-    public String getPort() {
+    String getPort() {
         return port.getText();
     }
 
-    public void setPort(String value) {
+    void setPort(String value) {
         port.setText(value);
     }
-    public String getNickname() {
+    String getNickname() {
         return nickname.getText();
     }
 
-    public void setNickname(String value) {
+    void setNickname(String value) {
         nickname.setText(value);
     }
-    public String getChannels() {
+
+    String getChannels() {
         return channels.getText();
     }
 
-    public void setChannels(String value) {
+    void setChannels(String value) {
         channels.setText(value);
     }
 
