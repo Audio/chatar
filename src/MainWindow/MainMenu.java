@@ -4,7 +4,7 @@ import Client.Client;
 import Config.GConfig;
 import Connection.InputHandler;
 import Dialog.MessageDialog;
-import Favorites.GServers;
+import Favorites.FavoritesWindow;
 import Favorites.ServerAddress;
 import java.awt.Component;
 import java.awt.event.*;
@@ -91,7 +91,7 @@ public class MainMenu extends JMenuBar {
         edit.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GServers.getInstance().setVisible(true);
+                FavoritesWindow.getInstance().setVisible(true);
             }
         });
 

@@ -8,9 +8,9 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-public class GServers extends JFrame implements WindowListener {
+public class FavoritesWindow extends JFrame implements WindowListener {
 
-    private static GServers instance;
+    private static FavoritesWindow instance;
     static final long serialVersionUID = 1L;
 
     private JList<String> list;
@@ -20,14 +20,14 @@ public class GServers extends JFrame implements WindowListener {
     private boolean changed;
 
 
-    public static GServers getInstance() {
+    public static FavoritesWindow getInstance() {
         if (instance == null)
-            instance = new GServers();
+            instance = new FavoritesWindow();
 
         return instance;
     }
 
-    private GServers() {
+    private FavoritesWindow() {
 
         // Nastaveni okna
         setDefaultCloseOperation(HIDE_ON_CLOSE);
