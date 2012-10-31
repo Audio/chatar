@@ -6,6 +6,7 @@ import Dialog.MessageDialog;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 
 // TODO ikonku pro todle vokno
@@ -17,14 +18,7 @@ public class FavoritesWindow extends JFrame implements WindowListener {
     private final int WINDOW_WIDTH = 500;
     private JTabbedPane tabPanel;
 
-    private JTextField title;
-    private JTextField address;
-    private JTextField port;
-    private JTextField nickname;
-    private JTextArea channels;
-    // TODO JPasswordField password (auth)
-
-    private JButton delete;
+    // TODO nepotřeba
     private boolean changed;
 
 
@@ -39,7 +33,7 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setTitle("Seznam oblíbených serverů");
         setResizable(false);
-        setSize(WINDOW_WIDTH, 300);
+        setSize(WINDOW_WIDTH, 290);
 
         createMainPanel();
         loadServerList();
@@ -53,10 +47,11 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         contentPanel.setLayout(layout);
 
         tabPanel = new JTabbedPane(JTabbedPane.LEFT);
-        GUI.setExactSize(tabPanel, WINDOW_WIDTH, 200);
+        tabPanel.setBorder( new EmptyBorder(10, 10, 0, 10) );
+        GUI.setExactSize(tabPanel, WINDOW_WIDTH - 10, 210);
 
         JPanel buttonPanel = createButtonPanel();
-        GUI.setExactSize(buttonPanel, WINDOW_WIDTH, 100);
+        GUI.setExactSize(buttonPanel, WINDOW_WIDTH, 60);
 
         layout.putConstraint(SpringLayout.WEST, buttonPanel, 0, SpringLayout.WEST, tabPanel);
         layout.putConstraint(SpringLayout.NORTH, buttonPanel, 0, SpringLayout.SOUTH, tabPanel);
@@ -64,86 +59,6 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         contentPanel.add(tabPanel);
         contentPanel.add( Box.createVerticalGlue() );
         contentPanel.add(buttonPanel);
-    }
-
-    private JPanel createTabContent() {
-        JPanel panel = new JPanel();
-        panel.setBackground(Color.WHITE);
-
-        final int SPACER = 15;
-        final int LABEL_SPACER = 22;
-
-        JLabel titleLabel = new JLabel("Název v Oblíbených:");
-        JLabel addressLabel = new JLabel("Adresa serveru:");
-        JLabel portLabel = new JLabel("Port:");
-        JLabel nicknameLabel = new JLabel("Přezdívka:");
-        JLabel channelsLabel = new JLabel("<html>Automaticky připojit<br>do těchto kanálů:"
-                                        + "<br><br>(oddělujte čárkou)</html>");
-
-        Box labels = Box.createVerticalBox();
-        labels.add( Box.createRigidArea( new Dimension(0, 5)) );
-        labels.add(titleLabel);
-        labels.add( Box.createRigidArea( new Dimension(0, LABEL_SPACER)) );
-        labels.add(addressLabel);
-        labels.add( Box.createRigidArea( new Dimension(0, LABEL_SPACER)) );
-        labels.add(nicknameLabel);
-        labels.add( Box.createRigidArea( new Dimension(0, LABEL_SPACER)) );
-        labels.add(channelsLabel);
-        panel.add(labels);
-
-        title = new JTextField(15);
-        address = new JTextField();
-        port = new JTextField(5);
-        nickname = new JTextField();
-        channels = new JTextArea(3, 35);
-        channels.setFont( title.getFont() );
-        channels.setBorder( title.getBorder() );
-
-        Box inputsLeft = Box.createVerticalBox();
-        inputsLeft.add(title);
-        inputsLeft.add( Box.createRigidArea( new Dimension(0, SPACER)) );
-        inputsLeft.add(address);
-        inputsLeft.add( Box.createRigidArea( new Dimension(0, SPACER)) );
-        inputsLeft.add(nickname);
-
-        delete = new JButton("Odebrat");
-        delete.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionDeleteCurrent();
-            }
-        });
-
-        Box portBox = Box.createHorizontalBox();
-        portBox.add(portLabel);
-        portBox.add( Box.createRigidArea( new Dimension(SPACER, 0)) );
-        portBox.add(port);
-
-        Box inputsRight = Box.createVerticalBox();
-        inputsRight.setAlignmentY(BOTTOM_ALIGNMENT);
-        inputsRight.setAlignmentX(RIGHT_ALIGNMENT);
-        inputsRight.add(delete);
-        inputsRight.add( Box.createRigidArea( new Dimension(0, SPACER)) );
-        inputsRight.add(portBox);
-
-        Box inputs = Box.createHorizontalBox();
-        inputs.add(inputsLeft);
-        inputs.add( Box.createRigidArea( new Dimension(SPACER, 0)) );
-        inputs.add(inputsRight);
-
-        Box rightSide = Box.createVerticalBox();
-        rightSide.add(inputs);
-        rightSide.add( Box.createRigidArea( new Dimension(0, SPACER)) );
-        rightSide.add(channels);
-
-        Box all = Box.createHorizontalBox();
-        all.add(labels);
-        all.add( Box.createRigidArea( new Dimension(SPACER, 0)) );
-        all.add(rightSide);
-
-        panel.add(all);
-
-        return panel;
     }
 
     private JPanel createButtonPanel() {
@@ -173,9 +88,9 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         });
 
         Box buttons = Box.createHorizontalBox();
-        buttons.add( Box.createRigidArea( new Dimension(60, 0)) );
+        buttons.add( Box.createRigidArea( new Dimension(70, 0)) );
         buttons.add(create);
-        buttons.add( Box.createRigidArea( new Dimension(WINDOW_WIDTH - 350, 0)) );
+        buttons.add( Box.createRigidArea( new Dimension(WINDOW_WIDTH - 370, 0)) );
         buttons.add(cancel);
         buttons.add( Box.createRigidArea( new Dimension(10, 0)) );
         buttons.add(save);
@@ -192,8 +107,8 @@ public class FavoritesWindow extends JFrame implements WindowListener {
     }
 
     private void loadServerList() {
-        JPanel panel = createTabContent();
-        tabPanel.add("Brambora", panel);
+        tabPanel.add("Rizon", new Form() );
+        tabPanel.add("Quakenet", new Form() );
         /*
         String[] srv = Storage.loadFile();
         for (int i = 0; i < srv.length; i++) {
