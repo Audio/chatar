@@ -359,8 +359,8 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         if ( recipient.equals(myNick) ) {
             getServerTab().removeChannelTab(this);
         } else {
-            appendInfo(initiator + " vykopnul " + recipient + " (důvod: " + reason + ")");
-            usersModel.detachUser(initiator);
+            appendInfo(initiator + " vyhodil " + recipient + " (důvod: " + reason + ")");
+            usersModel.detachUser(recipient);
         }
     }
 
