@@ -25,8 +25,15 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     public ChannelTab(String channel, final ServerTab serverTab) {
         this.serverTab = serverTab;
+        this.tabName = channel;
+        this.usersQueue = new LinkedList<>();
 
-        // Konstrukce panelu
+        createMainPanel();
+        createPopupMenu();
+        setTopic(null);
+    }
+
+    private void createMainPanel() {
         SpringLayout layout = new SpringLayout();
         setLayout(layout);
 
@@ -102,7 +109,18 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         rightbox.add( Box.createRigidArea(new Dimension(0, 5)) );
         rightbox.add(bottompanel);
 
-        // Popup menu - navazuje se az na konkretni objekty v seznamu
+        add(userspanel);
+        add(rightbox);
+        setBackground(Color.WHITE);
+
+        layout.putConstraint(SpringLayout.WEST, rightbox, 5, SpringLayout.EAST, userspanel);
+        layout.putConstraint(SpringLayout.EAST, rightbox, 0, SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.SOUTH, this, 0, SpringLayout.SOUTH, rightbox);
+        layout.putConstraint(SpringLayout.NORTH, userspanel, 5, SpringLayout.NORTH, rightbox);
+        layout.putConstraint(SpringLayout.SOUTH, userspanel, 0, SpringLayout.SOUTH, rightbox);
+    }
+
+    private void createPopupMenu() {
         popup = new JPopupMenu();
 
         JMenuItem tl1 = new JMenuItem("Poslat zprávu");
@@ -136,23 +154,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
         popupListener = new PopupListener();
         userList.addMouseListener(popupListener);
-
-        // Uskladneni objektu to hlavniho panelu
-        add(userspanel);
-        add(rightbox);
-        setBackground(Color.WHITE);
-
-        //layout.putConstraint(SpringLayout.WEST, this, 0, SpringLayout.WEST, userspanel);
-        layout.putConstraint(SpringLayout.WEST, rightbox, 5, SpringLayout.EAST, userspanel);
-        layout.putConstraint(SpringLayout.EAST, rightbox, 0, SpringLayout.EAST, this);
-        layout.putConstraint(SpringLayout.SOUTH, this, 0, SpringLayout.SOUTH, rightbox);
-        layout.putConstraint(SpringLayout.NORTH, userspanel, 5, SpringLayout.NORTH, rightbox);
-        layout.putConstraint(SpringLayout.SOUTH, userspanel, 0, SpringLayout.SOUTH, rightbox);
-
-        tabName = channel;
-        usersQueue = new LinkedList<>();
-
-        setTopic(null);
     }
 
     class PopupListener extends MouseAdapter {
