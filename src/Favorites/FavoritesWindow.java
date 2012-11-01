@@ -11,7 +11,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 
-// TODO poslouchat enter a escape
 public class FavoritesWindow extends JFrame implements WindowListener {
 
     private static FavoritesWindow instance;
@@ -44,6 +43,9 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         reloadServerList();
 
         addWindowListener(this);
+
+        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        manager.addKeyEventDispatcher( new KeyDispatcher() );
     }
 
     private void createMainPanel() {
@@ -177,6 +179,11 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         s.set("channels", form.getChannels() );
     }
 
+    private boolean isChannelsFocused() {
+        Form form = (Form) tabPanel.getSelectedComponent();
+        return form.isChannelsFocused();
+    }
+
     private void actionCancel() {
         reloadServerList();
         close();
@@ -201,5 +208,23 @@ public class FavoritesWindow extends JFrame implements WindowListener {
     public void windowDeiconified(WindowEvent e) { }
     public void windowActivated(WindowEvent e) { }
     public void windowDeactivated(WindowEvent e) { }
+
+    private class KeyDispatcher implements KeyEventDispatcher {
+
+        @Override
+        public boolean dispatchKeyEvent(KeyEvent e) {
+            if ( e.getID() == KeyEvent.KEY_RELEASED ) {
+                if ( e.getKeyCode() == KeyEvent.VK_ENTER && !isChannelsFocused() ) {
+                    saveList();
+                    close();
+                } else if ( e.getKeyCode() == KeyEvent.VK_ESCAPE ) {
+                    close();
+                }
+            }
+
+            return false;
+        }
+
+    }
 
 }
