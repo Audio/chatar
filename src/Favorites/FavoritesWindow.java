@@ -179,11 +179,6 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         s.set("channels", form.getChannels() );
     }
 
-    private boolean isChannelsFocused() {
-        Form form = (Form) tabPanel.getSelectedComponent();
-        return form.isChannelsFocused();
-    }
-
     private void actionCancel() {
         reloadServerList();
         close();
@@ -214,10 +209,14 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         @Override
         public boolean dispatchKeyEvent(KeyEvent e) {
             if ( e.getID() == KeyEvent.KEY_RELEASED ) {
-                if ( e.getKeyCode() == KeyEvent.VK_ENTER && !isChannelsFocused() ) {
+                boolean happenedOnTextField = e.getComponent() instanceof JTextField;
+                boolean happenedOnTextArea = e.getComponent() instanceof JTextArea;
+
+                if ( e.getKeyCode() == KeyEvent.VK_ENTER && happenedOnTextField ) {
                     saveList();
                     close();
-                } else if ( e.getKeyCode() == KeyEvent.VK_ESCAPE ) {
+                } else if ( e.getKeyCode() == KeyEvent.VK_ESCAPE
+                            && (happenedOnTextField || happenedOnTextArea) ) {
                     close();
                 }
             }

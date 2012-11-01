@@ -161,10 +161,6 @@ class Form extends javax.swing.JPanel {
         title.selectAll();
     }
 
-    boolean isChannelsFocused() {
-        return channels.hasFocus();
-    }
-
     String getTitle() {
         return title.getText().trim();
     }
