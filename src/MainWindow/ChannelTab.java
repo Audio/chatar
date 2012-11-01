@@ -123,34 +123,52 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     private void createPopupMenu() {
         popup = new JPopupMenu();
 
-        JMenuItem tl1 = new JMenuItem("Poslat zprávu");
-        tl1.addActionListener( new ActionListener() {
+        JMenuItem b1 = new JMenuItem("Poslat zprávu");
+        b1.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 openChatByClick(selectedPopupUser);
             }
-        } );
+        });
 
-        JMenuItem tl2 = new JMenuItem("Získat informace");
-        tl2.addActionListener( new ActionListener() {
+        JMenuItem b2 = new JMenuItem("Zobrazit údaje");
+        b2.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 getServerTab().getConnection().whois(selectedPopupUser);
             }
-        } );
+        });
 
-        JMenuItem tl3 = new JMenuItem("Vyhodit z místnosti");
-        tl3.addActionListener( new ActionListener() {
+        JMenuItem b3 = new JMenuItem("Vyhodit");
+        b3.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String params = getTabName() + " " + selectedPopupUser;
-                InputHandler.handleKick(params);
+                getServerTab().getConnection().kick( getTabName(), selectedPopupUser);
             }
-        } );
+        });
 
-        popup.add(tl1);
-        popup.add(tl2);
-        popup.add(tl3);
+        JMenuItem b4 = new JMenuItem("Zakázat");
+        b4.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getServerTab().getConnection().ban( getTabName(), selectedPopupUser);
+            }
+        });
+
+        JMenuItem b5 = new JMenuItem("Zakázat a vyhodit");
+        b5.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getServerTab().getConnection().ban( getTabName(), selectedPopupUser);
+                getServerTab().getConnection().kick( getTabName(), selectedPopupUser);
+            }
+        });
+
+        popup.add(b1);
+        popup.add(b2);
+        popup.add(b3);
+        popup.add(b4);
+        popup.add(b5);
 
         popupListener = new PopupListener();
         userList.addMouseListener(popupListener);
