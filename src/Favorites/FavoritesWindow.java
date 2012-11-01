@@ -5,11 +5,13 @@ import MainWindow.MainWindow;
 import Dialog.MessageDialog;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 
+// TODO poslouchat enter a escape
 public class FavoritesWindow extends JFrame implements WindowListener {
 
     private static FavoritesWindow instance;
@@ -18,6 +20,7 @@ public class FavoritesWindow extends JFrame implements WindowListener {
     private final int WINDOW_WIDTH = 500;
     private Storage storage;
     private List<Server> servers;
+    private List<JLabel> tabLabels;
     private JTabbedPane tabPanel;
 
 
@@ -104,7 +107,18 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         return buttonPanel;
     }
 
+    private void addTab(Form form) {
+        JLabel label = new JLabel( form.getTitle() );
+        GUI.setExactSize(label, 45, 20);
+        tabLabels.add(label);
+
+        tabPanel.add("", form);
+        int index = tabPanel.getTabCount() - 1;
+        tabPanel.setTabComponentAt(index, label);
+    }
+
     private void reloadServerList() {
+        tabLabels = new ArrayList<>();
         tabPanel.removeAll();
         servers = storage.load();
         for (Server s : servers) {
@@ -114,22 +128,22 @@ public class FavoritesWindow extends JFrame implements WindowListener {
             form.setPort( s.get("port") );
             form.setNickname( s.get("nickname") );
             form.setChannels( s.get("channels") );
-            tabPanel.add(s.get("title"), form);
+            addTab(form);
         }
-
     }
 
     private void actionAddServer() {
         Form form = new Form(this);
+        form.setTitle("Nový server");
         servers.add( new Server() );
-        tabPanel.add("Nový server", form);
-        tabPanel.setSelectedIndex( tabPanel.getComponentCount() - 1 );
+        addTab(form);
+        tabPanel.setSelectedIndex( tabPanel.getTabCount() - 1 );
         form.focusTitle();
     }
 
     void serverTitleHasChanged(String newTitle) {
         int serverId = tabPanel.getSelectedIndex();
-        tabPanel.setTitleAt(serverId, newTitle);
+        tabLabels.get(serverId).setText(newTitle);
     }
 
     void actionDeleteCurrent() {

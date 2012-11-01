@@ -53,16 +53,27 @@ class Form extends javax.swing.JPanel {
             }
         });
 
+        title.setMaximumSize(new java.awt.Dimension(6, 20));
+        title.setNextFocusableComponent(address);
         title.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 titleHasChanged(evt);
             }
         });
 
+        address.setMaximumSize(new java.awt.Dimension(6, 20));
+        address.setNextFocusableComponent(port);
+
+        nickname.setMaximumSize(new java.awt.Dimension(6, 20));
+
         portLabel.setLabelFor(port);
         portLabel.setText("Port:");
 
+        port.setMaximumSize(new java.awt.Dimension(6, 20));
+        port.setNextFocusableComponent(nickname);
+
         channels.setColumns(20);
+        channels.setLineWrap(true);
         channels.setRows(5);
         jScrollPane1.setViewportView(channels);
 
@@ -77,22 +88,20 @@ class Form extends javax.swing.JPanel {
                     .addComponent(titleLabel)
                     .addComponent(addressLabel)
                     .addComponent(channelsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(nickname, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(address, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(portLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(port)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(nickname, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
-                            .addComponent(address)
-                            .addComponent(title, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
+                        .addComponent(port, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(delete))
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -149,10 +158,11 @@ class Form extends javax.swing.JPanel {
 
     void focusTitle() {
         title.requestFocus();
+        title.selectAll();
     }
 
     String getTitle() {
-        return title.getText();
+        return title.getText().trim();
     }
 
     void setTitle(String value) {
@@ -160,7 +170,7 @@ class Form extends javax.swing.JPanel {
     }
 
     String getAddress() {
-        return address.getText();
+        return address.getText().trim();
     }
 
     void setAddress(String value) {
@@ -168,14 +178,15 @@ class Form extends javax.swing.JPanel {
     }
 
     String getPort() {
-        return port.getText();
+        return port.getText().trim();
     }
 
     void setPort(String value) {
         port.setText(value);
     }
+
     String getNickname() {
-        return nickname.getText();
+        return nickname.getText().trim();
     }
 
     void setNickname(String value) {
@@ -183,7 +194,7 @@ class Form extends javax.swing.JPanel {
     }
 
     String getChannels() {
-        return channels.getText();
+        return channels.getText().trim();
     }
 
     void setChannels(String value) {
