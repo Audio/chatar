@@ -1,20 +1,24 @@
 package Favorites;
 
+import java.util.*;
+
 
 public class ConnectionDetails {
 
     public static final int DEFAULT_PORT = 6667;
-    public static final String DEFAULT_NICK = "ChatarUser";
+    public static final String DEFAULT_NICK = "Chatar";
 
     public String address;
     public int port;
     public String nickname;
+    public List<String> channelsToJoin;
 
 
     private ConnectionDetails() {
         this.address = "";
         this.port = DEFAULT_PORT;
         this.nickname = DEFAULT_NICK;
+        this.channelsToJoin = new ArrayList<>();
     }
 
     public static ConnectionDetails fromAddress(String fullAddress) {
@@ -45,7 +49,17 @@ public class ConnectionDetails {
         if ( !nick.isEmpty() )
             cd.nickname = nick;
 
+        String autoChans = server.get("channels");
+        if ( !autoChans.isEmpty() )
+            cd.addChannelList(autoChans);
+
         return cd;
+    }
+
+    private void addChannelList(String channels) {
+        String[] c = channels.split(",?\\s+");
+        Collections.addAll(channelsToJoin, c);
+        Collections.sort(channelsToJoin);
     }
 
     public boolean isValid() {

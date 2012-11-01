@@ -114,8 +114,8 @@ public class MainMenu extends JMenuBar {
                 item.addActionListener( new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        ConnectionDetails sa = ConnectionDetails.fromServer(s);
-                        MainWindow.getInstance().createServerTab(sa);
+                        ConnectionDetails cd = ConnectionDetails.fromServer(s);
+                        MainWindow.getInstance().createServerTab(cd);
                     }
                 });
 

@@ -46,13 +46,6 @@ public class Storage {
             for (Match attr : attributes)
                 s.set(attr.tag(), attr.text() );
 
-            // TODO parsovani jinde
-            /*
-            s.autojoinChannels =  new ArrayList<>();
-            String[] channels = server.find("autojoin").text().split(",?\\s+");
-            Collections.addAll(s.autojoinChannels, channels);
-            */
-
             list.add(s);
         }
  

@@ -4,7 +4,8 @@ import Client.*;
 import Connection.*;
 import Dialog.MessageDialog;
 import Favorites.ConnectionDetails;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -17,11 +18,12 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     private JLabel addressLabel;
     private JLabel channelsLabel;
     private Connection connection;
-    private ArrayList<ChannelTab> channelTabs;
-    private ArrayList<PrivateChatTab> privateChatTabs;
+    private List<String> channelsToJoin;
+    private List<ChannelTab> channelTabs;
+    private List<PrivateChatTab> privateChatTabs;
 
 
-    public ServerTab(ConnectionDetails sa) {
+    public ServerTab(ConnectionDetails cd) {
         SpringLayout layout = new SpringLayout();
         setLayout(layout);
 
@@ -31,7 +33,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         GUI.setPreferredSize(top, 700, 50);
 
         JLabel text_address = new JLabel("Server:");
-        addressLabel = new JLabel("irc://" + sa.address + "/");
+        addressLabel = new JLabel("irc://" + cd.address + "/");
 
         Box r1 = Box.createHorizontalBox();
         r1.setBorder( BorderFactory.createEmptyBorder(10, 0, 0, 0) );
@@ -77,11 +79,12 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         layout.putConstraint(SpringLayout.SOUTH, this, 0, SpringLayout.SOUTH, textpanel);
 
         appendInfo("Probíhá připojování na server...");
-        tabName = sa.address;
+        tabName = cd.address;
+        channelsToJoin = cd.channelsToJoin;
         channelTabs = new ArrayList<>();
         privateChatTabs = new ArrayList<>();
 
-        connection = new Connection(sa);
+        connection = new Connection(cd);
         connection.setServerEventsListener(this);
         (new Thread(connection)).start();
     }
@@ -162,6 +165,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         MainWindow.getInstance().getMainMenu().toggleConnectionActions(true);
         MainWindow.getInstance().getMainMenu().toggleUserMenuBar(true);
         MainWindow.getInstance().getNickButton().setText( connection.getNick() );
+        autoJoinChannels();
     }
 
     @Override
@@ -169,6 +173,13 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         MessageDialog.error("Chyba připojení", "K vybranému serveru se nelze připojit.");
         appendError("Spojení nelze uskutečnit: " + reason);
         ClientLogger.log("Nelze se připojit: " + reason, ClientLogger.ERROR);
+    }
+
+    private void autoJoinChannels() {
+        while ( channelsToJoin.size() > 0 ) {
+            ChannelTab tab = createChannelTab( channelsToJoin.remove(0) );
+            tab.setFocus();
+        }
     }
 
     @Override
