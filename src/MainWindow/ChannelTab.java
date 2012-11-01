@@ -346,16 +346,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     }
 
     @Override
-    public void userBanned(String initiator, String recipient) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void userUnbanned(String initiator, String recipient) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public void topicChanged(String initiator, String topic) {
         String message = initiator + " nastavil téma na " + HTML.bold(topic);
         appendInfo(message);

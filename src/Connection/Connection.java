@@ -218,18 +218,6 @@ public class Connection extends PircBot implements Runnable {
             listener.userKicked(kickerNick, recipientNick, reason);
     }
 
-    private void notifyAboutUserBanned(String channel, String initiator, String recipient) {
-        ChannelEventsListener listener = getChannelEventsListener(channel);
-        if (listener != null)
-            listener.userBanned(initiator, recipient);
-    }
-
-    private void notifyAboutUserUnbanned(String channel, String initiator, String recipient) {
-        ChannelEventsListener listener = getChannelEventsListener(channel);
-        if (listener != null)
-            listener.userUnbanned(initiator, recipient);
-    }
-
     @Override
     protected void onTopic(String channel, String topic, String setBy, long date, boolean changed) {
         for (ChannelEventsListener listener : channelEventsListeners) {

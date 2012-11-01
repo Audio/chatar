@@ -15,14 +15,16 @@ public class User implements Comparable<User> {
                                 MODE_ADMIN = "a",
                                 MODE_OPERATOR = "o",
                                 MODE_HALF_OPERATOR = "h",
-                                MODE_VOICE = "v";
+                                MODE_VOICE = "v",
+                                MODE_BAN = "b";
 
     private static final String TEXT_OWNER = "Owner",
                                 TEXT_ADMIN = "Admin",
                                 TEXT_OPERATOR = "Operator",
                                 TEXT_HALF_OPERATOR = "Half operator",
                                 TEXT_VOICE = "Voice",
-                                TEXT_USER = "User";
+                                TEXT_USER = "User",
+                                TEXT_BAN = "Ban";
 
     private static final List<String> PRIORITIES = java.util.Arrays.asList(
                                         PREFIX_OWNER, PREFIX_ADMIN, PREFIX_OPERATOR,
@@ -94,6 +96,8 @@ public class User implements Comparable<User> {
                 return TEXT_HALF_OPERATOR;
             case MODE_VOICE:
                 return TEXT_VOICE;
+            case MODE_BAN:
+                return TEXT_BAN;
             default:
                 return TEXT_USER;
         }

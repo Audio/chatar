@@ -20,8 +20,6 @@ public interface ChannelEventsListener extends GlobalEventsListener {
     public void userLeft(String nickname);
     public void userQuit(String nickname, String reason);
     public void userKicked(String initiator, String recipient, String reason);
-    public void userBanned(String initiator, String recipient);
-    public void userUnbanned(String initiator, String recipient);
 
     public void topicChanged(String initiator, String topic);
 
