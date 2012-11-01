@@ -164,6 +164,7 @@ public class FavoritesWindow extends JFrame implements WindowListener {
             storeDetails(i);
 
         storage.store(servers);
+        MainWindow.getInstance().getMainMenu().loadFavoriteServersList(servers);
     }
 
     private void storeDetails(int serverId) {

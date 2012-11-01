@@ -4,10 +4,10 @@ import Client.Client;
 import Config.GConfig;
 import Connection.InputHandler;
 import Dialog.MessageDialog;
-import Favorites.FavoritesWindow;
-import Favorites.ServerAddress;
+import Favorites.*;
 import java.awt.Component;
 import java.awt.event.*;
+import java.util.List;
 import javax.swing.*;
 
 
@@ -16,12 +16,14 @@ public class MainMenu extends JMenuBar {
     static final long serialVersionUID = 1L;
 
     private JMenu userMenu;
+    private JMenu favoritesMenu;
 
     private JMenuItem joinToChannel;
     private JMenuItem disconnectFromAll;
     private JMenuItem disconnectFromServer;
     private JMenuItem clearChat;
     private JMenuItem closePanel;
+    private JMenuItem editFavorites;
 
 
     public MainMenu() {
@@ -81,23 +83,48 @@ public class MainMenu extends JMenuBar {
     }
 
     private void createFavoritesMenu() {
-        JMenu menu = new JMenu("Oblíbené");
+        favoritesMenu = new JMenu("Oblíbené");
 
-        // TODO seznam serverů
-        // TODO po kliknutí se připojí
-
-        JMenuItem edit = new JMenuItem("Editovat seznam");
-        edit.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK) );
-        edit.addActionListener( new ActionListener() {
+        editFavorites = new JMenuItem("Editovat seznam");
+        editFavorites.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK) );
+        editFavorites.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 FavoritesWindow.getInstance().setVisible(true);
             }
         });
 
-        menu.add(edit);
+        Storage storage = new Storage();
+        loadFavoriteServersList( storage.load() );
 
-        add(menu);
+        add(favoritesMenu);
+    }
+
+    public void loadFavoriteServersList(List<Server> servers) {
+        favoritesMenu.removeAll();
+
+        if ( servers.size() > 0 ) {
+            for (final Server s : servers) {
+                JMenuItem item = new JMenuItem( s.get("title") );
+                item.addActionListener( new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String addr = s.get("address");
+                        if ( !s.get("port").isEmpty() )
+                            addr += ":" + s.get("port");
+
+                        ServerAddress sa = new ServerAddress(addr);
+                        MainWindow.getInstance().createServerTab(sa);
+                    }
+                });
+
+                favoritesMenu.add(item);
+            }
+
+            favoritesMenu.addSeparator();
+        }
+
+        favoritesMenu.add(editFavorites);
     }
 
     private void createServerMenu() {
