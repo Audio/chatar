@@ -1,7 +1,6 @@
 package Client;
 
 import MainWindow.MainWindow;
-import Dialog.MessageDialog;
 import javax.swing.UIManager;
 
 
@@ -17,32 +16,10 @@ public class Client {
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
-            Client.run();
+            MainWindow.getInstance().setVisible(true);
         } catch (Exception e) {
             ClientLogger.log("Chyba při běhu programu: " + e.getMessage(), ClientLogger.ERROR);
         }
-    }
-
-    public static void run() {
-        MainWindow.getInstance().validate();
-    }
-
-    // TODO otazku dat do MainWindow
-    public static void terminate(int returnCode) {
-
-        if (returnCode > 0) {
-            ClientLogger.log("Program byl násilně ukončen.", ClientLogger.ERROR);
-            ClientLogger.quit();
-            System.exit(returnCode);
-        } else {
-            boolean close = MessageDialog.confirmQuestion("Ukončit aplikaci",
-                                                "Opravdu chcete ukončit aplikaci?");
-            if (close) {
-                ClientLogger.quit();
-                System.exit(0);
-            }
-        }
-
     }
 
 }

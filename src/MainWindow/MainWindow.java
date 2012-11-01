@@ -31,11 +31,11 @@ public class MainWindow extends JFrame {
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setVisible(true);
         setIconImage( new ImageIcon("img/app-icon.png").getImage() );
 
         createMenuBar();
         createContentArea();
+        validate();
     }
 
     public final void resetTitle() {

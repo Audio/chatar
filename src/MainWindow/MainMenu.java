@@ -1,6 +1,6 @@
 package MainWindow;
 
-import Client.Client;
+import Client.ClientLogger;
 import Config.GConfig;
 import Connection.InputHandler;
 import Dialog.MessageDialog;
@@ -70,7 +70,12 @@ public class MainMenu extends JMenuBar {
         close.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Client.terminate(0);
+                boolean close = MessageDialog.confirmQuestion("Ukončit aplikaci",
+                                                "Opravdu chcete ukončit aplikaci?");
+                if (close) {
+                    ClientLogger.quit();
+                    System.exit(0);
+                }
             }
         });
 
