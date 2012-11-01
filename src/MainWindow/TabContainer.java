@@ -2,6 +2,7 @@ package MainWindow;
 
 import Client.GUI;
 import Favorites.ConnectionDetails;
+import java.awt.Component;
 import javax.swing.JTabbedPane;
 import javax.swing.event.*;
 
@@ -50,7 +51,14 @@ public class TabContainer extends JTabbedPane {
             tip = "Server " + title;
         } else {
             ServerTab s = tab.getServerTab();
-            index = indexOfComponent(s) + 1;
+            index = indexOfComponent(s);
+
+            while ( ++index < getTabCount() ) {
+                Component c = getComponentAt(index);
+                if (c instanceof ServerTab)
+                    break;
+            }
+
             tip = "Server " + s.getTabName() + ", ";
             tip += (tab instanceof ChannelTab) ? "kanál" : "uživatel";
             tip += " " + title;
