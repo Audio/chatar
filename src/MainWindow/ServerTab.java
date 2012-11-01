@@ -3,7 +3,7 @@ package MainWindow;
 import Client.*;
 import Connection.*;
 import Dialog.MessageDialog;
-import Favorites.ServerAddress;
+import Favorites.ConnectionDetails;
 import java.awt.*;
 import java.util.*;
 import javax.swing.*;
@@ -21,7 +21,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     private ArrayList<PrivateChatTab> privateChatTabs;
 
 
-    public ServerTab(ServerAddress sa) {
+    public ServerTab(ConnectionDetails sa) {
         SpringLayout layout = new SpringLayout();
         setLayout(layout);
 

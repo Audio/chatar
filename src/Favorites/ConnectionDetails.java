@@ -1,7 +1,7 @@
 package Favorites;
 
 
-public class ServerAddress {
+public class ConnectionDetails {
 
     public static final int DEFAULT_PORT = 6667;
 
@@ -9,7 +9,7 @@ public class ServerAddress {
     public int port;
 
 
-    public ServerAddress(String fullAddress) {
+    public ConnectionDetails(String fullAddress) {
         if (fullAddress == null) {
             this.address = "";
             this.port = DEFAULT_PORT;
