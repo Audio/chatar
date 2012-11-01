@@ -156,7 +156,7 @@ public class InputHandler {
 
     public static void handleServer(String address) {
         try {
-            MainWindow.getInstance().createServerTab( new ConnectionDetails(address) );
+            MainWindow.getInstance().createServerTab( ConnectionDetails.fromAddress(address) );
             clearInput();
         } catch (Exception e) {
             MessageDialog.error("Chyba aplikace", "Připojení nelze uskutečnit.");

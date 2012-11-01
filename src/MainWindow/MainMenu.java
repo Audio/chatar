@@ -109,11 +109,7 @@ public class MainMenu extends JMenuBar {
                 item.addActionListener( new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        String addr = s.get("address");
-                        if ( !s.get("port").isEmpty() )
-                            addr += ":" + s.get("port");
-
-                        ConnectionDetails sa = new ConnectionDetails(addr);
+                        ConnectionDetails sa = ConnectionDetails.fromServer(s);
                         MainWindow.getInstance().createServerTab(sa);
                     }
                 });
@@ -137,7 +133,7 @@ public class MainMenu extends JMenuBar {
             public void actionPerformed(ActionEvent e) {
                 String addr = MessageDialog.inputQuestion("Rychlé připojení k serveru",
                                                              "Adresa serveru (:port)");
-                ConnectionDetails sa = new ConnectionDetails(addr);
+                ConnectionDetails sa = ConnectionDetails.fromAddress(addr);
                 if ( sa.isValid() )
                     MainWindow.getInstance().createServerTab(sa);
             }

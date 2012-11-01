@@ -1,5 +1,6 @@
 package Connection;
 
+import Favorites.ConnectionDetails;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.jibble.pircbot.*;
@@ -15,13 +16,13 @@ public class Connection extends PircBot implements Runnable {
     private ArrayList<PrivateMessagingListener> privateMessagingListeners;
 
 
-    public Connection(String server, int port) {
-        this.server = server;
-        this.port = port;
+    public Connection(ConnectionDetails cd) {
+        this.server = cd.address;
+        this.port = cd.port;
         this.channelEventsListeners = new ArrayList<>();
         this.privateMessagingListeners = new ArrayList<>();
 
-        setName("pokusnyKrecek");
+        setName(cd.nickname);
         setAutoNickChange(true);
     }
 

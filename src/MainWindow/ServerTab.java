@@ -81,7 +81,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         channelTabs = new ArrayList<>();
         privateChatTabs = new ArrayList<>();
 
-        connection = new Connection(sa.address, sa.port);
+        connection = new Connection(sa);
         connection.setServerEventsListener(this);
         (new Thread(connection)).start();
     }
