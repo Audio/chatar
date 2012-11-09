@@ -15,6 +15,7 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
 
     private Settings settings;
     private UserForm userForm;
+    private EventsForm eventsForm;
 
 
     public static SettingsWindow getInstance() {
@@ -85,7 +86,11 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
 
     private void loadSettings() {
         userForm = new UserForm();
+        eventsForm = new EventsForm();
+
         addTab(userForm, "Uživatel");
+        addTab(eventsForm, "Události");
+
         Settings c = getSettings();
         /*
         nickname.setText(c.nickname);

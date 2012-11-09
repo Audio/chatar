@@ -1,13 +1,10 @@
 package Settings;
 
-import java.awt.Color;
-
 
 class UserForm extends javax.swing.JPanel {
 
     UserForm() {
         initComponents();
-        setBackground(Color.WHITE);
     }
 
     @SuppressWarnings("unchecked")
@@ -25,6 +22,7 @@ class UserForm extends javax.swing.JPanel {
         emailLabel = new javax.swing.JLabel();
         email = new javax.swing.JTextField();
 
+        setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(500, 200));
 
         nicknameLabel.setLabelFor(nickname);
