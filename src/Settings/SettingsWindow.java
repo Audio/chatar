@@ -26,7 +26,7 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
         setTitle("Osobní nastavení");
         setResizable(false);
         setSize(WINDOW_WIDTH, 290);
-        setIconImage( new ImageIcon("img/cog.png").getImage() ); // TODO vlastni ikonka
+        setIconImage( new ImageIcon("img/settings-icon.png").getImage() );
 
         createMainPanel();
         loadOptions();
