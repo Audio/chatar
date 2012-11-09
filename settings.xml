@@ -8,9 +8,10 @@
         <email>jara@chatar.cz</email>
     </user>
     <events>
-        <logging-chat value="false"/>
+        <log-chat value="false"/>
         <rejoin-after-kick value="true"/>
         <clickable-links value="true"/>
+        <ask-for-quit value="true"/>
     </events>
     <view>
         <display-topic value="true"/>
