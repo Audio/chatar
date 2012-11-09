@@ -13,6 +13,9 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
 
     private static SettingsWindow instance;
 
+    private Settings settings;
+    private UserForm userForm;
+
 
     public static SettingsWindow getInstance() {
         if (instance == null)
@@ -22,6 +25,7 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
     }
 
     private SettingsWindow() {
+        this.settings = new Settings();
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setTitle("Osobní nastavení");
         setResizable(false);
@@ -29,7 +33,7 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
         setIconImage( new ImageIcon("img/settings-icon.png").getImage() );
 
         createMainPanel();
-        loadOptions();
+        loadSettings();
 
         addWindowListener(this);
     }
@@ -54,8 +58,7 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
         });
 
         Box buttons = Box.createHorizontalBox();
-        // buttons.add( Box.createRigidArea( new Dimension(70, 0)) );
-        buttons.add( Box.createRigidArea( new Dimension(WINDOW_WIDTH - 370, 0)) );
+        buttons.add( Box.createRigidArea( new Dimension(WINDOW_WIDTH - 190, 0)) );
         buttons.add(cancel);
         buttons.add( Box.createRigidArea( new Dimension(10, 0)) );
         buttons.add(save);
@@ -80,7 +83,9 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
         close();
     }
 
-    private void loadOptions() {
+    private void loadSettings() {
+        userForm = new UserForm();
+        addTab(userForm, "Uživatel");
         Settings c = getSettings();
         /*
         nickname.setText(c.nickname);
