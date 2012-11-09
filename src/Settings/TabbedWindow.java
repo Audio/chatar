@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 public abstract class TabbedWindow extends JFrame {
 
     protected final int WINDOW_WIDTH = 500;
+    protected final int WINDOW_HEIGHT = 290;
     protected JTabbedPane tabPanel;
 
 

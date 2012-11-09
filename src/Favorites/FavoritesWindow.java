@@ -35,7 +35,7 @@ public class FavoritesWindow extends TabbedWindow implements WindowListener {
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setTitle("Seznam oblíbených serverů");
         setResizable(false);
-        setSize(WINDOW_WIDTH, 290);
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setIconImage( new ImageIcon("img/favorites-icon.png").getImage() );
 
         createMainPanel();
