@@ -1,9 +1,11 @@
 package Settings;
 
 import Client.GUI;
+import Dialog.MessageDialog;
 import MainWindow.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.management.InvalidAttributeValueException;
 import javax.swing.*;
 
 
@@ -55,8 +57,12 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
         save.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveSettings();
-                close();
+                try {
+                    saveSettings();
+                    close();
+                } catch (InvalidAttributeValueException ex) {
+                    MessageDialog.error("Nesprávně vyplněný formulář", ex.getMessage() );
+                }
             }
         });
 
@@ -116,7 +122,13 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
         // TODO vlastni prikazy
     }
 
-    private void saveSettings() {
+    private void saveSettings() throws InvalidAttributeValueException {
+        if ( userForm.getNickname().isEmpty() )
+            throw new InvalidAttributeValueException("Přezdívka musí být vyplněna");
+
+        else if ( userForm.getUsername().isEmpty() )
+            throw new InvalidAttributeValueException("Uživatelské jméno musí být vyplněno");
+
         settings.setUserProperty("nickname", userForm.getNickname() );
         settings.setUserProperty("altnickname", userForm.getAltNickname() );
         settings.setUserProperty("username", userForm.getUsername() );
