@@ -151,7 +151,7 @@ public class FavoritesWindow extends JFrame implements WindowListener {
     void actionDeleteCurrent() {
         Form form = (Form) tabPanel.getSelectedComponent();
         boolean delete = MessageDialog.confirmQuestion("Odstranění serveru",
-                        "Potvrďte odstranění serveru " + form.getTitle() + "." );
+                        "Potvrďte odstranění serveru " + form.getTitle() + ".");
 
         if (delete) {
             int serverId = tabPanel.getSelectedIndex();

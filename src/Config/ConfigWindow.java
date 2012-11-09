@@ -7,11 +7,11 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-public class GConfig extends JFrame implements WindowListener {
+public class ConfigWindow extends JFrame implements WindowListener {
 
     static final long serialVersionUID = 1L;
 
-    private static GConfig instance;
+    private static ConfigWindow instance;
 
     private JTextField nickname;
     private JTextField username;
@@ -21,14 +21,14 @@ public class GConfig extends JFrame implements WindowListener {
     private JPasswordField password;
 
 
-    public static GConfig getInstance() {
+    public static ConfigWindow getInstance() {
         if (instance == null)
-            instance = new GConfig();
+            instance = new ConfigWindow();
 
         return instance;
     }
 
-    private GConfig() {
+    private ConfigWindow() {
 
         // Nastaveni okna
         setDefaultCloseOperation(HIDE_ON_CLOSE);
