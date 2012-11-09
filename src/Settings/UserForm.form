@@ -6,7 +6,7 @@
       <Color blue="ff" green="ff" red="ff" type="rgb"/>
     </Property>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[500, 200]"/>
+      <Dimension value="[340, 200]"/>
     </Property>
   </Properties>
   <AuxValues>
@@ -33,13 +33,13 @@
                   <Component id="realnameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="emailLabel" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="118" max="32767" attributes="0"/>
+              <EmptySpace pref="77" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="email" pref="258" max="32767" attributes="0"/>
-                  <Component id="altNickname" alignment="0" max="32767" attributes="0"/>
-                  <Component id="nickname" alignment="0" max="32767" attributes="0"/>
-                  <Component id="username" alignment="0" max="32767" attributes="0"/>
-                  <Component id="realname" pref="258" max="32767" attributes="0"/>
+                  <Component id="altNickname" alignment="1" pref="176" max="32767" attributes="0"/>
+                  <Component id="username" alignment="1" max="32767" attributes="0"/>
+                  <Component id="realname" alignment="1" max="32767" attributes="0"/>
+                  <Component id="email" alignment="1" max="32767" attributes="0"/>
+                  <Component id="nickname" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>

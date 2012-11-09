@@ -6,7 +6,7 @@
       <Color blue="ff" green="ff" red="ff" type="rgb"/>
     </Property>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[500, 200]"/>
+      <Dimension value="[300, 200]"/>
     </Property>
   </Properties>
   <AuxValues>
@@ -32,41 +32,41 @@
                   <Component id="clickableLinksLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="askLabel" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="139" max="32767" attributes="0"/>
+              <EmptySpace pref="109" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="logChat" min="-2" max="-2" attributes="0"/>
-                  <Component id="clickableLinks" min="-2" max="-2" attributes="0"/>
-                  <Component id="rejoin" min="-2" max="-2" attributes="0"/>
-                  <Component id="ask" min="-2" max="-2" attributes="0"/>
+                  <Component id="ask" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Component id="logChat" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Component id="clickableLinks" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Component id="rejoin" alignment="1" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="187" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="logChatLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="logChat" alignment="3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="logChatLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="logChat" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="clickableLinksLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="clickableLinks" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="clickableLinksLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="clickableLinks" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="rejoinLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="rejoin" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="rejoinLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="rejoin" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="askLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="ask" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="askLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="ask" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="80" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

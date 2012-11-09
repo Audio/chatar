@@ -21,7 +21,7 @@ class EventsForm extends javax.swing.JPanel {
         ask = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(500, 200));
+        setPreferredSize(new java.awt.Dimension(300, 200));
 
         logChatLabel.setLabelFor(logChat);
         logChatLabel.setText("Logovat chat do souboru");
@@ -57,34 +57,34 @@ class EventsForm extends javax.swing.JPanel {
                     .addComponent(logChatLabel)
                     .addComponent(clickableLinksLabel)
                     .addComponent(askLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(logChat)
-                    .addComponent(clickableLinks)
-                    .addComponent(rejoin)
-                    .addComponent(ask))
-                .addGap(187, 187, 187))
+                    .addComponent(ask, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(logChat, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(clickableLinks, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(rejoin, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(13, 13, 13)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(logChatLabel)
                     .addComponent(logChat))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(clickableLinksLabel)
                     .addComponent(clickableLinks))
                 .addGap(8, 8, 8)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(rejoinLabel)
                     .addComponent(rejoin))
                 .addGap(8, 8, 8)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(askLabel)
                     .addComponent(ask))
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -74,7 +74,7 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
 
     private void addTab(Component c, String title) {
         JLabel label = new JLabel(title);
-        GUI.setExactSize(label, 45, 20);
+        GUI.setExactSize(label, 100, 20);
 
         tabPanel.add("", c);
         int index = tabPanel.getTabCount() - 1;

@@ -19,9 +19,10 @@ class ViewForm extends javax.swing.JPanel {
         tsFormatValuesLabel = new javax.swing.JLabel();
         displayTopic = new javax.swing.JCheckBox();
         timestampEnabled = new javax.swing.JCheckBox();
+        tsFormatExampleLabel = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(500, 200));
+        setPreferredSize(new java.awt.Dimension(340, 200));
 
         displayTopicLabel.setLabelFor(displayTopic);
         displayTopicLabel.setText("Zobrazovat téma kanálu");
@@ -36,7 +37,7 @@ class ViewForm extends javax.swing.JPanel {
 
         tsFormatKeyLabel.setForeground(new java.awt.Color(153, 153, 153));
         tsFormatKeyLabel.setLabelFor(timestamp);
-        tsFormatKeyLabel.setText("Formát času");
+        tsFormatKeyLabel.setText("Formát času:");
 
         tsFormatValuesLabel.setForeground(new java.awt.Color(153, 153, 153));
         tsFormatValuesLabel.setLabelFor(timestamp);
@@ -48,6 +49,10 @@ class ViewForm extends javax.swing.JPanel {
         timestampEnabled.setBackground(new java.awt.Color(255, 255, 255));
         timestampEnabled.setNextFocusableComponent(timestamp);
 
+        tsFormatExampleLabel.setForeground(new java.awt.Color(153, 153, 153));
+        tsFormatExampleLabel.setLabelFor(timestamp);
+        tsFormatExampleLabel.setText("příklad:   [h:m:s]");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -55,39 +60,47 @@ class ViewForm extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(timestampLabel)
-                    .addComponent(displayTopicLabel)
-                    .addComponent(timestampEnabledLabel)
-                    .addComponent(tsFormatKeyLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(timestampEnabled)
-                        .addComponent(displayTopic))
-                    .addComponent(tsFormatValuesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(timestamp, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(timestampLabel)
+                            .addComponent(displayTopicLabel)
+                            .addComponent(timestampEnabledLabel)
+                            .addComponent(tsFormatKeyLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(timestampEnabled, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(displayTopic, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(timestamp, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tsFormatExampleLabel)
+                            .addComponent(tsFormatValuesLabel))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(displayTopicLabel)
                     .addComponent(displayTopic))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(7, 7, 7)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(timestampEnabledLabel)
                     .addComponent(timestampEnabled))
-                .addGap(16, 16, 16)
+                .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(timestampLabel)
                     .addComponent(timestamp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(tsFormatKeyLabel)
-                    .addComponent(tsFormatValuesLabel))
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addComponent(tsFormatKeyLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tsFormatValuesLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tsFormatExampleLabel)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -98,6 +111,7 @@ class ViewForm extends javax.swing.JPanel {
     private javax.swing.JCheckBox timestampEnabled;
     private javax.swing.JLabel timestampEnabledLabel;
     private javax.swing.JLabel timestampLabel;
+    private javax.swing.JLabel tsFormatExampleLabel;
     private javax.swing.JLabel tsFormatKeyLabel;
     private javax.swing.JLabel tsFormatValuesLabel;
     // End of variables declaration//GEN-END:variables
