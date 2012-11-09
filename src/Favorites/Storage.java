@@ -1,6 +1,7 @@
 package Favorites;
 
 import Client.ClientLogger;
+import Client.HTML;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
@@ -65,8 +66,7 @@ public class Storage {
             }
         }
 
-        String endline = System.getProperty("line.separator");
-        String content = XML_HEADER + endline + rootElement;
+        String content = HTML.formatXML(XML_HEADER + rootElement);
         Path path = FileSystems.getDefault().getPath(".", FILENAME);
         try {
             Files.write(path, content.getBytes(), StandardOpenOption.CREATE,
