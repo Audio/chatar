@@ -1,6 +1,7 @@
 package Favorites;
 
 import Client.GUI;
+import Config.TabbedWindow;
 import MainWindow.MainWindow;
 import Dialog.MessageDialog;
 import java.awt.*;
@@ -8,19 +9,17 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
 
-public class FavoritesWindow extends JFrame implements WindowListener {
+public class FavoritesWindow extends TabbedWindow implements WindowListener {
 
-    private static FavoritesWindow instance;
     static final long serialVersionUID = 1L;
 
-    private final int WINDOW_WIDTH = 500;
+    private static FavoritesWindow instance;
+
     private Storage storage;
     private List<Server> servers;
     private List<JLabel> tabLabels;
-    private JTabbedPane tabPanel;
 
 
     public static FavoritesWindow getInstance() {
@@ -48,27 +47,8 @@ public class FavoritesWindow extends JFrame implements WindowListener {
         manager.addKeyEventDispatcher( new KeyDispatcher() );
     }
 
-    private void createMainPanel() {
-        JPanel contentPanel = (JPanel) getContentPane();
-        SpringLayout layout = new SpringLayout();
-        contentPanel.setLayout(layout);
-
-        tabPanel = new JTabbedPane(JTabbedPane.LEFT);
-        tabPanel.setBorder( new EmptyBorder(10, 10, 0, 10) );
-        GUI.setExactSize(tabPanel, WINDOW_WIDTH - 10, 210);
-
-        JPanel buttonPanel = createButtonPanel();
-        GUI.setExactSize(buttonPanel, WINDOW_WIDTH, 60);
-
-        layout.putConstraint(SpringLayout.WEST, buttonPanel, 0, SpringLayout.WEST, tabPanel);
-        layout.putConstraint(SpringLayout.NORTH, buttonPanel, 0, SpringLayout.SOUTH, tabPanel);
-
-        contentPanel.add(tabPanel);
-        contentPanel.add( Box.createVerticalGlue() );
-        contentPanel.add(buttonPanel);
-    }
-
-    private JPanel createButtonPanel() {
+    @Override
+    protected JPanel createButtonPanel() {
         JButton create = new JButton("Přidat server...");
         create.addActionListener( new ActionListener() {
             @Override
@@ -182,10 +162,6 @@ public class FavoritesWindow extends JFrame implements WindowListener {
     private void actionCancel() {
         reloadServerList();
         close();
-    }
-
-    private void close() {
-        setVisible(false);
     }
 
     @Override

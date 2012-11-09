@@ -7,18 +7,11 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-public class ConfigWindow extends JFrame implements WindowListener {
+public class ConfigWindow extends TabbedWindow implements WindowListener {
 
     static final long serialVersionUID = 1L;
 
     private static ConfigWindow instance;
-
-    private JTextField nickname;
-    private JTextField username;
-    private JTextField hostname;
-    private JTextField servername;
-    private JTextField realname;
-    private JPasswordField password;
 
 
     public static ConfigWindow getInstance() {
@@ -29,92 +22,20 @@ public class ConfigWindow extends JFrame implements WindowListener {
     }
 
     private ConfigWindow() {
-
-        // Nastaveni okna
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setTitle("Osobní nastavení");
         setResizable(false);
-        setSize(385, 300);
+        setSize(WINDOW_WIDTH, 290);
+        setIconImage( new ImageIcon("img/favorites-icon.png").getImage() ); // TODO vlastni ikonka
 
-        getContentPane().setLayout( new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS) );
+        createMainPanel();
+        loadOptions();
 
-        // Panel stranky - obsahuje 3 panely: panel labelu (popisu, main_panel),
-        // panel text. vstupu (input_panel) a panel s tlacitky (button_panel).
-        JPanel page = new JPanel();
-        page.setLayout( new BoxLayout(page, BoxLayout.LINE_AXIS) );
+        addWindowListener(this);
+    }
 
-
-        // Panel s popisy
-        JPanel main_panel = new JPanel();
-        main_panel.setLayout( new BoxLayout(main_panel, BoxLayout.LINE_AXIS) );
-        main_panel.setBorder( BorderFactory.createEmptyBorder(10, 10, 10, 0) );
-
-        JLabel nickname_label   = new JLabel("Přezdívka");
-        JLabel username_label   = new JLabel("Uživatelské jméno");
-        JLabel hostname_label   = new JLabel("Hostname");
-        JLabel servername_label = new JLabel("Název serveru");
-        JLabel realname_label   = new JLabel("Skutečné jméno");
-        JLabel password_label   = new JLabel("Heslo");
-
-        setTextFieldSize(nickname_label);
-        setTextFieldSize(username_label);
-        setTextFieldSize(hostname_label);
-        setTextFieldSize(servername_label);
-        setTextFieldSize(realname_label);
-        setTextFieldSize(password_label);
-
-        Box box = Box.createVerticalBox();
-        box.add(nickname_label);
-        box.add(username_label);
-        box.add(hostname_label);
-        box.add(servername_label);
-        box.add(realname_label);
-        box.add(password_label);
-        main_panel.add(box);
-
-        // Panel s text. vstupy
-        JPanel input_panel = new JPanel();
-        input_panel.setLayout( new BoxLayout(input_panel, BoxLayout.LINE_AXIS) );
-        input_panel.setBorder( BorderFactory.createEmptyBorder(10, 0, 10, 10) );
-
-        nickname = new JTextField();
-        username = new JTextField();
-        hostname = new JTextField();
-        servername = new JTextField();
-        realname = new JTextField();
-        password = new JPasswordField();
-
-        setTextFieldSize(nickname);
-        setTextFieldSize(username);
-        setTextFieldSize(hostname);
-        setTextFieldSize(servername);
-        setTextFieldSize(realname);
-        setTextFieldSize(password);
-
-        Box boxi = Box.createVerticalBox();
-        boxi.add(nickname);
-        boxi.add(username);
-        boxi.add(hostname);
-        boxi.add(servername);
-        boxi.add(realname);
-        boxi.add(password);
-        input_panel.add(boxi);
-
-
-        // Panel s tlacitky
-        JPanel button_panel = new JPanel();
-        button_panel.setLayout( new BoxLayout(button_panel, BoxLayout.LINE_AXIS) );
-        button_panel.setBorder( BorderFactory.createEmptyBorder(10, 10, 10, 0) );
-
-        JButton save = new JButton("Uložit");
-        save.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveOptions();
-                setVisible(false);
-            }
-        });
-
+    @Override
+    protected JPanel createButtonPanel() {
         JButton cancel = new JButton("Storno");
         cancel.addActionListener( new ActionListener() {
             @Override
@@ -123,60 +44,43 @@ public class ConfigWindow extends JFrame implements WindowListener {
             }
         });
 
-        setButtonSize(save);
-        setButtonSize(cancel);
+        JButton save = new JButton("Uložit změny");
+        save.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveOptions();
+                close();
+            }
+        });
 
-        Box boxb = Box.createHorizontalBox();
-        boxb.add(save);
-        boxb.add( Box.createRigidArea( new Dimension(20, 0) ) );
-        boxb.add(cancel);
+        Box buttons = Box.createHorizontalBox();
+        // buttons.add( Box.createRigidArea( new Dimension(70, 0)) );
+        buttons.add( Box.createRigidArea( new Dimension(WINDOW_WIDTH - 370, 0)) );
+        buttons.add(cancel);
+        buttons.add( Box.createRigidArea( new Dimension(10, 0)) );
+        buttons.add(save);
 
-        button_panel.add(boxb);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout( new BoxLayout(buttonPanel, BoxLayout.X_AXIS) );
+        buttonPanel.add(buttons);
 
-
-        // Konecne usporadani panelu do "stranky".
-        page.add(main_panel);
-        page.add( Box.createHorizontalGlue() );
-        page.add(input_panel);
-
-        getContentPane().add(page);
-        page.add( Box.createVerticalGlue() );
-        getContentPane().add(button_panel);
-
-        // Nahrani hodnot.
-        loadOptions();
-
-        // Zobrazeni okna.
-        setLocationRelativeTo(null);
-        setVisible(true);
-
-        addWindowListener(this);
-        //setAlwaysOnTop(true);
-
+        return buttonPanel;
     }
 
-    /**
-     * Nastavi defaultni velikost pro vsechna tlacitka.
-     */
-    public static void setButtonSize(Component button) {
-        GUI.setExactSize(button, 100, 30);
+    private void addTab(Component c, String title) {
+        JLabel label = new JLabel(title);
+        GUI.setExactSize(label, 45, 20);
+
+        tabPanel.add("", c);
+        int index = tabPanel.getTabCount() - 1;
+        tabPanel.setTabComponentAt(index, label);
     }
 
-    /**
-     * Nastavi defaultni velikost pro vsechna vstupni pole a labely.
-     */
-    public static void setTextFieldSize(Component textField) {
-        GUI.setExactSize(textField, 175, 30);
+    private void actionCancel() {
+        close();
     }
 
-    private void actionCancel () {
-        setVisible(false);
-    }
-
-    /**
-     * Ziska uzivatelske informace z aktulniho nastaveni vybraneho serveru.
-     */
-    private void loadOptions () {
+    private void loadOptions() {
         Config c = getConfig();
         /*
         nickname.setText(c.nickname);
@@ -188,13 +92,7 @@ public class ConfigWindow extends JFrame implements WindowListener {
         */
     }
 
-    /**
-     * Pri zavirani okna (skryti) uklada uzivatelske nastaveni do souboru.
-     * Není-li uživatel připojen k žádnému serveru, pak rovnou změní
-     * přezdívku na tlačítku na novou (GInput/button).
-     */
-    private void saveOptions () {
-
+    private void saveOptions() {
         /*
         Config c = new Config();
         c.nickname   = nickname.getText();
@@ -211,10 +109,9 @@ public class ConfigWindow extends JFrame implements WindowListener {
             MainWindow.getInstance().getGInput().setNickname(c.nickname);
         }
         */
-
     }
 
-    public static Config getConfig () {
+    public Config getConfig() {
         AbstractTab tab = MainWindow.getInstance().getActiveTab();
         if (tab == null) {
             Config c = new Config();
@@ -227,7 +124,7 @@ public class ConfigWindow extends JFrame implements WindowListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
-        setVisible(false);
+        close();
     }
 
     @Override
