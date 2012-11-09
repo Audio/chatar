@@ -55,7 +55,7 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
         save.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveOptions();
+                saveSettings();
                 close();
             }
         });
@@ -88,54 +88,55 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
 
     private void loadSettings() {
         userForm = new UserForm();
+        userForm.setNickname( settings.getUserProperty("nickname") );
+        userForm.setAltNickname( settings.getUserProperty("altnickname") );
+        userForm.setUsername( settings.getUserProperty("username") );
+        userForm.setRealname( settings.getUserProperty("realname") );
+        userForm.setEmail( settings.getUserProperty("email") );
+
         eventsForm = new EventsForm();
+        eventsForm.setLogChatChecked( settings.isEventEnabled("log-chat") );
+        eventsForm.setRejoinChecked( settings.isEventEnabled("rejoin-after-kick") );
+        eventsForm.setClickableLinksChecked( settings.isEventEnabled("clickable-links") );
+        eventsForm.setAskForQuitChecked( settings.isEventEnabled("ask-for-quit") );
+
         viewForm = new ViewForm();
+        viewForm.setDisplayTopicChecked( settings.isViewEnabled("display-topic") );
+        viewForm.setTimestampEnabled( settings.isViewEnabled("timestamp-enabled") );
+        viewForm.setTimestampFormat( settings.getViewTimestampFormat() );
+
         blockedForm = new BlockedForm();
+        blockedForm.setBlockedNicknames( settings.getBlockedNicknames() );
 
         addTab(userForm, "Uživatel");
         addTab(eventsForm, "Události");
         addTab(viewForm, "Zobrazení");
         addTab(blockedForm, "Blokovaní uživatelé");
 
-        Settings c = getSettings();
-        /*
-        nickname.setText(c.nickname);
-        username.setText(c.username);
-        hostname.setText(c.hostname);
-        servername.setText(c.servername);
-        realname.setText(c.realname);
-        password.setText(c.password);
-        */
+        // TODO vlastni prikazy
     }
 
-    private void saveOptions() {
-        /*
-        Config c = new Config();
-        c.nickname   = nickname.getText();
-        c.username   = username.getText();
-        c.hostname   = hostname.getText();
-        c.servername = servername.getText();
-        c.realname   = realname.getText();
-        c.password   = password.getPassword().toString();
-        c.saveToFile();
-        */
+    private void saveSettings() {
+        settings.setUserProperty("nickname", userForm.getNickname() );
+        settings.setUserProperty("altnickname", userForm.getAltNickname() );
+        settings.setUserProperty("username", userForm.getUsername() );
+        settings.setUserProperty("realname", userForm.getRealname() );
+        settings.setUserProperty("email", userForm.getEmail() );
 
-        /*
-        if ( MainWindow.getInstance().getTabContainer().getTabCount() == 0) {
-            MainWindow.getInstance().getGInput().setNickname(c.nickname);
-        }
-        */
-    }
+        settings.setEventEnabled("log-chat", eventsForm.isLogChatChecked() );
+        settings.setEventEnabled("rejoin-after-kick", eventsForm.isRejoinChecked() );
+        settings.setEventEnabled("clickable-links", eventsForm.isClickableLinksChecked() );
+        settings.setEventEnabled("ask-for-quit", eventsForm.isAskForQuitChecked() );
 
-    public Settings getSettings() {
-        AbstractTab tab = MainWindow.getInstance().getActiveTab();
-        if (tab == null) {
-            Settings c = new Settings();
-            // c.loadFromFile();
-            return c;
-        }
+        settings.setViewEnabled("display-topic", viewForm.isDisplayTopicChecked() );
+        settings.setViewEnabled("timestamp-enabled", viewForm.isTimestampEnabled() );
+        settings.setViewTimestampFormat( viewForm.getTimestampFormat() );
 
-        return null; // tab.getConnection().config;
+        settings.setBlockedNicknames( blockedForm.getBlockedNicknames() );
+
+        // TODO vlastni prikazy
+
+        settings.store();
     }
 
     @Override

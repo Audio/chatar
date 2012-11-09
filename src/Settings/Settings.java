@@ -4,7 +4,7 @@ import Client.ClientLogger;
 import Client.HTML;
 import java.io.*;
 import java.nio.file.*;
-import java.util.List;
+import java.util.*;
 import org.joox.Match;
 import org.xml.sax.SAXException;
 
@@ -36,7 +36,7 @@ public class Settings {
     }
 
     public void setUserProperty(String property, String value) {
-        // TODO fakt set
+        rootElement.xpath("user/" + property).text(value);
     }
 
     public boolean isEventEnabled(String event) {
@@ -65,12 +65,24 @@ public class Settings {
         rootElement.xpath("view/timestamp-format").text(format);
     }
 
-    public List<String> getBlockedNicknames() {
-        return null; // TODO fakt get
+    private List<String> getBlockedNicknamesList(String nicknames) {
+        String[] blocked = nicknames.split(",\\s");
+        List<String> names = Arrays.asList(blocked);
+        return names;
     }
 
-    public void setBlockedNicknames(List<String> nicknames) {
-        // TODO fakt set
+    public List<String> getBlockedNicknamesList() {
+        return getBlockedNicknamesList( getBlockedNicknames() );
+    }
+
+    public String getBlockedNicknames() {
+        return rootElement.xpath("blocked/nicknames").text();
+    }
+
+    public void setBlockedNicknames(String nicknames) {
+        List<String> names = getBlockedNicknamesList(nicknames);
+        String validatedNames = Arrays.toString( names.toArray() ).replaceAll("\\[|\\]", "");
+        rootElement.xpath("blocked/nicknames").text(validatedNames);
     }
 
     public List<String> getCommands() {
