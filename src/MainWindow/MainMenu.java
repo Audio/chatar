@@ -1,10 +1,10 @@
 package MainWindow;
 
 import Client.ClientLogger;
-import Settings.SettingsWindow;
 import Connection.InputHandler;
 import Dialog.MessageDialog;
 import Favorites.*;
+import Settings.*;
 import java.awt.Component;
 import java.awt.event.*;
 import java.util.List;
@@ -70,8 +70,10 @@ public class MainMenu extends JMenuBar {
         close.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean close = MessageDialog.confirmQuestion("Ukončit aplikaci",
-                                                "Opravdu chcete ukončit aplikaci?");
+                Settings settings = new Settings();
+                boolean ask = settings.isEventEnabled("ask-for-quit");
+                boolean close = ask ? MessageDialog.confirmQuestion("Ukončit aplikaci",
+                                            "Opravdu chcete ukončit aplikaci?") : true;
                 if (close) {
                     ClientLogger.quit();
                     System.exit(0);
