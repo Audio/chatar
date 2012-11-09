@@ -38,7 +38,8 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
         setIconImage( new ImageIcon("img/settings-icon.png").getImage() );
 
         createMainPanel();
-        loadSettings();
+        createTabs();
+        reloadSettings();
 
         addWindowListener(this);
     }
@@ -88,36 +89,37 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
         tabPanel.setTabComponentAt(index, label);
     }
 
-    private void actionCancel() {
-        close();
+    private void createTabs() {
+        userForm = new UserForm();
+        eventsForm = new EventsForm();
+        viewForm = new ViewForm();
+        blockedForm = new BlockedForm();
+
+        addTab(userForm, "Uživatel");
+        addTab(eventsForm, "Události");
+        addTab(viewForm, "Zobrazení");
+        addTab(blockedForm, "Blokovaní uživatelé");
+
+        // TODO vlastni prikazy
     }
 
-    private void loadSettings() {
-        userForm = new UserForm();
+    private void reloadSettings() {
         userForm.setNickname( settings.getUserProperty("nickname") );
         userForm.setAltNickname( settings.getUserProperty("altnickname") );
         userForm.setUsername( settings.getUserProperty("username") );
         userForm.setRealname( settings.getUserProperty("realname") );
         userForm.setEmail( settings.getUserProperty("email") );
 
-        eventsForm = new EventsForm();
         eventsForm.setLogChatChecked( settings.isEventEnabled("log-chat") );
         eventsForm.setRejoinChecked( settings.isEventEnabled("rejoin-after-kick") );
         eventsForm.setClickableLinksChecked( settings.isEventEnabled("clickable-links") );
         eventsForm.setAskForQuitChecked( settings.isEventEnabled("ask-for-quit") );
 
-        viewForm = new ViewForm();
         viewForm.setDisplayTopicChecked( settings.isViewEnabled("display-topic") );
         viewForm.setTimestampEnabled( settings.isViewEnabled("timestamp-enabled") );
         viewForm.setTimestampFormat( settings.getViewTimestampFormat() );
 
-        blockedForm = new BlockedForm();
         blockedForm.setBlockedNicknames( settings.getBlockedNicknames() );
-
-        addTab(userForm, "Uživatel");
-        addTab(eventsForm, "Události");
-        addTab(viewForm, "Zobrazení");
-        addTab(blockedForm, "Blokovaní uživatelé");
 
         // TODO vlastni prikazy
     }
@@ -149,6 +151,11 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
         // TODO vlastni prikazy
 
         settings.store();
+    }
+
+    private void actionCancel() {
+        reloadSettings();
+        close();
     }
 
     @Override
