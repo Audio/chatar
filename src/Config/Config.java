@@ -1,128 +1,95 @@
 package Config;
 
 import Client.ClientLogger;
+import Client.HTML;
 import java.io.*;
+import java.nio.file.*;
+import java.util.List;
+import org.joox.Match;
+import org.xml.sax.SAXException;
 
-/**
- * Kazde pripojeni ma vlastni konfiguracni nastaveni.
- * Dale probiha nacteni nastaveni z ulozeneho konfiguracniho souboru
- * (na záznamové médium).
- *
- * @author Martin Fouček
- */
-public class Config implements Serializable {
+import static org.joox.JOOX.$;
 
-    /**
-     * Uživatelova přezdívka.
-     */
-    public String nickname;
-    /**
-     * Uživatelské jméno.
-     */
-    public String username;
-    /**
-     * Hostname uživatele.
-     */
-    public String hostname;
-    /**
-     * Název uživatelova serveru.
-     */
-    public String servername;
-    /**
-     * Skutečné uživatelovo jméno.
-     */
-    public String realname;
-    /**
-     * Heslo pro připojení na server.
-     */
-    public String password;
 
-    // manipulace se souborem
-    private final static String filename = "options.bin";
-    private static final long serialVersionUID = 2389021989L;
+public class Config {
 
-    /**
-     * Pokyn k nacteni globalniho nastaveni - jiz pri inicializaci.
-     */
+    private final static String FILENAME = "settings.xml";
+    private final static String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+
+    private Match rootElement;
+
+
     public Config () {
-        loadFromFile();
+        parse();
     }
 
-    /**
-     * Vrati nahodne dvouciferne cislo.
-     *
-     * @return douciferne cislo
-     */
-    public int random () {
-        int ret = 1;
-        while (ret < 10)
-            ret = (int) Math.round( Math.random() * 100 );
-        return ret;
-    }
-
-    /**
-     * Nastavuje defaultni hodnoty.
-     */
-    private void setDefaults () {
-
-        nickname   = "chatar" + random();
-        username   = "guest";
-        hostname   = "fakehost";
-        servername = "lokal";
-        realname   = "Jara Cimrman";
-        password   = "nic";
-
-    }
-
-    /**
-     * Nacteni konfiguracniho souboru.
-     */
-    public void loadFromFile () {
-
+    private void parse() {
         try {
-            FileInputStream in = new FileInputStream(filename);
-            ObjectInputStream objs = new ObjectInputStream(in);
-            nickname   = (String) objs.readObject();
-            username   = (String) objs.readObject();
-            hostname   = (String) objs.readObject();
-            servername = (String) objs.readObject();
-            realname   = (String) objs.readObject();
-            password   = (String) objs.readObject();
-            objs.close();
-            in.close();
+            rootElement = $( new File(FILENAME) );
+        } catch (SAXException | IOException e) {
+            ClientLogger.log("Soubor s nastavením neexistuje.", ClientLogger.ERROR);
         }
-        catch (Exception e) {
-            ClientLogger.log(
-                    "Chyba pri nacitani " + filename + ": " + e.getClass().getSimpleName(),
-                    ClientLogger.ERROR);
-            setDefaults();
-            saveToFile();
-        }
-
     }
 
-    /**
-     * Ulozi nastaveni do souboru.
-     */
-    public void saveToFile () {
+    public String getUserProperty(String property) {
+        return rootElement.xpath("user/" + property).text();
+    }
 
+    public void setUserProperty(String property, String value) {
+        // TODO fakt set
+    }
+
+    public boolean isEventEnabled(String event) {
+        return rootElement.xpath("events/" + event).attr("value").equals("true");
+    }
+
+    public void setEventEnabled(String event, boolean enabled) {
+        String value = enabled ? "true" : "false";
+        rootElement.xpath("events/" + event).attr("value", value);
+    }
+
+    public boolean isViewEnabled(String view) {
+        return rootElement.xpath("view/" + view).attr("value").equals("true");
+    }
+
+    public void setViewEnabled(String view, boolean enabled) {
+        String value = enabled ? "true" : "false";
+        rootElement.xpath("view/" + view).attr("value", value);
+    }
+
+    public String getViewTimestampFormat() {
+        return rootElement.xpath("view/timestamp-format").text();
+    }
+
+    public void setViewTimestampFormat(String format) {
+        rootElement.xpath("view/timestamp-format").text(format);
+    }
+
+    public List<String> getBlockedNicknames() {
+        return null; // TODO fakt get
+    }
+
+    public void setBlockedNicknames(List<String> nicknames) {
+        // TODO fakt set
+    }
+
+    public List<String> getCommands() {
+        return null; // TODO fakt get
+    }
+
+    public void setCommands(List<String> commands) {
+        // TODO fakt set
+    }
+
+    public void store() {
+        String content = HTML.formatXML(XML_HEADER + rootElement);
+        Path path = FileSystems.getDefault().getPath(".", FILENAME);
         try {
-            FileOutputStream out = new FileOutputStream(filename);
-            ObjectOutputStream objs = new ObjectOutputStream(out);
-            objs.writeObject(nickname);
-            objs.writeObject(username);
-            objs.writeObject(hostname);
-            objs.writeObject(servername);
-            objs.writeObject(realname);
-            objs.writeObject(password);
-            objs.flush();
-            objs.close();
-            out.close();
+            Files.write(path, content.getBytes(), StandardOpenOption.CREATE,
+                                                  StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException ex) {
+            ClientLogger.log("Uložení souboru s nastavením se nezdařilo.", ClientLogger.ERROR);
         }
-        catch (IOException e) {
-            ClientLogger.log(e.getMessage(), ClientLogger.ERROR);
-        }
-
     }
 
 }

@@ -178,12 +178,14 @@ public class ConfigWindow extends JFrame implements WindowListener {
      */
     private void loadOptions () {
         Config c = getConfig();
+        /*
         nickname.setText(c.nickname);
         username.setText(c.username);
         hostname.setText(c.hostname);
         servername.setText(c.servername);
         realname.setText(c.realname);
         password.setText(c.password);
+        */
     }
 
     /**
@@ -193,6 +195,7 @@ public class ConfigWindow extends JFrame implements WindowListener {
      */
     private void saveOptions () {
 
+        /*
         Config c = new Config();
         c.nickname   = nickname.getText();
         c.username   = username.getText();
@@ -201,6 +204,7 @@ public class ConfigWindow extends JFrame implements WindowListener {
         c.realname   = realname.getText();
         c.password   = password.getPassword().toString();
         c.saveToFile();
+        */
 
         /*
         if ( MainWindow.getInstance().getTabContainer().getTabCount() == 0) {
@@ -214,7 +218,7 @@ public class ConfigWindow extends JFrame implements WindowListener {
         AbstractTab tab = MainWindow.getInstance().getActiveTab();
         if (tab == null) {
             Config c = new Config();
-            c.loadFromFile();
+            // c.loadFromFile();
             return c;
         }
 

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+    <user>
+        <nickname>Chatar</nickname>
+        <altnickname>Chatar|alt</altnickname>
+        <username>chatar</username>
+        <realname>Jára Chatař</realname>
+        <email>jara@chatar.cz</email>
+    </user>
+    <events>
+        <logging-chat value="false"/>
+        <rejoin-after-kick value="true"/>
+        <clickable-links value="true"/>
+    </events>
+    <view>
+        <display-topic value="true"/>
+        <timestamp-enabled value="true"/>
+        <timestamp-format>[h:m:s]</timestamp-format>
+    </view>
+    <blocked>
+        <nicknames>py-bot</nicknames>
+    </blocked>
+    <commands>
+        <command name="slap">/me slaps %T around a bit with a large trout</command>
+    </commands>
+</settings>
