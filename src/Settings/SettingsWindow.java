@@ -16,6 +16,7 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
     private Settings settings;
     private UserForm userForm;
     private EventsForm eventsForm;
+    private ViewForm viewForm;
 
 
     public static SettingsWindow getInstance() {
@@ -87,9 +88,11 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
     private void loadSettings() {
         userForm = new UserForm();
         eventsForm = new EventsForm();
+        viewForm = new ViewForm();
 
         addTab(userForm, "Uživatel");
         addTab(eventsForm, "Události");
+        addTab(viewForm, "Zobrazení");
 
         Settings c = getSettings();
         /*
