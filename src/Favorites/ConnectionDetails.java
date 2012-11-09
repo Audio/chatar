@@ -1,23 +1,28 @@
 package Favorites;
 
+import Settings.Settings;
 import java.util.*;
 
 
 public class ConnectionDetails {
 
     public static final int DEFAULT_PORT = 6667;
-    public static final String DEFAULT_NICK = "Chatar";
 
     public String address;
     public int port;
     public String nickname;
+    public String username;
     public List<String> channelsToJoin;
+    // TODO password
 
 
     private ConnectionDetails() {
+        Settings settings = new Settings();
+
         this.address = "";
         this.port = DEFAULT_PORT;
-        this.nickname = DEFAULT_NICK;
+        this.nickname = settings.getUserProperty("nickname");
+        this.username = settings.getUserProperty("username");
         this.channelsToJoin = new ArrayList<>();
     }
 

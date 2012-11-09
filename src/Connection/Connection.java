@@ -24,6 +24,7 @@ public class Connection extends PircBot implements Runnable {
 
         setName(cd.nickname);
         setAutoNickChange(true);
+        setLogin(cd.username);
     }
 
     @Override
