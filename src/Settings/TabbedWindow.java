@@ -1,4 +1,4 @@
-package Config;
+package Settings;
 
 import Client.GUI;
 import javax.swing.*;

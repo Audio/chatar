@@ -1,7 +1,7 @@
 package Favorites;
 
 import Client.GUI;
-import Config.TabbedWindow;
+import Settings.TabbedWindow;
 import MainWindow.MainWindow;
 import Dialog.MessageDialog;
 import java.awt.*;

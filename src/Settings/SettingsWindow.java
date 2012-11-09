@@ -1,4 +1,4 @@
-package Config;
+package Settings;
 
 import Client.GUI;
 import MainWindow.*;
@@ -7,26 +7,26 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-public class ConfigWindow extends TabbedWindow implements WindowListener {
+public class SettingsWindow extends TabbedWindow implements WindowListener {
 
     static final long serialVersionUID = 1L;
 
-    private static ConfigWindow instance;
+    private static SettingsWindow instance;
 
 
-    public static ConfigWindow getInstance() {
+    public static SettingsWindow getInstance() {
         if (instance == null)
-            instance = new ConfigWindow();
+            instance = new SettingsWindow();
 
         return instance;
     }
 
-    private ConfigWindow() {
+    private SettingsWindow() {
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setTitle("Osobní nastavení");
         setResizable(false);
         setSize(WINDOW_WIDTH, 290);
-        setIconImage( new ImageIcon("img/favorites-icon.png").getImage() ); // TODO vlastni ikonka
+        setIconImage( new ImageIcon("img/cog.png").getImage() ); // TODO vlastni ikonka
 
         createMainPanel();
         loadOptions();
@@ -81,7 +81,7 @@ public class ConfigWindow extends TabbedWindow implements WindowListener {
     }
 
     private void loadOptions() {
-        Config c = getConfig();
+        Settings c = getSettings();
         /*
         nickname.setText(c.nickname);
         username.setText(c.username);
@@ -111,10 +111,10 @@ public class ConfigWindow extends TabbedWindow implements WindowListener {
         */
     }
 
-    public Config getConfig() {
+    public Settings getSettings() {
         AbstractTab tab = MainWindow.getInstance().getActiveTab();
         if (tab == null) {
-            Config c = new Config();
+            Settings c = new Settings();
             // c.loadFromFile();
             return c;
         }

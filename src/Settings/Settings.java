@@ -1,4 +1,4 @@
-package Config;
+package Settings;
 
 import Client.ClientLogger;
 import Client.HTML;
@@ -11,7 +11,7 @@ import org.xml.sax.SAXException;
 import static org.joox.JOOX.$;
 
 
-public class Config {
+public class Settings {
 
     private final static String FILENAME = "settings.xml";
     private final static String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -19,7 +19,7 @@ public class Config {
     private Match rootElement;
 
 
-    public Config () {
+    public Settings () {
         parse();
     }
 

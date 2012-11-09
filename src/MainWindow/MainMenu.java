@@ -1,7 +1,7 @@
 package MainWindow;
 
 import Client.ClientLogger;
-import Config.ConfigWindow;
+import Settings.SettingsWindow;
 import Connection.InputHandler;
 import Dialog.MessageDialog;
 import Favorites.*;
@@ -41,7 +41,7 @@ public class MainMenu extends JMenuBar {
         settings.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ConfigWindow.getInstance().setVisible(true);
+                SettingsWindow.getInstance().setVisible(true);
             }
         });
 
