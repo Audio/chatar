@@ -96,6 +96,11 @@ public class Connection extends PircBot implements Runnable {
             case RPL_UNAWAY:
             case RPL_NOWAWAY:
                 handleAwayStatusResponse(code); break;
+            case ERR_CHANNELISFULL:
+            case ERR_INVITEONLYCHAN:
+            case ERR_BANNEDFROMCHAN:
+            case ERR_BADCHANNELKEY:
+                handleCannotJoinChannel(response); break;
         }
     }
 
@@ -194,6 +199,13 @@ public class Connection extends PircBot implements Runnable {
         ChannelEventsListener listener = getChannelEventsListener(channel);
         if (listener != null)
             listener.userJoined(sender);
+    }
+
+    private void handleCannotJoinChannel(String response) {
+        String channel = response.split(" ")[1];
+        ChannelEventsListener listener = getChannelEventsListener(channel);
+        if (listener != null)
+            listener.userLeft( this.getNick() );
     }
 
     @Override

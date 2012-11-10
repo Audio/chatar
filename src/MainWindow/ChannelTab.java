@@ -344,8 +344,13 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     @Override
     public void userLeft(String nickname) {
-        appendInfo(nickname + " odešel z místnosti." );
-        usersModel.detachUser(nickname);
+        boolean isMe = getServerTab().getConnection().getNick().equals(nickname);
+        if (isMe) {
+            getServerTab().removeChannelTab(this);
+        } else {
+            appendInfo(nickname + " odešel z místnosti." );
+            usersModel.detachUser(nickname);
+        }
     }
 
     @Override
@@ -358,8 +363,8 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     public void userKicked(String initiator, String recipient, String reason) {
         appendInfo(initiator + " vyhodil " + recipient + " (důvod: " + reason + ")");
 
-        String myNick = getServerTab().getConnection().getNick();
-        if ( recipient.equals(myNick) ) {
+        boolean isMe = getServerTab().getConnection().getNick().equals(recipient);
+        if (isMe) {
             if ( Settings.getInstance().isEventEnabled("rejoin-after-kick") )
                 getServerTab().getConnection().joinChannel( getTabName() );
             else
