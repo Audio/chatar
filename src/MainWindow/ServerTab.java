@@ -97,7 +97,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         ChannelTab tab = new ChannelTab(channel, this);
         channelTabs.add(tab);
         connection.addChannelEventsListener(tab);
-        connection.joinChannel(channel);
         MainWindow.getInstance().getTabContainer().insertTab(tab);
         return tab;
     }
@@ -212,6 +211,15 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     public void privateMessageWithoutListenerReceived(String sender, String message) {
         PrivateChatTab tab = createPrivateChatTab(sender);
         tab.appendText(sender + ": " + message);
+    }
+
+    @Override
+    public void joined(String channel) {
+        ChannelTab tab = getChannelTabByName(channel);
+        if (tab == null)
+            tab = createChannelTab(channel);
+
+        tab.setFocus();
     }
 
     @Override

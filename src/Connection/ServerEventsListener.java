@@ -8,6 +8,7 @@ public interface ServerEventsListener extends GlobalEventsListener {
     public void serverMessageReceived(int code, String message);
     public void noticeMessageReceived(String sender, String message);
     public void privateMessageWithoutListenerReceived(String sender, String message);
+    public void joined(String channel);
     public void channelCountReceived(String count);
     public void myNickHasChanged(String newNickname);
 

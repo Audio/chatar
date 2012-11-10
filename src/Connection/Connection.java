@@ -199,6 +199,8 @@ public class Connection extends PircBot implements Runnable {
         ChannelEventsListener listener = getChannelEventsListener(channel);
         if (listener != null)
             listener.userJoined(sender);
+        else if (serverEventsListener != null)
+            serverEventsListener.joined(channel);
     }
 
     private void handleCannotJoinChannel(String response) {

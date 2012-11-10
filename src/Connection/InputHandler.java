@@ -88,11 +88,7 @@ public class InputHandler {
             return;
         }
 
-        ChannelTab tab = getCurrentServerTab().getChannelTabByName(channel);
-        if (tab == null)
-            tab = getCurrentServerTab().createChannelTab(channel);
-
-        tab.setFocus();
+        getCurrentServerTab().getConnection().joinChannel(channel);
         clearInput();
     }
 
