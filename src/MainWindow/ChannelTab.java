@@ -90,7 +90,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
         JPanel bottompanel = new JPanel();
         bottompanel.setLayout( new BoxLayout(bottompanel, BoxLayout.LINE_AXIS) );
-        GUI.setPreferredSize(bottompanel, 480, 305);
+        GUI.setPreferredSize(bottompanel, 480, 200);
         bottompanel.setBorder( BorderFactory.createEmptyBorder() );
 
         JScrollPane chatscroll = new JScrollPane();
