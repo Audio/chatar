@@ -2,6 +2,7 @@ package MainWindow;
 
 import Client.*;
 import Connection.*;
+import Settings.Settings;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
@@ -355,11 +356,16 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     @Override
     public void userKicked(String initiator, String recipient, String reason) {
+        appendInfo(initiator + " vyhodil " + recipient + " (důvod: " + reason + ")");
+
         String myNick = getServerTab().getConnection().getNick();
         if ( recipient.equals(myNick) ) {
-            getServerTab().removeChannelTab(this);
+            Settings settings = new Settings();
+            if ( settings.isEventEnabled("rejoin-after-kick") )
+                getServerTab().getConnection().joinChannel( getTabName() );
+            else
+                getServerTab().removeChannelTab(this);
         } else {
-            appendInfo(initiator + " vyhodil " + recipient + " (důvod: " + reason + ")");
             usersModel.detachUser(recipient);
         }
     }
