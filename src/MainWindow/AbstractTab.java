@@ -2,9 +2,13 @@ package MainWindow;
 
 import Client.HTML;
 import Connection.GlobalEventsListener;
+import Settings.Settings;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.io.*;
+import java.net.URISyntaxException;
 import javax.swing.*;
+import javax.swing.event.*;
 import javax.swing.text.*;
 import javax.swing.text.html.HTMLDocument;
 
@@ -36,6 +40,18 @@ public abstract class AbstractTab extends JPanel implements GlobalEventsListener
         Font font = UIManager.getFont("Label.font");
         String bodyRule = "body { font-family: " + font.getFamily() + "; " + "font-size: 13pt; }";
         ((HTMLDocument) content.getDocument()).getStyleSheet().addRule(bodyRule);
+
+        content.addHyperlinkListener( new HyperlinkListener() {
+            @Override
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+                if( e.getEventType() == HyperlinkEvent.EventType.ACTIVATED
+                    && Desktop.isDesktopSupported() ) {
+                    try {
+                        Desktop.getDesktop().browse( e.getURL().toURI() );
+                    } catch (URISyntaxException | IOException ex) { /* not supported */ }
+                }
+            }
+        });
     }
 
     public void appendText(String str) {
@@ -43,6 +59,10 @@ public abstract class AbstractTab extends JPanel implements GlobalEventsListener
     }
 
     public void appendText(String str, JEditorPane panel) {
+        Settings settings = new Settings();
+        if ( settings.isEventEnabled("clickable-links") )
+            str = HTML.addHyperlinks(str);
+
         EditorKit kit = panel.getEditorKit();
         Document doc = panel.getDocument();
         try {

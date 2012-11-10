@@ -33,6 +33,10 @@ public class HTML {
         return "[<small>" + type.toUpperCase() + "</small>] ";
     }
 
+    public static String addHyperlinks(String message) {
+        return message.replaceAll("(ftp|https?)://\\S+", "<a href=\"$0\">$0</a>");
+    }
+
     // http://stackoverflow.com/a/1264912/557223
     public static String formatXML(String input) {
         try {
