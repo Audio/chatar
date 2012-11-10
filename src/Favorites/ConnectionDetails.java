@@ -17,7 +17,7 @@ public class ConnectionDetails {
 
 
     private ConnectionDetails() {
-        Settings settings = new Settings();
+        Settings settings = Settings.getInstance();
 
         this.address = "";
         this.port = DEFAULT_PORT;

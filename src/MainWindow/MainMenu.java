@@ -70,8 +70,7 @@ public class MainMenu extends JMenuBar {
         close.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Settings settings = new Settings();
-                boolean ask = settings.isEventEnabled("ask-for-quit");
+                boolean ask = Settings.getInstance().isEventEnabled("ask-for-quit");
                 boolean close = ask ? MessageDialog.confirmQuestion("Ukončit aplikaci",
                                             "Opravdu chcete ukončit aplikaci?") : true;
                 if (close) {

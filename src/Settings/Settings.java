@@ -13,17 +13,22 @@ import static org.joox.JOOX.$;
 
 public class Settings {
 
+    private static Settings instance;
+
     private final static String FILENAME = "settings.xml";
     private final static String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
     private Match rootElement;
 
 
-    public Settings () {
-        parse();
+    public static Settings getInstance() {
+        if (instance == null)
+            instance = new Settings();
+
+        return instance;
     }
 
-    private void parse() {
+    private Settings() {
         try {
             rootElement = $( new File(FILENAME) );
         } catch (SAXException | IOException e) {

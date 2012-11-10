@@ -59,8 +59,7 @@ public abstract class AbstractTab extends JPanel implements GlobalEventsListener
     }
 
     public void appendText(String str, JEditorPane panel) {
-        Settings settings = new Settings();
-        if ( settings.isEventEnabled("clickable-links") )
+        if ( Settings.getInstance().isEventEnabled("clickable-links") )
             str = HTML.addHyperlinks(str);
 
         EditorKit kit = panel.getEditorKit();

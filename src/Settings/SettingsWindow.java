@@ -30,7 +30,7 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
     }
 
     private SettingsWindow() {
-        this.settings = new Settings();
+        this.settings = Settings.getInstance();
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setTitle("Osobní nastavení");
         setResizable(false);

@@ -360,8 +360,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
         String myNick = getServerTab().getConnection().getNick();
         if ( recipient.equals(myNick) ) {
-            Settings settings = new Settings();
-            if ( settings.isEventEnabled("rejoin-after-kick") )
+            if ( Settings.getInstance().isEventEnabled("rejoin-after-kick") )
                 getServerTab().getConnection().joinChannel( getTabName() );
             else
                 getServerTab().removeChannelTab(this);
