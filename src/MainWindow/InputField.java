@@ -14,9 +14,7 @@ public class InputField extends JTextField {
     private enum Commands {
 
         UNKNOWN, ACTION, AFK, AWAY, BACK, CLEAR, JOIN, KICK, LEAVE, ME, MODE,
-        NICK, PART, PRIVMSG, QUIT, SERVER, TOPIC, WHOIS,
-        C, J
-        ;
+        NICK, PART, PRIVMSG, QUIT, SERVER, TOPIC, WHOIS;
 
         public static Commands fromString(String Str) {
             try {
@@ -100,7 +98,7 @@ public class InputField extends JTextField {
         Commands command = Commands.fromString(rawCommand);
 
         AbstractTab tab = MainWindow.getInstance().getActiveTab();
-        boolean connectionRequired = (command != Commands.CLEAR && command != Commands.SERVER && command != Commands.C);
+        boolean connectionRequired = (command != Commands.CLEAR && command != Commands.SERVER);
         boolean isConnected = (tab == null) ? false : tab.getServerTab().getConnection().isConnected();
         if (connectionRequired && !isConnected) {
             InputHandler.showNotConnectedError();
@@ -124,12 +122,7 @@ public class InputField extends JTextField {
                 case WHOIS:   { InputHandler.handleWhois(params); break; }
                 case ME:      { InputHandler.handleAction(params); break; }
                 case ACTION:  { InputHandler.handleAction(params); break; }
-
                 case SERVER:  { InputHandler.handleServer(params); break; }
-
-                // TODO pryc
-                case C:       { InputHandler.handleServer("irc.mmoirc.com"); break; }
-                case J:       { InputHandler.handleJoin("#abraka"); break; }
             }
 
         }
