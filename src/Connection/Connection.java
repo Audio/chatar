@@ -242,7 +242,7 @@ public class Connection extends PircBot implements Runnable {
 
     private PrivateMessagingListener getPrivateMessagingListener(String nickname) {
         for (PrivateMessagingListener listener : privateMessagingListeners) {
-            if ( listener.getNickname().equals(nickname) )
+            if ( listener.getNickname().equalsIgnoreCase(nickname) )
                 return listener;
         }
 
