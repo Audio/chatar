@@ -7,6 +7,7 @@ import java.awt.Desktop;
 import java.awt.Font;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.util.Calendar;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
@@ -15,6 +16,8 @@ import javax.swing.text.html.HTMLDocument;
 
 public abstract class AbstractTab extends JPanel implements GlobalEventsListener {
 
+    protected static String timestampFormat;
+
     protected ServerTab serverTab;
     protected String tabName;
     protected JEditorPane content;
@@ -22,6 +25,10 @@ public abstract class AbstractTab extends JPanel implements GlobalEventsListener
 
     public AbstractTab() {
         createContent();
+
+        timestampFormat = "";
+        if ( Settings.getInstance().isViewEnabled("timestamp-enabled") )
+            timestampFormat = Settings.getInstance().getViewTimestampFormat();
     }
 
     final public String getTabName() {
@@ -62,6 +69,8 @@ public abstract class AbstractTab extends JPanel implements GlobalEventsListener
         if ( Settings.getInstance().isEventEnabled("clickable-links") )
             str = HTML.addHyperlinks(str);
 
+        str = prependTimestamp(str);
+
         EditorKit kit = panel.getEditorKit();
         Document doc = panel.getDocument();
         try {
@@ -92,6 +101,24 @@ public abstract class AbstractTab extends JPanel implements GlobalEventsListener
 
     public void clearContent() {
         content.setText(null);
+    }
+
+    private String prependTimestamp(String str) {
+        if ( str.isEmpty() ) {
+            return str;
+        } else {
+            Calendar c = Calendar.getInstance();
+            String timestamp = timestampFormat;
+            timestamp = timestamp.replaceFirst("h", getTwoDigits( c.get(Calendar.HOUR_OF_DAY) ) );
+            timestamp = timestamp.replaceFirst("m", getTwoDigits( c.get(Calendar.MINUTE) ) );
+            timestamp = timestamp.replaceFirst("s", getTwoDigits( c.get(Calendar.SECOND) ) );
+            return HTML.small(timestamp) + " " + str;
+        }
+    }
+
+    private String getTwoDigits(int num) {
+        String str = Integer.toString(num);
+        return num < 10 ? "0" + str : str;
     }
 
     public void setFocus() {

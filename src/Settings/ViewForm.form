@@ -34,7 +34,7 @@
                           <Component id="timestampEnabledLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="tsFormatKeyLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="149" max="32767" attributes="0"/>
+                      <EmptySpace pref="94" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="timestampEnabled" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="displayTopic" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -78,7 +78,7 @@
               <Component id="tsFormatValuesLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="tsFormatExampleLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="20" max="32767" attributes="0"/>
+              <EmptySpace pref="40" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -165,7 +165,7 @@
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="timestamp"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="p&#x159;&#xed;klad:   [h:m:s]"/>
+        <Property name="text" type="java.lang.String" value="p&#x159;&#xed;klad:   h:m:s"/>
       </Properties>
     </Component>
   </SubComponents>

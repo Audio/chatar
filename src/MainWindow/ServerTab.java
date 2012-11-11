@@ -251,7 +251,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener, Sett
 
     @Override
     public void timestampFormatChanged(String format) {
-        // TODO zmena formatu casu
+        timestampFormat = format;
     }
 
 }

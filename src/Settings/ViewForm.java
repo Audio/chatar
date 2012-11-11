@@ -51,7 +51,7 @@ class ViewForm extends javax.swing.JPanel {
 
         tsFormatExampleLabel.setForeground(new java.awt.Color(153, 153, 153));
         tsFormatExampleLabel.setLabelFor(timestamp);
-        tsFormatExampleLabel.setText("příklad:   [h:m:s]");
+        tsFormatExampleLabel.setText("příklad:   h:m:s");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -66,7 +66,7 @@ class ViewForm extends javax.swing.JPanel {
                             .addComponent(displayTopicLabel)
                             .addComponent(timestampEnabledLabel)
                             .addComponent(tsFormatKeyLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(timestampEnabled, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(displayTopic, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -100,7 +100,7 @@ class ViewForm extends javax.swing.JPanel {
                 .addComponent(tsFormatValuesLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tsFormatExampleLabel)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

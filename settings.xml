@@ -8,7 +8,7 @@
         <email>jara@chatar.cz</email>
     </user>
     <events>
-        <log-chat value="false"/>
+        <log-chat value="true"/>
         <rejoin-after-kick value="true"/>
         <clickable-links value="true"/>
         <ask-for-quit value="true"/>
@@ -16,7 +16,7 @@
     <view>
         <display-topic value="true"/>
         <timestamp-enabled value="true"/>
-        <timestamp-format>[h:m:s]</timestamp-format>
+        <timestamp-format>h:m</timestamp-format>
     </view>
     <blocked>
         <nicknames>py-bot</nicknames>
