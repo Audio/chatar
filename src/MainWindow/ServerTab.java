@@ -175,10 +175,8 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     }
 
     private void autoJoinChannels() {
-        while ( channelsToJoin.size() > 0 ) {
-            ChannelTab tab = createChannelTab( channelsToJoin.remove(0) );
-            tab.setFocus();
-        }
+        while ( channelsToJoin.size() > 0 )
+            connection.joinChannel( channelsToJoin.remove(0) );
     }
 
     @Override
