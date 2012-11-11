@@ -17,7 +17,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     private JList<User> userList;
     private UserListRenderer<User> userListRenderer;
     private SortedListModel<User> usersModel;
-    private JEditorPane infobox;
+    private JEditorPane topicPanel;
     private JPopupMenu popup;
     private MouseListener popupListener;
     private String selectedPopupUser;
@@ -81,11 +81,11 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         infoscroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         infoscroll.setAutoscrolls(true);
 
-        infobox = new JEditorPane();
-        infobox.setContentType("text/html");
-        infobox.setEditable(false);
+        topicPanel = new JEditorPane();
+        topicPanel.setContentType("text/html");
+        topicPanel.setEditable(false);
 
-        infoscroll.setViewportView(infobox);
+        infoscroll.setViewportView(topicPanel);
         toppanel.add(infoscroll);
 
         JPanel bottompanel = new JPanel();
@@ -119,6 +119,9 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         layout.putConstraint(SpringLayout.SOUTH, this, 0, SpringLayout.SOUTH, rightbox);
         layout.putConstraint(SpringLayout.NORTH, userspanel, 5, SpringLayout.NORTH, rightbox);
         layout.putConstraint(SpringLayout.SOUTH, userspanel, 0, SpringLayout.SOUTH, rightbox);
+
+        if ( !Settings.getInstance().isViewEnabled("display-topic") )
+            setTopicPanelVisibility(false);
     }
 
     private void createPopupMenu() {
@@ -275,7 +278,11 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         else
             topic = HTML.bold(topic);
 
-        infobox.setText(topic);
+        topicPanel.setText(topic);
+    }
+
+    public void setTopicPanelVisibility(boolean visible) {
+        topicPanel.getParent().getParent().getParent().setVisible(visible);
     }
 
     @Override

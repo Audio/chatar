@@ -38,11 +38,11 @@ public class Settings {
         }
     }
 
-    public void addChannelEventsListener(SettingsChangesListener listener) {
+    public void addChangesListener(SettingsChangesListener listener) {
         listeners.add(listener);
     }
 
-    public void removeChannelEventsListener(SettingsChangesListener listener) {
+    public void removeChangesListener(SettingsChangesListener listener) {
         listeners.remove(listener);
     }
 

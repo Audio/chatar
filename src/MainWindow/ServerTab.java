@@ -4,6 +4,7 @@ import Client.*;
 import Connection.*;
 import Dialog.MessageDialog;
 import Favorites.ConnectionDetails;
+import Settings.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.*;
@@ -11,7 +12,7 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
 
-public class ServerTab extends AbstractTab implements ServerEventsListener {
+public class ServerTab extends AbstractTab implements ServerEventsListener, SettingsChangesListener {
 
     static final long serialVersionUID = 1L;
 
@@ -24,6 +25,22 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
 
     public ServerTab(ConnectionDetails cd) {
+        tabName = cd.address;
+        channelsToJoin = cd.channelsToJoin;
+        channelTabs = new ArrayList<>();
+        privateChatTabs = new ArrayList<>();
+
+        createMainPanel();
+        appendInfo("Probíhá připojování na server...");
+
+        connection = new Connection(cd);
+        connection.setServerEventsListener(this);
+        (new Thread(connection)).start();
+
+        Settings.getInstance().addChangesListener(this);
+    }
+
+    private void createMainPanel() {
         SpringLayout layout = new SpringLayout();
         setLayout(layout);
 
@@ -33,7 +50,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         GUI.setPreferredSize(top, 700, 50);
 
         JLabel text_address = new JLabel("Server:");
-        addressLabel = new JLabel("irc://" + cd.address + "/");
+        addressLabel = new JLabel("irc://" + tabName + "/");
 
         Box r1 = Box.createHorizontalBox();
         r1.setBorder( BorderFactory.createEmptyBorder(10, 0, 0, 0) );
@@ -77,16 +94,6 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
         layout.putConstraint(SpringLayout.EAST, top, 0, SpringLayout.EAST, this);
         layout.putConstraint(SpringLayout.EAST, textpanel, 0, SpringLayout.EAST, top);
         layout.putConstraint(SpringLayout.SOUTH, this, 0, SpringLayout.SOUTH, textpanel);
-
-        appendInfo("Probíhá připojování na server...");
-        tabName = cd.address;
-        channelsToJoin = cd.channelsToJoin;
-        channelTabs = new ArrayList<>();
-        privateChatTabs = new ArrayList<>();
-
-        connection = new Connection(cd);
-        connection.setServerEventsListener(this);
-        (new Thread(connection)).start();
     }
 
     public Connection getConnection() {
@@ -131,6 +138,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
 
         connection.disconnect();
         connection.removeServerEventsListener();
+        Settings.getInstance().removeChangesListener(this);
         MainWindow.getInstance().removeTab(this);
     }
 
@@ -228,6 +236,22 @@ public class ServerTab extends AbstractTab implements ServerEventsListener {
     @Override
     public void myNickHasChanged(String newNickname) {
         MainWindow.getInstance().getNickButton().setText(newNickname);
+    }
+
+    @Override
+    public void chatLoggingChanged(boolean enabled) {
+        // TODO logovani chatu
+    }
+
+    @Override
+    public void topicVisibilityChanged(boolean visible) {
+        for (ChannelTab channel : channelTabs)
+            channel.setTopicPanelVisibility(visible);
+    }
+
+    @Override
+    public void timestampFormatChanged(String format) {
+        // TODO zmena formatu casu
     }
 
 }
