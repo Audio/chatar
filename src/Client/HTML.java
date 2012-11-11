@@ -37,6 +37,10 @@ public class HTML {
         return message.replaceAll("(ftp|https?)://\\S+", "<a href=\"$0\">$0</a>");
     }
 
+    public static String removeTags(String message) {
+        return message.replaceAll("\\<.*?\\>", "");
+    }
+
     // http://stackoverflow.com/a/1264912/557223
     public static String formatXML(String input) {
         try {

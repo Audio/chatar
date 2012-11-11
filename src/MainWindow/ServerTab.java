@@ -240,7 +240,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener, Sett
 
     @Override
     public void chatLoggingChanged(boolean enabled) {
-        // TODO logovani chatu
+        isChatLoggingEnabled = enabled;
     }
 
     @Override

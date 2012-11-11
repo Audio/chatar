@@ -1,5 +1,6 @@
 package MainWindow;
 
+import Client.FileLogger;
 import Client.HTML;
 import Connection.GlobalEventsListener;
 import Settings.Settings;
@@ -17,18 +18,23 @@ import javax.swing.text.html.HTMLDocument;
 public abstract class AbstractTab extends JPanel implements GlobalEventsListener {
 
     protected static String timestampFormat;
+    protected static boolean isChatLoggingEnabled;
 
     protected ServerTab serverTab;
     protected String tabName;
     protected JEditorPane content;
+    protected FileLogger chatLogger;
 
 
     public AbstractTab() {
         createContent();
 
+        Settings s = Settings.getInstance();
         timestampFormat = "";
-        if ( Settings.getInstance().isViewEnabled("timestamp-enabled") )
-            timestampFormat = Settings.getInstance().getViewTimestampFormat();
+        if ( s.isViewEnabled("timestamp-enabled") )
+            timestampFormat = s.getViewTimestampFormat();
+
+        isChatLoggingEnabled = s.isEventEnabled("log-chat");
     }
 
     final public String getTabName() {
@@ -80,6 +86,8 @@ public abstract class AbstractTab extends JPanel implements GlobalEventsListener
         } catch (IOException | BadLocationException e) {
             e.printStackTrace();
         }
+
+        logIfEnabled( HTML.removeTags(str) );
     }
 
     public void appendInfo(String str) {
@@ -135,6 +143,16 @@ public abstract class AbstractTab extends JPanel implements GlobalEventsListener
             appendInfo("Nastaven stav nepřítomnosti");
         else
             appendInfo("Zrušen stav nepřítomnosti");
+    }
+
+    private void logIfEnabled(String content) {
+        if (!isChatLoggingEnabled)
+            return;
+
+        if (chatLogger == null)
+            chatLogger = new FileLogger( getServerTab().getTabName(), getTabName() );
+
+        chatLogger.log(content);
     }
 
 }
