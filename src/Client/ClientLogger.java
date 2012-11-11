@@ -17,7 +17,7 @@ public final class ClientLogger {
 
         try {
             logger = Logger.getLogger("Client");
-            handler = new FileHandler("log.txt", true);
+            handler = new FileHandler("log/error.log", true);
             handler.setFormatter( new SimpleFormatter() );
             logger.addHandler(handler);
         } catch (IOException e) {
