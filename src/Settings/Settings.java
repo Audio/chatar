@@ -19,6 +19,7 @@ public class Settings {
     private final static String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
     private Match rootElement;
+    private ArrayList<SettingsChangesListener> listeners;
 
 
     public static Settings getInstance() {
@@ -30,10 +31,19 @@ public class Settings {
 
     private Settings() {
         try {
-            rootElement = $( new File(FILENAME) );
+            this.listeners = new ArrayList<>();
+            this.rootElement = $( new File(FILENAME) );
         } catch (SAXException | IOException e) {
             ClientLogger.log("Soubor s nastavením neexistuje.", ClientLogger.ERROR);
         }
+    }
+
+    public void addChannelEventsListener(SettingsChangesListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeChannelEventsListener(SettingsChangesListener listener) {
+        listeners.remove(listener);
     }
 
     public String getUserProperty(String property) {
@@ -104,8 +114,18 @@ public class Settings {
         try {
             Files.write(path, content.getBytes(), StandardOpenOption.CREATE,
                                                   StandardOpenOption.TRUNCATE_EXISTING);
+            emitChanges();
         } catch (IOException ex) {
             ClientLogger.log("Uložení souboru s nastavením se nezdařilo.", ClientLogger.ERROR);
+        }
+    }
+
+    private void emitChanges() {
+        for (SettingsChangesListener listener : listeners) {
+            listener.chatLoggingChanged( isEventEnabled("log-chat") );
+            listener.topicVisibilityChanged( isViewEnabled("display-topic") );
+            String format = isViewEnabled("timestamp-enabled") ? getViewTimestampFormat() : "";
+            listener.timestampFormatChanged(format);
         }
     }
 
