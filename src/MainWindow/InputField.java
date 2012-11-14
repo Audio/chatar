@@ -1,7 +1,8 @@
 package MainWindow;
 
-import Command.CommandHistory;
+import Command.*;
 import Connection.InputHandler;
+import Settings.Settings;
 import java.awt.Dimension;
 import java.awt.event.*;
 import javax.swing.JTextField;
@@ -10,6 +11,9 @@ import javax.swing.JTextField;
 public class InputField extends JTextField {
 
     static final long serialVersionUID = 1L;
+
+    private static final byte MAX_RECURSION_DEPTH = 10;
+    private byte recursionDepth;
 
     private enum Commands {
 
@@ -97,6 +101,9 @@ public class InputField extends JTextField {
 
         Commands command = Commands.fromString(rawCommand);
 
+        if (command == Commands.UNKNOWN && handleCustomCommand(rawCommand, params))
+            return;
+
         AbstractTab tab = MainWindow.getInstance().getActiveTab();
         boolean connectionRequired = (command != Commands.CLEAR && command != Commands.SERVER);
         boolean isConnected = (tab == null) ? false : tab.getServerTab().getConnection().isConnected();
@@ -128,7 +135,30 @@ public class InputField extends JTextField {
         }
     }
 
-    private void handleMessage () {
+    private boolean handleCustomCommand(String name, String params) {
+        boolean handled = true;
+
+        Command customCommand = Settings.getInstance().getCommand(name);
+        if (customCommand != null) {
+
+            if (++recursionDepth > MAX_RECURSION_DEPTH) {
+                InputHandler.showRecursionTooDeepError();
+                recursionDepth = 0;
+            } else {
+                String newInput = customCommand.content.replaceAll("%T", params);
+                setText(newInput);
+                handleInputText();
+            }
+
+        } else {
+            recursionDepth = 0;
+            handled = false;
+        }
+
+        return handled;
+    }
+
+    private void handleMessage() {
         AbstractTab tab = InputHandler.getActiveTab();
         if (tab == null) {
             InputHandler.showNotConnectedError();

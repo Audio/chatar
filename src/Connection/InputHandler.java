@@ -39,6 +39,10 @@ public class InputHandler {
         MessageDialog.warning("Přepni si na kanál", "Aktivním oknem není kanál (channel).");
     }
 
+    public static void showRecursionTooDeepError() {
+        MessageDialog.error("Příkaz nelze zpracovat", "Rekurze při vykonávání vlastních příkazů");
+    }
+
     public static void handle(String command, String params) {
         getCurrentServerTab().getConnection().sendRawLine(command + " " + params);
         clearInput();

@@ -112,6 +112,15 @@ public class Settings {
         return list;
     }
 
+    public Command getCommand(String name) {
+        name = name.toLowerCase();
+        Match match = rootElement.xpath("commands/command[@name='" + name + "']");
+        if ( match.isEmpty() )
+            return null;
+        else
+            return new Command(name, match.text() );
+    }
+
     public void setCommands(List<Command> commands) {
         rootElement.find("commands command").remove();
         Match container = rootElement.find("commands");
