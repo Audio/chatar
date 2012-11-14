@@ -100,8 +100,6 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
         addTab(eventsForm, "Události");
         addTab(viewForm, "Zobrazení");
         addTab(blockedForm, "Blokovaní uživatelé");
-
-        // TODO vlastni prikazy
     }
 
     private void reloadSettings() {
@@ -121,8 +119,6 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
         viewForm.setTimestampFormat( settings.getViewTimestampFormat() );
 
         blockedForm.setBlockedNicknames( settings.getBlockedNicknames() );
-
-        // TODO vlastni prikazy
     }
 
     private void saveSettings() throws InvalidAttributeValueException {
@@ -148,8 +144,6 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
         settings.setViewTimestampFormat( viewForm.getTimestampFormat() );
 
         settings.setBlockedNicknames( blockedForm.getBlockedNicknames() );
-
-        // TODO vlastni prikazy
 
         settings.store();
     }

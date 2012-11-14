@@ -2,6 +2,7 @@ package Settings;
 
 import Client.ClientLogger;
 import Client.HTML;
+import Command.Command;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
@@ -100,12 +101,29 @@ public class Settings {
         rootElement.xpath("blocked/nicknames").text(validatedNames);
     }
 
-    public List<String> getCommands() {
-        return null; // TODO fakt get
+    public List<Command> getCommands() {
+        List<Command> list = new ArrayList<>();
+        Match commands = rootElement.xpath("commands").children();
+        for ( Match command : commands.each() ) {
+            String name = command.attr("name");
+            String content = command.text();
+            list.add( new Command(name, content) );
+        }
+        return list;
     }
 
-    public void setCommands(List<String> commands) {
-        // TODO fakt set
+    public void setCommands(List<Command> commands) {
+        rootElement.find("commands command").remove();
+        Match container = rootElement.find("commands");
+        container.text("");
+
+        for (Command c : commands) {
+            container.append( $("<command></command>") );
+            Match element = container.find("command").last();
+
+            element.attr("name", c.name);
+            element.text(c.content);
+        }
     }
 
     public void store() {

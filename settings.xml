@@ -22,6 +22,9 @@
         <nicknames>py-bot</nicknames>
     </blocked>
     <commands>
+        <command name="id">/nickserv identify %T</command>
+        <command name="j">/join %T</command>
+        <command name="msg">/privmsg slaps %T around a bit with a large trout</command>
         <command name="slap">/me slaps %T around a bit with a large trout</command>
     </commands>
 </settings>

@@ -1,6 +1,7 @@
 package MainWindow;
 
 import Client.ClientLogger;
+import Command.CustomCommandsWindow;
 import Connection.InputHandler;
 import Dialog.MessageDialog;
 import Favorites.*;
@@ -45,6 +46,15 @@ public class MainMenu extends JMenuBar {
             }
         });
 
+        JMenuItem commands = new JMenuItem("Vlastní příkazy");
+        commands.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK) );
+        commands.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CustomCommandsWindow.getInstance().setVisible(true);
+            }
+        });
+
         clearChat = new JMenuItem("Vymazat chat");
         clearChat.setVisible(false);
         clearChat.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK) );
@@ -81,6 +91,7 @@ public class MainMenu extends JMenuBar {
         });
 
         menu.add(settings);
+        menu.add(commands);
         menu.add(clearChat);
         menu.add(closePanel);
         menu.add(close);
