@@ -22,6 +22,7 @@ public class CustomCommandsWindow extends JFrame implements WindowListener, Popu
     private JTable table;
     private DefaultTableModel tableModel;
     private List<Command> commands;
+    private JButton delete;
 
 
     public static CustomCommandsWindow getInstance() {
@@ -55,9 +56,11 @@ public class CustomCommandsWindow extends JFrame implements WindowListener, Popu
         tableModel.addColumn("Název");
         tableModel.addColumn("Příkaz");
         tableModel.addTableModelListener(this);
+
         table = new JTable(tableModel);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setShowVerticalLines(false);
+        table.getSelectionModel().addListSelectionListener( new TableSelectionListener () );
 
         int columnPart = WINDOW_WIDTH / 5;
         table.getColumnModel().getColumn(0).setPreferredWidth(columnPart);
@@ -81,10 +84,6 @@ public class CustomCommandsWindow extends JFrame implements WindowListener, Popu
         contentPanel.add(buttonPanel);
     }
 
-    protected void close() {
-        setVisible(false);
-    }
-
     protected JPanel createButtonPanel() {
         JButton create = new JButton("Přidat");
         create.addActionListener( new ActionListener() {
@@ -94,7 +93,8 @@ public class CustomCommandsWindow extends JFrame implements WindowListener, Popu
             }
         });
 
-        JButton delete = new JButton("Odebrat");
+        delete = new JButton("Odebrat");
+        delete.setEnabled(false);
         delete.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -163,6 +163,7 @@ public class CustomCommandsWindow extends JFrame implements WindowListener, Popu
             commands.remove(row);
             tableModel.removeRow(row);
         }
+        delete.setEnabled(false);
     }
 
     @Override
@@ -199,6 +200,11 @@ public class CustomCommandsWindow extends JFrame implements WindowListener, Popu
         close();
     }
 
+    private void close() {
+        delete.setEnabled(false);
+        setVisible(false);
+    }
+
     @Override
     public void windowClosing(WindowEvent e) {
         close();
@@ -214,5 +220,15 @@ public class CustomCommandsWindow extends JFrame implements WindowListener, Popu
     public void windowDeiconified(WindowEvent e) { }
     public void windowActivated(WindowEvent e) { }
     public void windowDeactivated(WindowEvent e) { }
+
+    private class TableSelectionListener implements ListSelectionListener {
+
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if ( !e.getValueIsAdjusting() )
+                delete.setEnabled(true);
+        }
+
+    }
 
 }
