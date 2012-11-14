@@ -1,4 +1,4 @@
-package Settings;
+package Command;
 
 import java.util.ArrayList;
 

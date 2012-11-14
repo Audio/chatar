@@ -1,6 +1,6 @@
 package MainWindow;
 
-import Settings.CommandHistory;
+import Command.CommandHistory;
 import Connection.InputHandler;
 import java.awt.Dimension;
 import java.awt.event.*;
