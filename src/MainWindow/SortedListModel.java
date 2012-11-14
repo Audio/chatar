@@ -49,11 +49,34 @@ public class SortedListModel<E> extends AbstractListModel<E> {
 
     public boolean contains(String nickname) {
         for (User user : model) {
-            if ( user.getNickname().equals(nickname) )
+            if ( user.getNickname().equalsIgnoreCase(nickname) )
                 return true;
         }
 
         return false;
+    }
+
+    public String getCompleteNickname(String partialNick) {
+        String lowerNick = partialNick.toLowerCase();
+        for (User user : model) {
+            if ( user.getNickname().toLowerCase().startsWith(lowerNick) )
+                return user.getNickname();
+        }
+
+        return partialNick;
+    }
+
+    public String getNickAfter(String nickname) {
+        boolean returnNext = false;
+        for (User user : model) {
+            if (returnNext)
+                return user.getNickname();
+
+            if ( user.getNickname().equalsIgnoreCase(nickname) )
+                returnNext = true;
+        }
+
+        return nickname;
     }
 
     private void contentChanged() {

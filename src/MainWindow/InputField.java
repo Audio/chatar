@@ -33,6 +33,7 @@ public class InputField extends JTextField {
     public InputField() {
         super(510);
         setMaximumSize( new Dimension(0, 28) );
+        setFocusTraversalKeysEnabled(false);
 
         addActionListener( new ActionListener() {
             @Override
@@ -43,10 +44,73 @@ public class InputField extends JTextField {
 
         addKeyListener( new KeyAdapter() {
             @Override
-            public void keyPressed (KeyEvent e) {
-                browseHistory(e);
+            public void keyPressed(KeyEvent e) {
+                switch ( e.getKeyCode() ) {
+                    case KeyEvent.VK_DOWN:
+                    case KeyEvent.VK_UP:
+                        browseHistory(e); break;
+                    case KeyEvent.VK_TAB:
+                        completeNickname(e); break;
+                }
             }
         });
+    }
+
+    private void browseHistory(KeyEvent e) {
+        int c = e.getKeyCode();
+        String command = "";
+
+        if (c == KeyEvent.VK_UP)
+            command = CommandHistory.getPrevious();
+        else if (c == KeyEvent.VK_DOWN)
+            command = CommandHistory.getNext();
+
+        if ( command.length() == 0)
+            return;
+
+        e.consume();
+
+        setText(command);
+        selectAll();
+    }
+
+    private void completeNickname(KeyEvent e) {
+        e.consume();
+
+        String text = getText();
+        if ( text.trim().isEmpty() )
+            return;
+
+        AbstractTab activeTab = InputHandler.getActiveTab();
+        if (activeTab instanceof ChannelTab == false)
+            return;
+
+        ChannelTab tab = (ChannelTab) activeTab;
+        
+        int position = getCaret().getDot();
+
+        int nickStartPos = text.substring(0, position).lastIndexOf(" ");
+        if (nickStartPos == -1)
+            nickStartPos = 0;
+        else
+            nickStartPos++;
+
+        int nickEndPos = text.indexOf(" ", position);
+        if (nickEndPos == -1)
+            nickEndPos = text.length();
+
+        if (nickEndPos < text.length() && text.charAt(nickEndPos) == ':')
+            nickEndPos--;
+
+        String partialNick = text.substring(nickStartPos, nickEndPos);
+        String completeNickname;
+        if ( tab.contains(partialNick) )
+            completeNickname = tab.getNickAfter(partialNick);
+        else
+            completeNickname = tab.getCompleteNickname(partialNick);
+
+        text = text.substring(0, nickStartPos) + completeNickname + text.substring(nickEndPos);
+        setText(text);
     }
 
     private void handleInputText() {
@@ -58,28 +122,6 @@ public class InputField extends JTextField {
             handleCommand();
         else
             handleMessage();
-    }
-
-    private void browseHistory(KeyEvent e) {
-        int c = e.getKeyCode();
-        String command = "";
-
-        // Odchytí stisknutí šipky nahoru/dolu.
-        if (c == KeyEvent.VK_UP)
-            command = CommandHistory.getPrevious();
-        else if (c == KeyEvent.VK_DOWN)
-            command = CommandHistory.getNext();
-
-        // Žádný vrácený příkaz, nebo se nejedná o šipku.
-        if ( command.length() == 0)
-            return;
-
-        // Zabrání dalším akcím.
-        e.consume();
-
-        // Vypíše příkaz z historie.
-        setText(command);
-        selectAll();
     }
 
     private void handleCommand() {

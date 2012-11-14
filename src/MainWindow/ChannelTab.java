@@ -272,6 +272,14 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         }
     }
 
+    public String getCompleteNickname(String partialNick) {
+        return usersModel.getCompleteNickname(partialNick);
+    }
+
+    public String getNickAfter(String nickname) {
+        return usersModel.getNickAfter(nickname);
+    }
+
     private void setTopic(String topic) {
         if (topic == null || topic.trim().length() == 0)
             topic = "Diskusní téma není nastaveno.";
