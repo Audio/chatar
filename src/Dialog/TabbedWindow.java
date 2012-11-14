@@ -5,10 +5,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 
-public abstract class TabbedWindow extends JFrame {
+public abstract class TabbedWindow extends JFrame implements PopupWindowDimensions {
 
-    protected final int WINDOW_WIDTH = 500;
-    protected final int WINDOW_HEIGHT = 290;
     protected JTabbedPane tabPanel;
 
 
