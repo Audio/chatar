@@ -1,5 +1,6 @@
 package Settings;
 
+import Dialog.TabbedWindow;
 import Client.GUI;
 import Dialog.MessageDialog;
 import MainWindow.*;
