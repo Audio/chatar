@@ -178,13 +178,14 @@ public class CustomCommandsWindow extends JFrame implements WindowListener, Popu
     }
 
     private void saveChanges() {
-        removeEmptyCommands();
+        cleanUpTable();
         settings.setCommands(commands);
         settings.store();
     }
 
-    private void removeEmptyCommands() {
+    private void cleanUpTable() {
         for (int i = 0; i < commands.size(); ++i) {
+            commands.get(i).name = commands.get(i).name.toLowerCase();
             if ( commands.get(i).name.isEmpty() ) {
                 commands.remove(i);
                 tableModel.removeRow(i);
