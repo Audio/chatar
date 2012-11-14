@@ -38,6 +38,7 @@ public class MainMenu extends JMenuBar {
         JMenu menu = new JMenu("Chatař");
 
         JMenuItem settings = new JMenuItem("Nastavení");
+        settings.setIcon( new ImageIcon("img/settings-icon.png") );
         settings.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK) );
         settings.addActionListener( new ActionListener() {
             @Override
@@ -47,6 +48,7 @@ public class MainMenu extends JMenuBar {
         });
 
         JMenuItem commands = new JMenuItem("Vlastní příkazy");
+        commands.setIcon( new ImageIcon("img/commands-icon.png") );
         commands.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK) );
         commands.addActionListener( new ActionListener() {
             @Override
@@ -103,6 +105,7 @@ public class MainMenu extends JMenuBar {
         favoritesMenu = new JMenu("Oblíbené");
 
         editFavorites = new JMenuItem("Editovat seznam");
+        editFavorites.setIcon( new ImageIcon("img/favorites-icon.png") );
         editFavorites.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK) );
         editFavorites.addActionListener( new ActionListener() {
             @Override
