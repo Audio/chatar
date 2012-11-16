@@ -32,11 +32,12 @@ public class FavoritesWindow extends TabbedWindow implements WindowListener {
     private FavoritesWindow() {
         this.storage = new Storage();
 
+        setAlwaysOnTop(true);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
-        setTitle("Seznam oblíbených serverů");
+        setIconImage( new ImageIcon("img/favorites-icon.png").getImage() );
         setResizable(false);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        setIconImage( new ImageIcon("img/favorites-icon.png").getImage() );
+        setTitle("Seznam oblíbených serverů");
 
         createMainPanel();
         reloadServerList();

@@ -35,11 +35,12 @@ public class CustomCommandsWindow extends JFrame implements WindowListener, Popu
     private CustomCommandsWindow() {
         this.settings = Settings.getInstance();
 
+        setAlwaysOnTop(true);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
-        setTitle("Vlastní příkazy");
+        setIconImage( new ImageIcon("img/commands-icon.png").getImage() );
         setResizable(false);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        setIconImage( new ImageIcon("img/commands-icon.png").getImage() );
+        setTitle("Vlastní příkazy");
 
         createMainPanel();
         reloadCommandsTable();

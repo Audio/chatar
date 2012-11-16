@@ -32,11 +32,13 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
 
     private SettingsWindow() {
         this.settings = Settings.getInstance();
+
+        setAlwaysOnTop(true);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
-        setTitle("Osobní nastavení");
+        setIconImage( new ImageIcon("img/settings-icon.png").getImage() );
         setResizable(false);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        setIconImage( new ImageIcon("img/settings-icon.png").getImage() );
+        setTitle("Osobní nastavení");
 
         createMainPanel();
         createTabs();
