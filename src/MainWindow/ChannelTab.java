@@ -279,7 +279,13 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     @Override
     public void messageReceived(String sender, String message) {
-        appendText( HTML.bold(sender) + ": " + HTML.escapeTags(message) );
+        message = HTML.escapeTags(message);
+
+        String myNick = getServerTab().getConnection().getNick();
+        if ( message.indexOf(myNick) > -1 )
+            message = HTML.blue(message);
+
+        appendText( HTML.bold(sender) + ": " + message);
     }
 
     @Override
