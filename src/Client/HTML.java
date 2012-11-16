@@ -34,7 +34,7 @@ public class HTML {
     }
 
     public static String addHyperlinks(String message) {
-        return message.replaceAll("(ftp|https?)://\\S+", "<a href=\"$0\">$0</a>");
+        return message.replaceAll("(ftp|https?)://[^\\s<]+", "<a href=\"$0\">$0</a>");
     }
 
     public static String removeTags(String message) {
