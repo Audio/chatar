@@ -84,7 +84,7 @@ public class MainMenu extends JMenuBar {
             public void actionPerformed(ActionEvent e) {
                 boolean ask = Settings.getInstance().isEventEnabled("ask-for-quit");
                 boolean close = ask ? MessageDialog.confirmQuestion("Ukončit aplikaci",
-                                            "Opravdu chcete ukončit aplikaci?") : true;
+                                "Opravdu chcete ukončit aplikaci?", MainWindow.getInstance() ) : true;
                 if (close) {
                     ClientLogger.quit();
                     System.exit(0);
@@ -152,7 +152,8 @@ public class MainMenu extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String addr = MessageDialog.inputQuestion("Rychlé připojení k serveru",
-                                                             "Adresa serveru (:port)");
+                                                          "Adresa serveru (:port)",
+                                                          MainWindow.getInstance() );
                 ConnectionDetails sa = ConnectionDetails.fromAddress(addr);
                 if ( sa.isValid() )
                     MainWindow.getInstance().createServerTab(sa);
@@ -166,7 +167,8 @@ public class MainMenu extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String channel = MessageDialog.inputQuestion("Připojení ke kanálu",
-                                                             "Název kanálu");
+                                                             "Název kanálu",
+                                                             MainWindow.getInstance() );
                 if (channel != null) {
                     if ( !channel.startsWith("#") )
                         channel = "#" + channel;
@@ -223,7 +225,8 @@ public class MainMenu extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String reason = MessageDialog.inputQuestion("Nastavení vlastní zprávy",
-                        "Nastavte důvod své nepřítomnosti, nebo nechte pole prázdné.");
+                        "Nastavte důvod své nepřítomnosti, nebo nechte pole prázdné.",
+                        MainWindow.getInstance() );
                 if (reason != null)
                     InputHandler.handleAway( reason.trim() );
             }

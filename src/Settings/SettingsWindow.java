@@ -65,7 +65,7 @@ public class SettingsWindow extends TabbedWindow implements WindowListener {
                     saveSettings();
                     close();
                 } catch (InvalidAttributeValueException ex) {
-                    MessageDialog.error("Nesprávně vyplněný formulář", ex.getMessage() );
+                    MessageDialog.error("Nesprávně vyplněný formulář", ex.getMessage(), instance);
                 }
             }
         });

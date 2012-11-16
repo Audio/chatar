@@ -176,7 +176,9 @@ public class ServerTab extends AbstractTab implements ServerEventsListener, Sett
 
     @Override
     public void connectionCantBeEstabilished(String reason) {
-        MessageDialog.error("Chyba připojení", "K vybranému serveru se nelze připojit.");
+        MessageDialog.error("Chyba připojení",
+                            "K vybranému serveru se nelze připojit.",
+                            MainWindow.getInstance() );
         appendError("Spojení nelze uskutečnit: " + reason);
         ClientLogger.log("Nelze se připojit: " + reason, ClientLogger.ERROR);
     }

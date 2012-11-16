@@ -132,7 +132,7 @@ public class FavoritesWindow extends TabbedWindow implements WindowListener {
     void actionDeleteCurrent() {
         Form form = (Form) tabPanel.getSelectedComponent();
         boolean delete = MessageDialog.confirmQuestion("Odstranění serveru",
-                        "Potvrďte odstranění serveru " + form.getTitle() + ".");
+                        "Potvrďte odstranění serveru " + form.getTitle() + ".", this);
 
         if (delete) {
             int serverId = tabPanel.getSelectedIndex();

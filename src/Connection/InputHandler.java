@@ -29,15 +29,21 @@ public class InputHandler {
     }
 
     public static void showNotConnectedError() {
-        MessageDialog.error("Připojení nedostupné", "Nejste připojen/a k žádnému serveru.");
+        MessageDialog.error("Připojení nedostupné",
+                            "Nejste připojen/a k žádnému serveru.",
+                            MainWindow.getInstance() );
     }
 
     public static void showNotActiveChannelWarning() {
-        MessageDialog.warning("Přepni si na kanál", "Aktivním oknem není kanál (channel).");
+        MessageDialog.warning("Přepni si na kanál",
+                              "Aktivním oknem není kanál (channel).",
+                              MainWindow.getInstance() );
     }
 
     public static void showRecursionTooDeepError() {
-        MessageDialog.error("Příkaz nelze zpracovat", "Rekurze při vykonávání vlastních příkazů");
+        MessageDialog.error("Příkaz nelze zpracovat",
+                            "Rekurze při vykonávání vlastních příkazů",
+                            MainWindow.getInstance() );
     }
 
     public static void handle(String command, String params) {
@@ -152,11 +158,12 @@ public class InputHandler {
     }
 
     public static void handleServer(String address) {
+        MainWindow window = MainWindow.getInstance();
         try {
-            MainWindow.getInstance().createServerTab( ConnectionDetails.fromAddress(address) );
+            window.createServerTab( ConnectionDetails.fromAddress(address) );
             clearInput();
         } catch (Exception e) {
-            MessageDialog.error("Chyba aplikace", "Připojení nelze uskutečnit.");
+            MessageDialog.error("Chyba aplikace", "Připojení nelze uskutečnit.", window);
         }
     }
 
