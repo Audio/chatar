@@ -88,6 +88,11 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
     }
 
     @Override
+    public void actionReceived(String action) {
+        appendText( HTML.italic( getNickname() + " " + action) );
+    }
+
+    @Override
     public void userChangesNick(String newNick) {
         setTabName(newNick);
     }

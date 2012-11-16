@@ -145,6 +145,19 @@ public class Connection extends PircBot implements Runnable {
     }
 
     @Override
+    protected void onAction(String sender, String login, String hostname, String target, String action) {
+        if ( target.startsWith("#") ) {
+            ChannelEventsListener listener = getChannelEventsListener(target);
+            if (listener != null)
+                listener.actionReceived(sender, action);
+        } else {
+            PrivateMessagingListener listener = getPrivateMessagingListener(sender);
+            if (listener != null)
+                listener.actionReceived(action);
+        }
+    }
+
+    @Override
     protected void onUserList(String channel, User[] users) {
         ChannelEventsListener listener = getChannelEventsListener(channel);
         if (listener != null) {

@@ -5,6 +5,7 @@ public interface PrivateMessagingListener extends GlobalEventsListener {
 
     public String getNickname();
     public void privateMessageReceived(String message);
+    public void actionReceived(String action);
     public void userChangesNick(String newNick);
     public void userIsAway(String reason);
 

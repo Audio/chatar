@@ -289,6 +289,11 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     }
 
     @Override
+    public void actionReceived(String sender, String action) {
+        appendText( HTML.italic(sender + " " + action) );
+    }
+
+    @Override
     public void userListReceived(User[] users) {
         setUsers(users);
     }

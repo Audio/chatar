@@ -9,6 +9,7 @@ public interface ChannelEventsListener extends GlobalEventsListener {
     public boolean contains(String nickname);
 
     public void messageReceived(String sender, String message);
+    public void actionReceived(String sender, String action);
     public void userListReceived(User[] users);
 
     public void userModeGranted(String initiator, String recipient, String mode);

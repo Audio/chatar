@@ -212,7 +212,7 @@ public class InputHandler {
     }
 
     public static void handleAction(String params) {
-        if ( !isChannelTabActive() ) {
+        if ( getActiveTab() instanceof ServerTab ) {
             showNotActiveChannelWarning();
             return;
         }
