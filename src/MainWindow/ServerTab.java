@@ -198,7 +198,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener, Sett
                 tab.appendError(message);
 
         } else {
-            appendText(message);
+            appendText( HTML.escapeTags(message) );
         }
     }
 

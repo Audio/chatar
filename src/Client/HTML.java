@@ -37,6 +37,11 @@ public class HTML {
         return message.replaceAll("(ftp|https?)://[^\\s<]+", "<a href=\"$0\">$0</a>");
     }
 
+    public static String escapeTags(String message) {
+        message = message.replaceAll("<", "&lt;");
+        return message.replaceAll(">", "&gt;");
+    }
+
     public static String removeTags(String message) {
         return message.replaceAll("\\<.*?\\>", "");
     }

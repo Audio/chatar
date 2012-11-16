@@ -79,7 +79,7 @@ public class InputHandler {
 
         if (tab != null) {
             String myNick = serverTab.getConnection().getNick();
-            tab.appendText( HTML.bold(myNick) + ": " + message);
+            tab.appendText( HTML.bold(myNick) + ": " + HTML.escapeTags(message) );
         }
     }
 

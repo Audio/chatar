@@ -84,7 +84,7 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
 
     @Override
     public void privateMessageReceived(String message) {
-        appendText( HTML.bold( getNickname() ) + ": " + message);
+        appendText( HTML.bold( getNickname() ) + ": " + HTML.escapeTags(message) );
     }
 
     @Override

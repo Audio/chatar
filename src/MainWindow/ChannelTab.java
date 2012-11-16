@@ -279,7 +279,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     @Override
     public void messageReceived(String sender, String message) {
-        appendText( HTML.bold(sender) + ": " + message);
+        appendText( HTML.bold(sender) + ": " + HTML.escapeTags(message) );
     }
 
     @Override
