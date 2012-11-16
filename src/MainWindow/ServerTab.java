@@ -9,7 +9,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 
 
 public class ServerTab extends AbstractTab implements ServerEventsListener, SettingsChangesListener {
@@ -46,24 +45,24 @@ public class ServerTab extends AbstractTab implements ServerEventsListener, Sett
 
         JPanel top = new JPanel();
         top.setLayout( new BoxLayout(top, BoxLayout.PAGE_AXIS) );
-        top.setBorder( BorderFactory.createEtchedBorder(EtchedBorder.RAISED) );
+        top.setBorder( BorderFactory.createEmptyBorder() );
         GUI.setPreferredSize(top, 700, 50);
 
-        JLabel text_address = new JLabel("Server:");
+        JLabel textAddress = new JLabel("Server:");
         addressLabel = new JLabel("irc://" + tabName + "/");
 
         Box r1 = Box.createHorizontalBox();
         r1.setBorder( BorderFactory.createEmptyBorder(10, 0, 0, 0) );
-        r1.add(text_address);
+        r1.add(textAddress);
         r1.add( Box.createRigidArea( new Dimension(10, 0)) );
         r1.add(addressLabel);
 
-        JLabel text_channels = new JLabel("Počet místností:");
+        JLabel textChannels = new JLabel("Počet místností:");
         channelsLabel = new JLabel("-");
 
         Box r2 = Box.createHorizontalBox();
         r2.setBorder( BorderFactory.createEmptyBorder() );
-        r2.add(text_channels);
+        r2.add(textChannels);
         r2.add( Box.createRigidArea( new Dimension(10, 0)) );
         r2.add(channelsLabel);
 

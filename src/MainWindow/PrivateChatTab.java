@@ -16,17 +16,15 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
     public PrivateChatTab(String nickname, final ServerTab serverTab) {
         this.serverTab = serverTab;
 
-        // Konstrukce panelu
         SpringLayout layout = new SpringLayout();
         setLayout(layout);
 
-        // Info panel - vypis dodatecnych informaci o uzivateli,
-        // se kterym komunikujeme
-        JPanel toppanel = new JPanel();
-        toppanel.setLayout (new BoxLayout(toppanel, BoxLayout.LINE_AXIS) );
-        GUI.setPreferredSize(toppanel, 695, 100);
-        toppanel.setMaximumSize( new Dimension(3200, 120) );
-        toppanel.setBorder( BorderFactory.createEtchedBorder() );
+        // Vypis dodatecnych informaci o uzivateli, se kterym komunikujeme
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout (new BoxLayout(topPanel, BoxLayout.LINE_AXIS) );
+        GUI.setPreferredSize(topPanel, 695, 75);
+        topPanel.setMaximumSize( new Dimension(3200, 100) );
+        topPanel.setBorder( BorderFactory.createEmptyBorder() );
 
         JScrollPane infoscroll = new JScrollPane();
         infoscroll.setBorder( BorderFactory.createEmptyBorder() );
@@ -37,15 +35,17 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
         infobox = new JEditorPane();
         infobox.setContentType("text/html");
         infobox.setEditable(false);
+        infobox.setBackground(backgroundColor);
+        setNicerFont(infobox);
 
         infoscroll.setViewportView(infobox);
-        toppanel.add(infoscroll);
+        topPanel.add(infoscroll);
 
         // Obsahovy panel - vypis chatu
-        JPanel bottompanel = new JPanel();
-        bottompanel.setLayout( new BoxLayout(bottompanel, BoxLayout.LINE_AXIS) );
-        GUI.setPreferredSize(bottompanel, 695, 305);
-        bottompanel.setBorder( BorderFactory.createEmptyBorder() );
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout( new BoxLayout(bottomPanel, BoxLayout.LINE_AXIS) );
+        GUI.setPreferredSize(bottomPanel, 695, 275);
+        bottomPanel.setBorder( BorderFactory.createEmptyBorder() );
 
         JScrollPane chatscroll = new JScrollPane();
         chatscroll.setBorder( BorderFactory.createEmptyBorder() );
@@ -54,19 +54,19 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
         chatscroll.setAutoscrolls(true);
 
         chatscroll.setViewportView(content);
-        bottompanel.add(chatscroll);
+        bottomPanel.add(chatscroll);
 
         // Uskladneni objektu to hlavniho panelu
-        add(toppanel);
-        add(bottompanel);
+        add(topPanel);
+        add(bottomPanel);
         setBackground(Color.WHITE);
 
-        layout.putConstraint(SpringLayout.NORTH, bottompanel, 5, SpringLayout.SOUTH, toppanel);
-        layout.putConstraint(SpringLayout.WEST, toppanel, 0, SpringLayout.WEST, this);
-        layout.putConstraint(SpringLayout.WEST, bottompanel, 0, SpringLayout.WEST, toppanel);
-        layout.putConstraint(SpringLayout.EAST, toppanel, 0, SpringLayout.EAST, this);
-        layout.putConstraint(SpringLayout.EAST, bottompanel, 0, SpringLayout.EAST, toppanel);
-        layout.putConstraint(SpringLayout.SOUTH, this, 0, SpringLayout.SOUTH, bottompanel);
+        layout.putConstraint(SpringLayout.NORTH, bottomPanel, 5, SpringLayout.SOUTH, topPanel);
+        layout.putConstraint(SpringLayout.WEST, topPanel, 0, SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.WEST, bottomPanel, 0, SpringLayout.WEST, topPanel);
+        layout.putConstraint(SpringLayout.EAST, topPanel, 0, SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.EAST, bottomPanel, 0, SpringLayout.EAST, topPanel);
+        layout.putConstraint(SpringLayout.SOUTH, this, 0, SpringLayout.SOUTH, bottomPanel);
 
         tabName = nickname;
     }
@@ -84,7 +84,7 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
 
     @Override
     public void privateMessageReceived(String message) {
-        appendText( getNickname() + ": " + message);
+        appendText( HTML.bold( getNickname() ) + ": " + message);
     }
 
     @Override

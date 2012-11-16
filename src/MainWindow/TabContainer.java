@@ -3,6 +3,7 @@ package MainWindow;
 import Client.GUI;
 import Favorites.ConnectionDetails;
 import java.awt.Component;
+import javax.swing.BorderFactory;
 import javax.swing.JTabbedPane;
 import javax.swing.event.*;
 
@@ -13,8 +14,9 @@ public class TabContainer extends JTabbedPane {
 
 
     public TabContainer(int width, int height) {
+        super(JTabbedPane.BOTTOM);
+        setBorder( BorderFactory.createEmptyBorder(-2, -1, 1, -3) );
         GUI.setPreferredSize(this, width, height);
-        setTabPlacement(JTabbedPane.BOTTOM);
 
         addChangeListener(new ChangeListener() {
             @Override

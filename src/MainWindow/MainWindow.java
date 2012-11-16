@@ -10,6 +10,9 @@ public class MainWindow extends JFrame {
 
     static final long serialVersionUID = 1L;
 
+    private static final int INITIAL_WIDTH = 900,
+                             INITIAL_HEIGHT = 600;
+
     private static MainWindow instance;
 
     private TabContainer tabContainer;
@@ -27,8 +30,7 @@ public class MainWindow extends JFrame {
 
     private MainWindow() {
         resetTitle();
-        setSize(700, 500);
-        GUI.setPreferredSize(this, 700, 500);
+        GUI.setPreferredSize(this, INITIAL_WIDTH, INITIAL_HEIGHT);
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -46,11 +48,10 @@ public class MainWindow extends JFrame {
     private void createMenuBar() {
         menuBar = new MainMenu();
         setJMenuBar(menuBar);
-        menuBar.setVisible(true);
     }
 
     private void createContentArea() {
-        tabContainer = new TabContainer(650, 400);
+        tabContainer = new TabContainer(INITIAL_WIDTH - 50, 400);
         JPanel inputArea = createInputArea();
 
         JPanel contentPanel = (JPanel) getContentPane();
@@ -59,29 +60,24 @@ public class MainWindow extends JFrame {
         contentPanel.add(tabContainer);
         contentPanel.add(inputArea);
 
-        // Tab umisten nad Input
-        layout.putConstraint(SpringLayout.WEST, inputArea, 0, SpringLayout.WEST, tabContainer);
         layout.putConstraint(SpringLayout.NORTH, inputArea, 0, SpringLayout.SOUTH, tabContainer);
-        // Roztahovani vertikalni - tab
-        layout.putConstraint(SpringLayout.EAST, contentPanel, 0, SpringLayout.EAST, tabContainer);
-        layout.putConstraint(SpringLayout.SOUTH, contentPanel, 40, SpringLayout.SOUTH, tabContainer);
-        // Roztahovani horizontalni - tab, input
-        layout.putConstraint(SpringLayout.EAST, contentPanel, 0, SpringLayout.EAST, inputArea);
-        layout.putConstraint(SpringLayout.EAST, inputArea, 0, SpringLayout.EAST, tabContainer);
+        layout.putConstraint(SpringLayout.SOUTH, contentPanel, 44, SpringLayout.SOUTH, tabContainer);
 
-        tabContainer.setVisible(true);
-        inputArea.setVisible(true);
-        inputField.requestFocusInWindow();
+        layout.putConstraint(SpringLayout.EAST, tabContainer, 0, SpringLayout.EAST, contentPanel);
+        layout.putConstraint(SpringLayout.WEST, tabContainer, 0, SpringLayout.WEST, contentPanel);
+
+        layout.putConstraint(SpringLayout.EAST, inputArea, 0, SpringLayout.EAST, contentPanel);
+        layout.putConstraint(SpringLayout.WEST, inputArea, 0, SpringLayout.WEST, contentPanel);
     }
 
     private JPanel createInputArea() {
         JPanel area = new JPanel();
-        GUI.setPreferredSize(area, 650, 100);
+        GUI.setPreferredSize(area, INITIAL_WIDTH - 50, 100);
         area.setLayout( new BoxLayout(area, BoxLayout.PAGE_AXIS) );
 
         JPanel innerPanel = new JPanel();
         innerPanel.setLayout( new BoxLayout(innerPanel, BoxLayout.LINE_AXIS) );
-        innerPanel.setBorder( BorderFactory.createEmptyBorder(5, 10, 5, 10) );
+        innerPanel.setBorder( BorderFactory.createEmptyBorder(8, 10, 8, 10) );
 
         nickButton = new NickButton();
         inputField = new InputField();

@@ -28,6 +28,8 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         this.serverTab = serverTab;
         this.tabName = channel;
         this.usersQueue = new LinkedList<>();
+        this.usersModel = new SortedListModel<>();
+        this.userListRenderer = new UserListRenderer<>();
 
         createMainPanel();
         createPopupMenu();
@@ -35,90 +37,62 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     }
 
     private void createMainPanel() {
-        SpringLayout layout = new SpringLayout();
-        setLayout(layout);
-
-        // Levy panel s vypisem pripojenych uzivatelu
-        JPanel userspanel = new JPanel();
-        userspanel.setLayout( new BoxLayout(userspanel, BoxLayout.LINE_AXIS) );
-        GUI.setPreferredSize(userspanel, 200, 375);
-        userspanel.setBorder( BorderFactory.createEmptyBorder(0, 7, 0, 0) );
-        userspanel.setBackground(Color.WHITE);
-
-        // Levy panel - Scrollpanel
-        JScrollPane scrollpanel = new JScrollPane();
-        scrollpanel.setBorder( BorderFactory.createEmptyBorder() );
-        scrollpanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollpanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollpanel.setAutoscrolls(true);
-
-        userListRenderer = new UserListRenderer<>();
-        usersModel = new SortedListModel<>();
-
         userList = new JList<>(usersModel);
         userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         userList.setSelectedIndex(0);
         userList.setLayoutOrientation(JList.VERTICAL);
         userList.setSelectionBackground( new Color(102, 153, 255) );
         userList.setCellRenderer(userListRenderer);
+        userList.setBorder( BorderFactory.createEmptyBorder(10, 10, 0, 0) );
 
-        JScrollPane panel = new JScrollPane(userList);
-        GUI.setPreferredSize(panel, 250, 355);
-
-        scrollpanel.setViewportView(userList);
-        userspanel.add(scrollpanel);
-
-        // Pravy obsahovy panel - vypis informaci o kanale; vypis chatu
-        JPanel toppanel = new JPanel();
-        toppanel.setLayout ( new BoxLayout(toppanel, BoxLayout.LINE_AXIS) );
-        GUI.setPreferredSize(toppanel, 480, 80);
-        toppanel.setMaximumSize( new Dimension(3200, 100) );
-        toppanel.setBorder( BorderFactory.createEtchedBorder() );
-
-        JScrollPane infoscroll = new JScrollPane();
-        infoscroll.setBorder( BorderFactory.createEmptyBorder() );
-        infoscroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        infoscroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        infoscroll.setAutoscrolls(true);
+        JScrollPane usersPanel = new JScrollPane(userList);
+        usersPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        usersPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        usersPanel.setAutoscrolls(true);
+        usersPanel.setBorder( BorderFactory.createEmptyBorder() );
+        GUI.setPreferredSize(usersPanel, 200, 350);
 
         topicPanel = new JEditorPane();
         topicPanel.setContentType("text/html");
         topicPanel.setEditable(false);
+        topicPanel.setBackground(backgroundColor);
+        topicPanel.setBorder( BorderFactory.createEmptyBorder(10, 10, 0, 10) );
+        setNicerFont(topicPanel);
 
-        infoscroll.setViewportView(topicPanel);
-        toppanel.add(infoscroll);
+        JScrollPane topPanel = new JScrollPane(topicPanel);
+        topPanel.setBorder( BorderFactory.createEmptyBorder() );
+        topPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        topPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        topPanel.setMaximumSize( new Dimension(4000, 75) );
+        GUI.setPreferredSize(topPanel, 480, 50);
 
-        JPanel bottompanel = new JPanel();
-        bottompanel.setLayout( new BoxLayout(bottompanel, BoxLayout.LINE_AXIS) );
-        GUI.setPreferredSize(bottompanel, 480, 200);
-        bottompanel.setBorder( BorderFactory.createEmptyBorder() );
+        content.setBorder( BorderFactory.createEmptyBorder(10, 10, 10, 10) );
 
-        JScrollPane chatscroll = new JScrollPane();
-        chatscroll.setBorder( BorderFactory.createEmptyBorder() );
-        chatscroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        chatscroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        chatscroll.setAutoscrolls(true);
+        JScrollPane bottomPanel = new JScrollPane(content);
+        bottomPanel.setBorder( BorderFactory.createEmptyBorder() );
+        bottomPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        bottomPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        bottomPanel.setAutoscrolls(true);
+        GUI.setPreferredSize(bottomPanel, 480, 300);
 
-        chatscroll.setViewportView(content);
-        bottompanel.add(chatscroll);
+        Box leftBox = Box.createVerticalBox();
+        leftBox.add(topPanel);
+        leftBox.add(bottomPanel);
 
-        // Slepeni horniho a spodniho praveho panelu
-        Box rightbox = Box.createVerticalBox();
-        rightbox.setBorder( BorderFactory.createEmptyBorder(0, 0, 0, 5) );
-        GUI.setPreferredSize(rightbox, 485, 375);
-        rightbox.add(toppanel);
-        rightbox.add( Box.createRigidArea(new Dimension(0, 5)) );
-        rightbox.add(bottompanel);
+        add(leftBox);
+        add(usersPanel);
 
-        add(userspanel);
-        add(rightbox);
-        setBackground(Color.WHITE);
+        SpringLayout layout = new SpringLayout();
 
-        layout.putConstraint(SpringLayout.WEST, rightbox, 5, SpringLayout.EAST, userspanel);
-        layout.putConstraint(SpringLayout.EAST, rightbox, 0, SpringLayout.EAST, this);
-        layout.putConstraint(SpringLayout.SOUTH, this, 0, SpringLayout.SOUTH, rightbox);
-        layout.putConstraint(SpringLayout.NORTH, userspanel, 5, SpringLayout.NORTH, rightbox);
-        layout.putConstraint(SpringLayout.SOUTH, userspanel, 0, SpringLayout.SOUTH, rightbox);
+        layout.putConstraint(SpringLayout.EAST, leftBox, 0, SpringLayout.WEST, usersPanel);
+        layout.putConstraint(SpringLayout.WEST, leftBox, 0, SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.EAST, usersPanel, 0, SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.NORTH, leftBox, 0, SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.NORTH, usersPanel, 0, SpringLayout.NORTH, leftBox);
+        layout.putConstraint(SpringLayout.SOUTH, leftBox, 0, SpringLayout.SOUTH, this);
+        layout.putConstraint(SpringLayout.SOUTH, usersPanel, 0, SpringLayout.SOUTH, leftBox);
+
+        setLayout(layout);
 
         if ( !Settings.getInstance().isViewEnabled("display-topic") )
             setTopicPanelVisibility(false);
@@ -268,7 +242,6 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
             }
         } catch (InterruptedException | InvocationTargetException e) {
             ClientLogger.log("Chyba pri nastavovani seznamu uzivatelu: " + e.getMessage(), ClientLogger.ERROR);
-            e.printStackTrace();
         }
     }
 
@@ -282,7 +255,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     private void setTopic(String topic) {
         if (topic == null || topic.trim().length() == 0)
-            topic = "Diskusní téma není nastaveno.";
+            topic = HTML.italic("Diskusní téma není nastaveno.");
         else
             topic = HTML.bold(topic);
 
@@ -290,7 +263,8 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
     }
 
     public void setTopicPanelVisibility(boolean visible) {
-        topicPanel.getParent().getParent().getParent().setVisible(visible);
+        topicPanel.getParent().getParent().setVisible(visible);
+        validate();
     }
 
     @Override
@@ -305,7 +279,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
 
     @Override
     public void messageReceived(String sender, String message) {
-        appendText(sender + ": " + message);
+        appendText( HTML.bold(sender) + ": " + message);
     }
 
     @Override

@@ -4,6 +4,7 @@ import Client.FileLogger;
 import Client.HTML;
 import Connection.GlobalEventsListener;
 import Settings.Settings;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Font;
 import java.io.*;
@@ -19,6 +20,7 @@ public abstract class AbstractTab extends JPanel implements GlobalEventsListener
 
     protected static String timestampFormat;
     protected static boolean isChatLoggingEnabled;
+    protected static Color backgroundColor = new Color(250, 250, 250);
 
     protected ServerTab serverTab;
     protected String tabName;
@@ -49,10 +51,7 @@ public abstract class AbstractTab extends JPanel implements GlobalEventsListener
         content = new JEditorPane();
         content.setContentType("text/html");
         content.setEditable(false);
-
-        Font font = UIManager.getFont("Label.font");
-        String bodyRule = "body { font-family: " + font.getFamily() + "; " + "font-size: 13pt; }";
-        ((HTMLDocument) content.getDocument()).getStyleSheet().addRule(bodyRule);
+        setNicerFont(content);
 
         content.addHyperlinkListener( new HyperlinkListener() {
             @Override
@@ -65,6 +64,12 @@ public abstract class AbstractTab extends JPanel implements GlobalEventsListener
                 }
             }
         });
+    }
+
+    protected void setNicerFont(JEditorPane panel) {
+        Font font = UIManager.getFont("Menu.font");
+        String bodyRule = "body { font-family: " + font.getFamily() + "; font-size: 12pt; }";
+        ((HTMLDocument) panel.getDocument()).getStyleSheet().addRule(bodyRule);
     }
 
     public void appendText(String str) {
@@ -83,9 +88,7 @@ public abstract class AbstractTab extends JPanel implements GlobalEventsListener
             Reader reader = new StringReader(str);
             kit.read(reader, doc, doc.getLength());
             panel.setCaretPosition( doc.getLength() );
-        } catch (IOException | BadLocationException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException | BadLocationException e) { }
 
         logIfEnabled( HTML.removeTags(str) );
     }

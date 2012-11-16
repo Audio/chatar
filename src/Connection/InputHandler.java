@@ -1,9 +1,6 @@
 package Connection;
 
-import MainWindow.ServerTab;
-import MainWindow.MainWindow;
-import MainWindow.ChannelTab;
-import MainWindow.AbstractTab;
+import MainWindow.*;
 import Dialog.MessageDialog;
 import Client.*;
 import Favorites.ConnectionDetails;
@@ -82,7 +79,7 @@ public class InputHandler {
 
         if (tab != null) {
             String myNick = serverTab.getConnection().getNick();
-            tab.appendText(myNick + ": " + message);
+            tab.appendText( HTML.bold(myNick) + ": " + message);
         }
     }
 
