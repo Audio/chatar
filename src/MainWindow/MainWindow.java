@@ -10,8 +10,8 @@ public class MainWindow extends JFrame {
 
     static final long serialVersionUID = 1L;
 
-    private static final int INITIAL_WIDTH = 900,
-                             INITIAL_HEIGHT = 600;
+    private static final int INITIAL_WIDTH = 900, INITIAL_HEIGHT = 600,
+                             MINIMUM_WIDTH = 600, MINIMUM_HEIGHT = 400;
 
     private static MainWindow instance;
 
@@ -30,7 +30,8 @@ public class MainWindow extends JFrame {
 
     private MainWindow() {
         resetTitle();
-        GUI.setPreferredSize(this, INITIAL_WIDTH, INITIAL_HEIGHT);
+        setMinimumSize( new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT) );
+        setSize( new Dimension(INITIAL_WIDTH, INITIAL_HEIGHT) );
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -51,7 +52,7 @@ public class MainWindow extends JFrame {
     }
 
     private void createContentArea() {
-        tabContainer = new TabContainer(INITIAL_WIDTH - 50, 400);
+        tabContainer = new TabContainer(MINIMUM_WIDTH - 50, MINIMUM_HEIGHT - 200);
         JPanel inputArea = createInputArea();
 
         JPanel contentPanel = (JPanel) getContentPane();
@@ -72,7 +73,7 @@ public class MainWindow extends JFrame {
 
     private JPanel createInputArea() {
         JPanel area = new JPanel();
-        GUI.setPreferredSize(area, INITIAL_WIDTH - 50, 100);
+        GUI.setPreferredSize(area, MINIMUM_WIDTH - 50, 100);
         area.setLayout( new BoxLayout(area, BoxLayout.PAGE_AXIS) );
 
         JPanel innerPanel = new JPanel();
