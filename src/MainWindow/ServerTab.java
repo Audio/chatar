@@ -71,7 +71,7 @@ public class ServerTab extends AbstractTab implements ServerEventsListener, Sett
 
         JPanel textpanel = new JPanel();
         textpanel.setLayout( new BoxLayout(textpanel, BoxLayout.LINE_AXIS) );
-        GUI.setPreferredSize(textpanel, 650, 320);
+        GUI.setPreferredSize(textpanel, 650, 120);
         textpanel.setBorder( BorderFactory.createEmptyBorder(10, 10, 10, 10) );
         textpanel.setBackground(Color.WHITE);
 

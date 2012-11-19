@@ -44,7 +44,7 @@ public class PrivateChatTab extends AbstractTab implements PrivateMessagingListe
         // Obsahovy panel - vypis chatu
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout( new BoxLayout(bottomPanel, BoxLayout.LINE_AXIS) );
-        GUI.setPreferredSize(bottomPanel, 695, 275);
+        GUI.setPreferredSize(bottomPanel, 695, 150);
         bottomPanel.setBorder( BorderFactory.createEmptyBorder() );
 
         JScrollPane chatscroll = new JScrollPane();

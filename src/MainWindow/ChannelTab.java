@@ -73,7 +73,7 @@ public class ChannelTab extends AbstractTab implements ChannelEventsListener {
         bottomPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         bottomPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         bottomPanel.setAutoscrolls(true);
-        GUI.setPreferredSize(bottomPanel, 480, 300);
+        GUI.setPreferredSize(bottomPanel, 480, 200);
 
         Box leftBox = Box.createVerticalBox();
         leftBox.add(topPanel);
